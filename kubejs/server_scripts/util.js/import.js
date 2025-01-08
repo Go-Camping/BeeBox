@@ -1,0 +1,5 @@
+const $QuartPos = Java.loadClass("net.minecraft.core.QuartPos")
+const $BoundingBox = Java.loadClass("net.minecraft.world.level.levelgen.structure.BoundingBox")
+const $MutableInt = Java.loadClass("org.apache.commons.lang3.mutable.MutableInt")
+const $ResourceArgument = Java.loadClass("net.minecraft.commands.arguments.ResourceArgument")
+const $Registries = Java.loadClass("net.minecraft.core.registries.Registries")

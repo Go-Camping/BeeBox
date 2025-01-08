@@ -1,0 +1,10 @@
+9 possible world presets found:
+- "minecraft:large_biomes"
+- "minecraft:amplified"
+- "skyblockbuilder:skyblock"
+- "minecraft:flat"
+- "hexlands:hexlands"
+- "minecraft:single_biome_surface"
+- "minecraft:normal"
+- "hexlands:hexlands_overworld_only"
+- "minecraft:debug_all_block_states"
