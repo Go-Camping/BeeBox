@@ -1,0 +1,99 @@
+ServerEvents.recipes(event => {
+    event.recipes.custommachinery.custom_machine("kubejs:bee_shop", 20 * 10).resetOnError()
+        .gui(new shopRunningPage()
+            .addGui(new shopSlotGui("output_slot_0", 30, 30))
+            .addGui(new shopSlotGui("output_slot_1", 50, 30))
+            .addGui(new shopSlotGui("output_slot_2", 70, 30))
+            .addGui(new shopSlotGui("output_slot_3", 90, 30))
+            .addGui(new shopSlotGui("output_slot_4", 110, 30))
+            .addGui(new shopSlotGui("output_slot_5", 130, 30))
+            .addGui(new shopSlotGui("output_slot_6", 150, 30))
+            .addGui(new shopSlotGui("output_slot_7", 170, 30))
+            .addGui(new shopSlotGui("output_slot_8", 190, 30))
+            .addGui(new shopSlotGui("output_slot_9", 210, 30))
+            .addGui(new shopSlotGui("goods_slot_0", 30, 10))
+            .addGui(new shopSlotGui("goods_slot_1", 50, 10))
+            .addGui(new shopSlotGui("goods_slot_2", 70, 10))
+            .addGui(new shopSlotGui("goods_slot_3", 90, 10))
+            .addGui(new shopSlotGui("goods_slot_4", 110, 10))
+            .addGui(new shopSlotGui("goods_slot_5", 130, 10))
+            .addGui(new shopSlotGui("goods_slot_6", 150, 10))
+            .addGui(new shopSlotGui("goods_slot_7", 170, 10))
+            .addGui(new shopSlotGui("goods_slot_8", 190, 10))
+            .addGui(new shopSlotGui("goods_slot_9", 210, 10))
+            .addGui(new shopButtonGui("goods_button_0", 30 - 1, 10 - 1))
+            .addGui(new shopButtonGui("goods_button_1", 50 - 1, 10 - 1))
+            .addGui(new shopButtonGui("goods_button_2", 70 - 1, 10 - 1))
+            .addGui(new shopButtonGui("goods_button_3", 90 - 1, 10 - 1))
+            .addGui(new shopButtonGui("goods_button_4", 110 - 1, 10 - 1))
+            .addGui(new shopButtonGui("goods_button_5", 130 - 1, 10 - 1))
+            .addGui(new shopButtonGui("goods_button_6", 150 - 1, 10 - 1))
+            .addGui(new shopButtonGui("goods_button_7", 170 - 1, 10 - 1))
+            .addGui(new shopButtonGui("goods_button_8", 190 - 1, 10 - 1))
+            .addGui(new shopButtonGui("goods_button_9", 210 - 1, 10 - 1))
+            .buildGui()
+        )
+        .requireFunctionOnEnd(ctx => {
+            return ctx.success()
+        })
+        .requireFunctionEachTick(ctx => {
+            let machine = ctx.machine
+            let itemInput = machine.getItemStored("input_slot_1")
+
+            // Only for debug
+            let debugButtonState = machine.data.getBoolean("debug")
+            if(debugButtonState) { 
+                machine.getOwner().tell("§edebug: ") 
+                machine.data.putBoolean("debug", false)
+            }
+
+            // 检测菜单
+            if (itemInput.id == "kubejs:shop_order") {
+                let nbt = itemInput.getNbt()
+                if(!nbt || !nbt.get("TradeMap")){
+                    return ctx.error("no trade list")
+                }
+                let tradeMap = nbt.get("TradeMap")
+
+                // 售卖物品展示
+                for(let i = 0; i < tradeMap.length; i++){
+                    let trade = tradeMap[i]
+                    machine.setItemStored("goods_slot_" + i, Item.of(trade.getString("goods"), trade.getInt("count")))
+                }
+
+                // 购买按纽
+                for(let i = 0; i < 10; i++){
+                    let trade = tradeMap[i]
+                    let buttonState = machine.data.getBoolean("goods_button_" + i)
+                    if(buttonState){
+                        let goods = machine.getItemStored("goods_slot_" + i)
+                        machine.addItemToSlot("output_slot_" + i, goods, false)
+                        machine.data.putBoolean("goods_button_" + i, false)
+                    }
+                }
+                return ctx.success()
+            }
+
+            // 没有菜单时商品栏清空
+            // todo：
+            // 1.解决在商品栏有商品的情况下摧毁商店方块则商品栏物品会掉出
+            // 2.实现关闭商店gui后菜单自动返回玩家物品栏，避免机器一直处于工作状态
+            for(let i = 0; i < 10; i++){
+                machine.setItemStored("goods_slot_" + i, "minecraft:air")
+            }
+            return ctx.error("no item")
+        })
+        .requireFunctionToStart(ctx => {
+            let machine = ctx.machine
+            let data = ctx.tile.persistentData
+            let itemInput = machine.getItemStored("input_slot_1")
+            if (itemInput.id == "kubejs:shop_order") {
+                let nbt = itemInput.getNbt()
+                if(!nbt || !nbt.get("TradeMap")){
+                    return ctx.error("no trade list")
+                }
+                return ctx.success()
+            }
+            return ctx.error("no item")
+        })
+})
