@@ -1,13 +1,35 @@
-ItemEvents.rightClicked("wooden_axe", event=>{
+ItemEvents.rightClicked("kubejs:debugger", event=>{
     let p = event.player
     let l = p.level
 
     p.tell('b')
 
-    let a = new BeeBox(l, 32, Math.round(p.x) + 0.5, Math.round(p.y - 2), Math.round(p.z) + 0.5)
-    a.build()
-    a.extend(6).build()
+    // let a = new BeeBox(l, 16, Math.round(p.x) + 0.5, Math.round(p.y - 2), Math.round(p.z) + 0.5)
+    // a.build()
+    // p.tell("0: "+a.centerx+" "+a.centery+" "+a.centerz)
+    // a.extend(1).build()
+    // p.tell("1: "+a.centerx+" "+a.centery+" "+a.centerz)
+    // a.extend(2).build()
+    // p.tell("2: "+a.centerx+" "+a.centery+" "+a.centerz)
+    // a.extend(3).build()
+    // p.tell("3: "+a.centerx+" "+a.centery+" "+a.centerz)
+    // a.extend(4).build()
+    // p.tell("4: "+a.centerx+" "+a.centery+" "+a.centerz)
+    // a.extend(5).build()
+    // p.tell("5: "+a.centerx+" "+a.centery+" "+a.centerz)
+    // a.extend(1).build()
+    // p.tell("6: "+a.centerx+" "+a.centery+" "+a.centerz)
 
+    let bb = new BeeBoxBuilder(l,16, Math.round(p.x) + 0.5, Math.round(p.y - 2), Math.round(p.z) + 0.5)
+    bb.build()
+    bb.extend(1).build()
+    bb.extend(2).build()
+    bb.extend(3).build()
+    bb.extend(4).build()
+    bb.extend(5).build()
+    bb.extend(1).build()
+
+    // bb.extend(6).build()
     
     /*let b = 16
     let r = Math.round((b - 2) * Math.sqrt(3) / 2)

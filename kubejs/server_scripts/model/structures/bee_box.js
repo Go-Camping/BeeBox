@@ -17,11 +17,11 @@ function BeeBox (level, length, centerx, centery, centerz){
     this.centery = centery
     this.centerz = centerz
     this.biome = "minecraft:plains"
-    this.wallHeight = 2
+    this.wallHeight = 8
     this.float = false
     this.floorBlock = Block.getBlock("kubejs:beehive").defaultBlockState()
     this.wallBlock = Block.getBlock("minecraft:honeycomb_block").defaultBlockState()
-    this.floatBlock = Block.getBlock("minecraft:air").defaultBlockState()
+    this.floatBlock = Block.getBlock("kubejs:beehive").defaultBlockState()
     return this
 }
 

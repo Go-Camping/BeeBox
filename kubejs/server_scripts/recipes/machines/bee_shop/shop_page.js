@@ -1,4 +1,9 @@
-
+/**
+ * 
+ * @param {String} buttonId 
+ * @param {number} x 
+ * @param {number} y 
+ */
 function shopButtonGui(buttonId, x, y){
     this.type = "custommachinery:button"
     this.id = buttonId
@@ -8,6 +13,12 @@ function shopButtonGui(buttonId, x, y){
     this.hold_time = 1
     // this.texture = ""
 }
+/**
+ * 一个物品槽
+ * @param {String} shopSlotId 
+ * @param {number} x 
+ * @param {number} y 
+ */
 function shopSlotGui(shopSlotId, x, y){
     this.type = "custommachinery:slot"
     this.id = shopSlotId
@@ -15,13 +26,15 @@ function shopSlotGui(shopSlotId, x, y){
     this.y = y
     // this.texture = ""
 }
-
+/**
+ * 商店页面
+ */
 function shopRunningPage(){
     this.gui = []
 }
 shopRunningPage.prototype = {
     /**
-     * 
+     * 添加一个gui
      * @param {shopSlotGui | shopButtonGui} gui 
      */
     addGui : function(gui){
