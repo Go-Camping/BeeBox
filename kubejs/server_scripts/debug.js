@@ -1,33 +1,20 @@
 ItemEvents.rightClicked("kubejs:debugger", event=>{
-    let p = event.player
-    let l = p.level
+    let player = event.player
+    let level = player.level
 
-    p.tell('b')
+    player.tell('§edebug start')
 
-    // let a = new BeeBox(l, 16, Math.round(p.x) + 0.5, Math.round(p.y - 2), Math.round(p.z) + 0.5)
-    // a.build()
-    // p.tell("0: "+a.centerx+" "+a.centery+" "+a.centerz)
-    // a.extend(1).build()
-    // p.tell("1: "+a.centerx+" "+a.centery+" "+a.centerz)
-    // a.extend(2).build()
-    // p.tell("2: "+a.centerx+" "+a.centery+" "+a.centerz)
-    // a.extend(3).build()
-    // p.tell("3: "+a.centerx+" "+a.centery+" "+a.centerz)
-    // a.extend(4).build()
-    // p.tell("4: "+a.centerx+" "+a.centery+" "+a.centerz)
-    // a.extend(5).build()
-    // p.tell("5: "+a.centerx+" "+a.centery+" "+a.centerz)
-    // a.extend(1).build()
-    // p.tell("6: "+a.centerx+" "+a.centery+" "+a.centerz)
-
-    let bb = new BeeBoxBuilder(l,16, Math.round(p.x) + 0.5, Math.round(p.y - 2), Math.round(p.z) + 0.5)
-    bb.build()
-    bb.extend(1).build()
-    bb.extend(2).build()
-    bb.extend(3).build()
-    bb.extend(4).build()
-    bb.extend(5).build()
-    bb.extend(1).build()
+    let bb = new BeeBoxBuilder(level,12, player.x, player.y - 2, player.z)
+    // bb.build()
+    bb.door(2).door(1).build()
+    bb.extend(2).door(2+3).door(0).build()
+    bb.extend(0).door(0+3).door(0+3+1).build()
+    // bb.extend(1).build()
+    // bb.extend(2).build() 
+    // bb.extend(3).build()
+    // bb.extend(4).build()
+    // bb.extend(5).build()
+    // bb.extend(1).build()
 
     // bb.extend(6).build()
     
@@ -56,6 +43,6 @@ ItemEvents.rightClicked("kubejs:debugger", event=>{
 
     }*/
 
-    p.tell('f')
+    player.tell('§edebug end')
 
 })

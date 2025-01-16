@@ -75,9 +75,7 @@ ServerEvents.recipes(event => {
             }
 
             // 没有菜单时商品栏清空
-            // todo：
-            // 1.解决在商品栏有商品的情况下摧毁商店方块则商品栏物品会掉出
-            // 2.实现关闭商店gui后菜单自动返回玩家物品栏，避免机器一直处于工作状态
+            // todo:
             for(let i = 0; i < 10; i++){
                 machine.setItemStored("goods_slot_" + i, "minecraft:air")
             }
