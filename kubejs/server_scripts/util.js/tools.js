@@ -1,0 +1,45 @@
+
+/**
+ * 寻找附近的BeeBoxCenter方块坐标
+ * @param {Internal.Level} level 
+ * @param {BlockPos} startPos 起始坐标
+ * @param {number} range 水平范围
+ * @param {number} verticalRange 垂直范围，仅向下搜索
+ * @returns {BlockPos | null}
+ */
+function findCurrentBoxCenter(level, startPos, range, verticalRange) {
+    let centerPosList = []
+    for(let i = 0; i < verticalRange; i++){
+        let vBlock = level.getBlock(startPos.x, startPos.y - i, startPos.z)
+        centerPosList = FindBlocksAroundBlock(vBlock, range, 1, (block) => {
+            return (block.id == "kubejs:beebox_center")? true : false
+        })
+        if(centerPosList.length > 0){
+            level.server.tell(`§5find`)
+            break
+        }
+    }
+    let distance = Infinity
+    let centerPos = null
+    centerPosList.forEach((/** @type {Internal.BlockContainerJS} */ block) => {
+        let pos = block.pos
+        let dist = Math.pow(pos.x - startPos.x, 2) + Math.pow(pos.y - startPos.y, 2) + Math.pow(pos.z - startPos.z, 2)
+        if(dist < distance){
+            centerPos = pos
+        }
+    })
+    return centerPos
+}
+
+/**
+ * 转换坐标为BeeBoxBuilder的id
+ * @param {number} x 
+ * @param {number} y 
+ * @param {number} z 
+ * @returns String
+ */
+function convertToBeeBoxBuilderId(x, y, z) {
+    let pos = new BlockPos(x, y, z)
+    return `${pos.x}_${pos.y}_${pos.z}`
+}
+

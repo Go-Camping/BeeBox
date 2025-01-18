@@ -1,4 +1,4 @@
 // priority: 1000
 
-// <id, BeeBoxBuilder>
-global.BoxCenter = new Map()
+// <BeeBoxBuilder.id, BeeBoxBuilder>
+global.BoxCenterMap = new Map()
