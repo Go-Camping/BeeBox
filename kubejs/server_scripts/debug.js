@@ -6,57 +6,41 @@ ItemEvents.rightClicked("kubejs:debugger", event=>{
     let playerPos = new BlockPos(player.x, player.y - 2, player.z)
 
     if(false){
-        let bbb = new BeeBoxBuilder(level, 12, playerPos)
-        bbb.buildBox()
-        bbb.extend(0).buildBox()
-        bbb.extend(2).buildBox()
+        let bbb = new BeeBoxBuilder(level, playerPos)//.setBoxSize(16, 10)
+        bbb.buildBox().door(0).door(1).door(2)
+        bbb.extend(0).buildBox().door(0 + 3)
+        bbb.extend(1).buildBox().door(1 + 3)
+        bbb.extend(2).buildBox().door(2 + 3)
 
         player.tell(`build box center at [${playerPos.x}, ${playerPos.y}, ${playerPos.z}]`)
     }
     else{
-        // let closestPos = `${pos.x}_${pos.y}_${pos.z}`
-        // let distant = -1
-        // global.BoxCenterMap.forEach((/** @type {BeeBoxBuilder} */ value, key) => {
-        //     let x = value.centerX
-        //     let y = value.centerY
-        //     let z = value.centerZ
-        //     let dist = Math.pow(x - pos.x, 2) + Math.pow(y - pos.y, 2) + Math.pow(z - pos.z, 2)
-        //     if(dist < distant || distant == -1){
-        //         distant = dist
-        //         closestPos = `${x}_${y}_${z}`
-        //     }
-        // })
-        // let findBox = global.BoxCenterMap.get(closestPos)
-        let boxLength = 12
-        let boxHigh = 8
-        let CurrentBoxPos = findCurrentBoxCenter(level, playerPos, boxLength, boxHigh)
-        if(CurrentBoxPos == null){
-            player.tell(`no find box center`)
-            return
-        }
-        player.tell(`find box center at [${CurrentBoxPos.x}, ${CurrentBoxPos.y}, ${CurrentBoxPos.z}]`)
-        let item = player.getMainHandItem()
-        let doorNum = 0
-        if(!item.getNbt() || item.getNbt().getInt("DoorNum") == null){
-            player.tell('§5no DoorNum in item')
-            player.tell('§edebug end')
-            return
-        }
-        doorNum = item.getNbt().getInt("DoorNum") 
-        let findBox = new BeeBoxBuilder(level, boxLength, CurrentBoxPos)
-        let newBox = new BeeBoxBuilder(level, boxLength, CurrentBoxPos).extend(doorNum)
-        if(level.getBlock(newBox.centerX, newBox.centerY, newBox.centerZ).id == "kubejs:beebox_center"){
-            player.tell(`§5box already exist`)
-            player.tell('§edebug end')
-            return
-        }
-        else{
-            findBox.door(doorNum)
-            newBox.buildBox()
-            newBox.door(doorNum + 3)
-            player.tell(`§5build finish`)
-        }
-        // give @a kubejs:nesting_order{DoorNum:0}
+        let goods1 = Item.of('forestry:serum_ge', '{ForgeCaps:{Parent:{analyzed:0b,genome:{"forestry:butterfly_effect":{active:"forestry:butterfly_effect_none",inactive:"forestry:butterfly_effect_none"},"forestry:butterfly_lifespan":{active:"forestry:20id",inactive:"forestry:20id"},"forestry:butterfly_species":{active:"forestry:butterfly_cspeckled_wood",inactive:"forestry:butterfly_cspeckled_wood"},"forestry:cocoon":{active:"forestry:cocoon_default",inactive:"forestry:cocoon_default"},"forestry:fertility":{active:"forestry:2id",inactive:"forestry:2id"},"forestry:fireproof":{active:"forestry:falsed",inactive:"forestry:falsed"},"forestry:flower_type":{active:"forestry:flower_type_vanilla",inactive:"forestry:flower_type_vanilla"},"forestry:humidity_tolerance":{active:"forestry:tolerance_none",inactive:"forestry:tolerance_none"},"forestry:metabolism":{active:"forestry:2i",inactive:"forestry:2i"},"forestry:never_sleeps":{active:"forestry:falsed",inactive:"forestry:falsed"},"forestry:size":{active:"forestry:0.5f",inactive:"forestry:0.5f"},"forestry:speed":{active:"forestry:0.3fd",inactive:"forestry:0.3fd"},"forestry:temperature_tolerance":{active:"forestry:tolerance_none",inactive:"forestry:tolerance_none"},"forestry:tolerates_rain":{active:"forestry:falsed",inactive:"forestry:falsed"}},health:20,max_heath:20}}}')
+        let goods2 = Item.of('forestry:bee_drone_ge', '{ForgeCaps:{Parent:{analyzed:0b,genome:{"forestry:activity":{active:"forestry:activity_diurnal",inactive:"forestry:activity_diurnal"},"forestry:bee_effect":{active:"forestry:bee_effect_none",inactive:"forestry:bee_effect_none"},"forestry:bee_species":{active:"forestry:bee_monastic",inactive:"forestry:bee_monastic"},"forestry:cave_dwelling":{active:"forestry:trued",inactive:"forestry:trued"},"forestry:fertility":{active:"forestry:1id",inactive:"forestry:1id"},"forestry:flower_type":{active:"forestry:flower_type_wheat",inactive:"forestry:flower_type_wheat"},"forestry:humidity_tolerance":{active:"forestry:tolerance_both_1d",inactive:"forestry:tolerance_both_1d"},"forestry:lifespan":{active:"forestry:50i",inactive:"forestry:50i"},"forestry:pollination":{active:"forestry:30i",inactive:"forestry:30i"},"forestry:speed":{active:"forestry:0.6fd",inactive:"forestry:0.6fd"},"forestry:temperature_tolerance":{active:"forestry:tolerance_both_1d",inactive:"forestry:tolerance_both_1d"},"forestry:territory":{active:"forestry:9_6_9",inactive:"forestry:9_6_9"},"forestry:tolerates_rain":{active:"forestry:falsed",inactive:"forestry:falsed"}},health:50,max_heath:50,pristine:1b}}}')
+        // let shopOrder1 = Item.of('kubejs:shop_order', '{TradeList:[{}]}')
+        // /**
+        //  * @type {Internal.CompoundTag[]} 
+        //  */
+        // let tradeList = shopOrder1.getNbt().get("TradeList")
+        // tradeList.push(tradeList[0].copy())
+        // tradeList[0].putInt("count", 10)
+        // tradeList[0].putInt("cost", 10)
+        // tradeList[0].putString("goods", goods1.getId())
+        // tradeList[0].putString("goods_nbt", goods1.getNbtString())
+
+        // tradeList[1].putInt("count", 1)
+        // tradeList[1].putInt("cost", 3)
+        // tradeList[1].putString("goods", "stick")
+        
+        // let shopOrder1 = Item.of('kubejs:shop_order', '{TradeList:[{cost:10,count:10,goods:"stone"},{cost:3,count:1,goods:"stick"},{cost:500,count:12,goods:"diamond"},{cost:250,count:2,goods:"forestry:serum_ge",goods_nbt:\'{ForgeCaps:{Parent:{analyzed:0b,genome:{"forestry:butterfly_effect":{active:"forestry:butterfly_effect_none",inactive:"forestry:butterfly_effect_none"},"forestry:butterfly_lifespan":{active:"forestry:20id",inactive:"forestry:20id"},"forestry:butterfly_species":{active:"forestry:butterfly_blue_duke",inactive:"forestry:butterfly_blue_duke"},"forestry:cocoon":{active:"forestry:cocoon_default",inactive:"forestry:cocoon_default"},"forestry:fertility":{active:"forestry:3i",inactive:"forestry:3i"},"forestry:fireproof":{active:"forestry:falsed",inactive:"forestry:falsed"},"forestry:flower_type":{active:"forestry:flower_type_vanilla",inactive:"forestry:flower_type_vanilla"},"forestry:humidity_tolerance":{active:"forestry:tolerance_none",inactive:"forestry:tolerance_none"},"forestry:metabolism":{active:"forestry:2i",inactive:"forestry:2i"},"forestry:never_sleeps":{active:"forestry:falsed",inactive:"forestry:falsed"},"forestry:size":{active:"forestry:0.5f",inactive:"forestry:0.5f"},"forestry:speed":{active:"forestry:0.3fd",inactive:"forestry:0.3fd"},"forestry:temperature_tolerance":{active:"forestry:tolerance_both_1d",inactive:"forestry:tolerance_both_1d"},"forestry:tolerates_rain":{active:"forestry:falsed",inactive:"forestry:falsed"}},health:20,max_heath:20}}}\'}]}')
+        let shopOrder1 = Item.of('kubejs:shop_order', `{TradeList:[{cost:10,count:10,goods:"stone",goods_nbt:"{Unbreakable:1b}"},{cost:3,count:1,goods:"stick"}]}`)
+        let shopOrder2 = new ShopOrder().build()
+        let shopOrder3 = new ShopOrder().addTrade(goods1, 10).addTrade(goods2, 105).addTrade(Item.of("air"), 0).build()
+        let nestingOrder = Item.of('kubejs:nesting_order', '{DoorNum:0}')
+        player.give(shopOrder1.withName('交易清单§6 1'))
+        player.give(shopOrder2.withName('交易清单§6 2'))
+        player.give(shopOrder3.withName('交易清单§6 3'))
+        player.give(nestingOrder)
     }
 
     // player.tell(global.BoxCenterMap.get(closestPos).centerY)

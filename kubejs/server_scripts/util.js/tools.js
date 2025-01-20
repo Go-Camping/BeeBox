@@ -12,7 +12,7 @@ function findCurrentBoxCenter(level, startPos, range, verticalRange) {
     for(let i = 0; i < verticalRange; i++){
         let vBlock = level.getBlock(startPos.x, startPos.y - i, startPos.z)
         centerPosList = FindBlocksAroundBlock(vBlock, range, 1, (block) => {
-            return (block.id == "kubejs:beebox_center")? true : false
+            return (block.id == "kubejs:beebox_center")
         })
         if(centerPosList.length > 0){
             level.server.tell(`§5find`)
@@ -29,17 +29,5 @@ function findCurrentBoxCenter(level, startPos, range, verticalRange) {
         }
     })
     return centerPos
-}
-
-/**
- * 转换坐标为BeeBoxBuilder的id
- * @param {number} x 
- * @param {number} y 
- * @param {number} z 
- * @returns String
- */
-function convertToBeeBoxBuilderId(x, y, z) {
-    let pos = new BlockPos(x, y, z)
-    return `${pos.x}_${pos.y}_${pos.z}`
 }
 

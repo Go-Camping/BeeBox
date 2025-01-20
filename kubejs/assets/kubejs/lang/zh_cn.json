@@ -1,3 +1,6 @@
 {
-    "block.kubejs.beehive": "蜂箱墙壁"
+    "block.kubejs.beehive": "蜂箱墙壁",
+    "block.kubejs.beebox_center": "蜂箱中心",
+    "item.kubejs.shop_order": "交易清单",
+    "item.kubejs.nesting_order": "筑巢令"
 }

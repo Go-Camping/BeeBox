@@ -1,40 +1,46 @@
 ItemEvents.rightClicked("kubejs:nesting_order", event=>{
+    // 右键选择建巢方向
+    // shift右键使用
     let player = event.player
     let level = player.level
     let item = event.item
-
-    player.tell('§edebug start')
-    let playerPos = new BlockPos(player.x, player.y - 2, player.z)
-    let boxLength = 12
-    let boxHigh = 8
-    let CurrentBoxPos = findCurrentBoxCenter(level, playerPos, boxLength, boxHigh)
-    if(CurrentBoxPos == null){
-        player.tell(`no find box center`)
+    if(!item.getNbt() || item.getNbt().getInt("DoorNum") == null){
+        player.tell('§5无效物品')
         return
     }
-    player.tell(`find box center at [${CurrentBoxPos.x}, ${CurrentBoxPos.y}, ${CurrentBoxPos.z}]`)
-    let doorNum = 0
-    if(!item.getNbt() || item.getNbt().getInt("DoorNum") == null){
-        player.tell('§5no DoorNum in item')
-        player.tell('§edebug end')
+    let doorNum = item.getNbt().getInt("DoorNum")
+    if(!player.isShiftKeyDown()){
+        doorNum = (doorNum + 1) % 6
+        item.getNbt().putInt("DoorNum", doorNum)
+        return
+    }
+    player.tell('§edebug start')
+    let playerPos = new BlockPos(player.x, player.y - 2, player.z)
+    let boxLength = BeeBoxDefautlSize.boxLength
+    let boxHigh = BeeBoxDefautlSize.boxHigh
+    let CurrentBoxPos = findCurrentBoxCenter(level, playerPos, boxLength - 1, boxHigh)
+    if(CurrentBoxPos == null){
+        player.tell(`§5没有找到当前箱子中心`)
         return
     }
     doorNum = item.getNbt().getInt("DoorNum") 
-    let findBox = new BeeBoxBuilder(level, boxLength, CurrentBoxPos)
-    let newBox = new BeeBoxBuilder(level, boxLength, CurrentBoxPos).extend(doorNum)
+    let findBox = new BeeBoxBuilder(level, CurrentBoxPos)
+    let newBox = new BeeBoxBuilder(level, CurrentBoxPos).extend(doorNum)
     if(level.getBlock(newBox.centerX, newBox.centerY, newBox.centerZ).id == "kubejs:beebox_center"){
-        player.tell(`§5box already exist`)
-        player.tell('§edebug end')
+        player.tell(`§5那里已经有一个蜂箱了`)
         return
     }
     else{
         findBox.door(doorNum)
-        newBox.buildBox()
-        newBox.door(doorNum + 3)
-        player.tell(`§5build finish`)
+        newBox.buildBox().door(doorNum + 3)
         let damageValue = item.getDamageValue()
-        item.setDamageValue(damageValue + 1)
+        if(damageValue > item.getMaxDamage()){
+            item.setCount(0)
+        }
+        else {
+            item.setDamageValue(damageValue + 1)
+        }
+        player.addItemCooldown("kubejs:nesting_order", 20 * 5)
+        player.tell(`§5建筑完成`)
     }
-    player.tell('§edebug end')
-    // give @a kubejs:nesting_order{DoorNum:0}
 })
