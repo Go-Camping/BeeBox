@@ -15,7 +15,6 @@ function findCurrentBoxCenter(level, startPos, range, verticalRange) {
             return (block.id == "kubejs:beebox_center")
         })
         if(centerPosList.length > 0){
-            level.server.tell(`§5find`)
             break
         }
     }

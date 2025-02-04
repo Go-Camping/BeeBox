@@ -12,9 +12,10 @@ ItemEvents.rightClicked("kubejs:nesting_order", event=>{
     if(!player.isShiftKeyDown()){
         doorNum = (doorNum + 1) % 6
         item.getNbt().putInt("DoorNum", doorNum)
+        level.server.runCommandSilent(`title ${player.name.getString()} actionbar {"text":"${Text.translatable("kubejs.status_msg.door_direction." + doorNum).getString()}","color":"yellow"}`)
         return
     }
-    player.tell('§edebug start')
+    // player.tell('§edebug start')
     let playerPos = new BlockPos(player.x, player.y - 2, player.z)
     let boxLength = BeeBoxDefautlSize.boxLength
     let boxHigh = BeeBoxDefautlSize.boxHigh
