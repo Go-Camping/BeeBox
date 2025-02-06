@@ -23,8 +23,9 @@ function BeeBoxBuilder (level, centerPos){
     ]
     this.floorBlock = "kubejs:beehive"
     this.biome = "minecraft:cold_ocean"
+    this.structure = []
     this.sideUnits = []
-    this.initSideUnits()
+    this.updateSideUnits()
 }
 BeeBoxBuilder.prototype = {
     /**
@@ -40,21 +41,21 @@ BeeBoxBuilder.prototype = {
         this.buildFlat(this.wallHeight, this.floatBlock, "replace")
         this.buildFlat(0, this.floorBlock, "replace")
         this.fillBiome(this.biome)
-        // 生成蜂巢中心
-        this.level.getBlock(this.centerX, this.centerY, this.centerZ).set("kubejs:beebox_center")
+        this.buildStructure()
+        this.buildCenter()
         return this
     },
     /**
      * 根据wall_number对应的墙和当前box中心xyz，生成一个新的BeeBoxBuilder对象
-     * @param {number} wall_number 从正北（Z轴负方向）开始，顺时针计算，每个边代表一个方向，依次为从0至5
+     * @param {number} wall_number 从正北（Z轴负方向）开始，顺时针计算，每个边代表一个方向，依次为从0至5, 若为负数，则代表上或下，-1代表上，-2代表下
      * @returns 新的BeeBoxBuilder对象
      */
     extend : function(wall_number){
-        if(wall_number < 0) return this
+        wall_number = wall_number > 0 ? wall_number % 6 : wall_number
         let newX = this.centerX
         let newY = this.centerY
         let newZ = this.centerZ
-        switch(wall_number % 6){
+        switch(wall_number){
             case 0 :
                 newZ = this.centerZ - this.halfSideLength * 4
                 break
@@ -77,8 +78,14 @@ BeeBoxBuilder.prototype = {
                 newZ = this.centerZ - this.halfSideLength * 2
                 newX = this.centerX - (this.halfSideLength + 1) * 3 
                 break
+            case -1 :
+                newY = this.centerY + this.wallHeight + 1
+                break
+            case -2 :               
+                newY = this.centerY - this.wallHeight - 1
+                break
             default :
-                newZ = this.centerZ - this.halfSideLength * 4
+                // newZ = this.centerZ - this.halfSideLength * 4
                 break
         }
         return this.clone().setCenterPos(new BlockPos(newX, newY, newZ))
@@ -86,6 +93,12 @@ BeeBoxBuilder.prototype = {
     setWallBlock : function(wall_number, block){
         if(wall_number < 0) return this
         this.wallBlock[wall_number % 6] = block
+        return this
+    },
+    setAllWallBlock : function(block){
+        for(let i = 0; i < 6; i++){
+            this.setWallBlock(i, block)
+        }
         return this
     },
     setFloorBlock : function(block){
@@ -106,7 +119,7 @@ BeeBoxBuilder.prototype = {
         if(high < 3){high = 3}
         this.halfSideLength = Math.round(sideLength / 2)
         this.wallHeight = high - 1
-        return this.initSideUnits()
+        return this.updateSideUnits()
     },
     /**
      * 设置中心位置
@@ -117,10 +130,20 @@ BeeBoxBuilder.prototype = {
         this.centerX = pos.x
         this.centerY = pos.y
         this.centerZ = pos.z
-        return this.initSideUnits()
+        return this.updateSideUnits()
     },
     setBiome : function(biome){
         this.biome = biome
+        return this
+    },
+    /**
+     * 向蜂箱中添加结构
+     * @param {string} id 结构id
+     * @param {BlockPos} offsetPos 相对坐标，相对于蜂箱中心的偏移量
+     * @returns 
+     */
+    addStructure : function(id, offsetPos){
+        this.structure.push({"id": id, "offsetPos": offsetPos})
         return this
     },
     /**
@@ -128,13 +151,12 @@ BeeBoxBuilder.prototype = {
      * @param {number} wall_number 从正北（Z轴负方向）开始，顺时针计算，每个边代表一个方向，依次为从0至5
      * @returns 
      */
-    door : function(wall_number){
+    buildDoor : function(wall_number){
         if(wall_number < 0) return this
         let blockColumn = this.sideUnits[wall_number % 6]
         for(let i = 1; i < this.halfSideLength - 1; i++){
             let unit = blockColumn[i]
-            unit.block = "air"
-            blockColumnUnit(this.level, unit.block, unit.x, unit.y + 1, unit.z, this.wallHeight - 2)
+            blockColumnUnit(this.level, "air", unit.x, unit.y + 1, unit.z, this.wallHeight - 2)
         }
         return this
     },
@@ -147,20 +169,20 @@ BeeBoxBuilder.prototype = {
         if(wall_number < 0) return this
         for(let j = 0; j < this.halfSideLength; j++){
             let unit = this.sideUnits[wall_number % 6][j]
-            blockColumnUnit(this.level, unit.block, unit.x, unit.y, unit.z, this.wallHeight)
+            blockColumnUnit(this.level, this.wallBlock[wall_number % 6], unit.x, unit.y, unit.z, this.wallHeight)
         }
         return this
     },
     /**
      * 建造一层六边形平面
-     * @param {number} high 距离BOX底部的高度
+     * @param {number} offsetY 距离BOX底部的Y偏移量
      * @param {*} block 
      * @param {String} type "keep" | "replace"
      */
-    buildFlat : function(high, block, type){
+    buildFlat : function(offsetY, block, type){
         let currentStartPos
         let currentEndPos
-        let flatY = this.centerY + Math.min(high, this.wallHeight)
+        let flatY = this.centerY + Math.min(offsetY, this.wallHeight)
         for(let i = 0; i < this.halfSideLength; i++){
             if(i > 0){
                 currentStartPos = this.sideUnits[1][i]  
@@ -173,6 +195,7 @@ BeeBoxBuilder.prototype = {
                 this.level.server.runCommandSilent(`fill ${currentStartPos.x - 1} ${flatY} ${currentStartPos.z} ${currentEndPos.x + 2} ${flatY} ${currentStartPos.z + 1} ${block} ${type}`)
             }
        }
+       this.buildCenter()
        return this
     },
     /**
@@ -193,6 +216,27 @@ BeeBoxBuilder.prototype = {
        }
         return this
     },
+    /**
+     * 在相对中心位置建造一个模板结构
+     * @param {string} id  template id
+     * @param {BlockPos} offsetPos  相对坐标，相对于蜂箱中心的偏移量
+     * @returns 
+     */
+    buildStructure : function(){
+        this.structure.forEach(template => {
+            let id = template.id
+            let offsetPos = template.offsetPos
+            this.level.server.runCommandSilent(`/place template ${id} ${this.centerX + offsetPos.x} ${this.centerY + offsetPos.y} ${this.centerZ + offsetPos.z}`)
+        })
+        return this
+    },
+    buildCenter : function(){
+        this.level.getBlock(this.centerX, this.centerY, this.centerZ).set("kubejs:beebox_center")
+        this.level.getBlock(this.centerX + 1, this.centerY, this.centerZ).set(this.floorBlock)
+        this.level.getBlock(this.centerX, this.centerY, this.centerZ + 1).set(this.floorBlock)
+        this.level.getBlock(this.centerX + 1, this.centerY, this.centerZ + 1).set(this.floorBlock)
+        return this
+    },
     clone : function(){
         let newBox = new BeeBoxBuilder(this.level, new BlockPos(this.centerX, this.centerY, this.centerZ))
            .setWallBlock(0, this.wallBlock[0])
@@ -209,23 +253,23 @@ BeeBoxBuilder.prototype = {
         return newBox
     },
     /**
-     * 标记用于组成六边形蜂巢的柱子单元坐标; 初始化时调用
+     * 标记用于组成六边形蜂巢的柱子单元坐标， 更新sideUnits数组，用于buildWall
      * 
      * sideUnits[墙编号0 ~ 5][柱子编号0 ~ halfSideLength-1] = {x: number, y: number, z: number, block: string}
      */
-    initSideUnits : function(){
+    updateSideUnits : function(){
         let startPos = new BlockPos(this.centerX - this.halfSideLength + 1, this.centerY, this.centerZ - this.halfSideLength * 2 + 1)
         let halfLength = this.halfSideLength
         for(let i = 0; i < 6; i++){
             this.sideUnits[i] = []
         }
         for(let j = 0; j < halfLength; j++){
-            this.sideUnits[0][j] = {x: startPos.x + j * 2, y: startPos.y, z: startPos.z, block: this.wallBlock[0]}
-            this.sideUnits[1][j] = {x: startPos.x + halfLength * 2 + j, y: startPos.y, z: startPos.z + j * 2, block: this.wallBlock[1]}
-            this.sideUnits[2][j] = {x: startPos.x + halfLength * 3 - 1 - j, y: startPos.y, z: startPos.z + halfLength * 2 + j * 2, block: this.wallBlock[2]}
-            this.sideUnits[3][j] = {x: startPos.x + (halfLength - 1) * 2 - j * 2, y: startPos.y, z: startPos.z + halfLength * 4 - 2, block: this.wallBlock[3]}
-            this.sideUnits[4][j] = {x: startPos.x - 2 - j, y: startPos.y, z: startPos.z + halfLength * 4 - 2 - j * 2, block: this.wallBlock[4]}
-            this.sideUnits[5][j] = {x: startPos.x - halfLength - 1 + j, y: startPos.y, z: startPos.z + halfLength * 2 - j * 2 - 2, block: this.wallBlock[5]}
+            this.sideUnits[0][j] = {x: startPos.x + j * 2, y: startPos.y, z: startPos.z}
+            this.sideUnits[1][j] = {x: startPos.x + halfLength * 2 + j, y: startPos.y, z: startPos.z + j * 2}
+            this.sideUnits[2][j] = {x: startPos.x + halfLength * 3 - 1 - j, y: startPos.y, z: startPos.z + halfLength * 2 + j * 2}
+            this.sideUnits[3][j] = {x: startPos.x + (halfLength - 1) * 2 - j * 2, y: startPos.y, z: startPos.z + halfLength * 4 - 2}
+            this.sideUnits[4][j] = {x: startPos.x - 2 - j, y: startPos.y, z: startPos.z + halfLength * 4 - 2 - j * 2}
+            this.sideUnits[5][j] = {x: startPos.x - halfLength - 1 + j, y: startPos.y, z: startPos.z + halfLength * 2 - j * 2 - 2}
         }
         return this
     }

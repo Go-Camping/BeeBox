@@ -1,5 +1,5 @@
 
 const BeeBoxDefautlSize = {
-    boxLength : 12,
-    boxHigh : 10,
+    boxLength : 14,
+    boxHigh : 14,
 }

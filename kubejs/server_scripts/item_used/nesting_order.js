@@ -21,7 +21,7 @@ ItemEvents.rightClicked("kubejs:nesting_order", event=>{
     let boxHigh = BeeBoxDefautlSize.boxHigh
     let CurrentBoxPos = findCurrentBoxCenter(level, playerPos, boxLength - 1, boxHigh)
     if(CurrentBoxPos == null){
-        player.tell(`§5没有找到当前箱子中心`)
+        player.tell(`§5附近没有找到箱子中心`)
         return
     }
     doorNum = item.getNbt().getInt("DoorNum") 
@@ -32,8 +32,8 @@ ItemEvents.rightClicked("kubejs:nesting_order", event=>{
         return
     }
     else{
-        findBox.door(doorNum)
-        newBox.buildBox().door(doorNum + 3)
+        findBox.buildDoor(doorNum)
+        newBox.buildBox().buildDoor(doorNum + 3)
         let damageValue = item.getDamageValue()
         if(damageValue > item.getMaxDamage()){
             item.setCount(0)
