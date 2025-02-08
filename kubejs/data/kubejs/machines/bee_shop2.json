@@ -1,0 +1,192 @@
+{
+    "name": {
+      "text": "Bee Shop1"
+    },
+    "appearance": {
+      "running": {
+        "custommachinery:block": "forestry:alveary_fan",
+        "custommachinery:item": "forestry:alveary_fan"
+      },
+      "errored": {
+        "custommachinery:block": "forestry:alveary_fan",
+        "custommachinery:item": "forestry:alveary_fan"
+      },
+      "paused": {
+        "custommachinery:block": "forestry:alveary_fan",
+        "custommachinery:item": "forestry:alveary_fan"
+      },
+      "custommachinery:block": "minecraft:birch_wood",
+      "custommachinery:item": "minecraft:birch_wood",
+      "idle": {
+        "custommachinery:block": "forestry:alveary_fan",
+        "custommachinery:item": "forestry:alveary_fan"
+      }
+    },
+    "components": [
+      {
+        "type": "custommachinery:item",
+        "id": "input_slot_1"
+      },
+      {
+        "type": "custommachinery:item",
+        "id": "input_slot_2"
+      },
+      {
+        "type": "custommachinery:item",
+        "id": "output_slot_0",
+        "mode": "output"
+      },
+      {
+        "type": "custommachinery:item",
+        "id": "output_slot_1",
+        "mode": "output"
+      },
+      {
+        "type": "custommachinery:item",
+        "id": "output_slot_2",
+        "mode": "output"
+      },
+      {
+        "type": "custommachinery:item",
+        "id": "output_slot_3",
+        "mode": "output"
+      },
+      {
+        "type": "custommachinery:item",
+        "id": "output_slot_4",
+        "mode": "output"
+      },
+      {
+        "type": "custommachinery:item",
+        "id": "output_slot_5",
+        "mode": "output"
+      },
+      {
+        "type": "custommachinery:item",
+        "id": "output_slot_6",
+        "mode": "output"
+      },
+      {
+        "type": "custommachinery:item",
+        "id": "output_slot_7",
+        "mode": "output"
+      },
+      {
+        "type": "custommachinery:item",
+        "id": "output_slot_8",
+        "mode": "output"
+      },
+      {
+        "type": "custommachinery:item",
+        "id": "output_slot_9",
+        "mode": "output"
+      },
+      {
+        "type": "custommachinery:item",
+        "locked": true,
+        "id": "goods_slot_0",
+        "mode": "none",
+        "variant": "custommachinery:result"
+      },
+      {
+        "type": "custommachinery:item",
+        "locked": true,
+        "id": "goods_slot_1",
+        "variant": "custommachinery:result"
+      },
+      {
+        "type": "custommachinery:item",
+        "locked": true,
+        "id": "goods_slot_2",
+        "variant": "custommachinery:result"
+      },
+      {
+        "type": "custommachinery:item",
+        "locked": true,
+        "id": "goods_slot_3",
+        "variant": "custommachinery:result"
+      },
+      {
+        "type": "custommachinery:item",
+        "locked": true,
+        "id": "goods_slot_4",
+        "variant": "custommachinery:result"
+      },
+      {
+        "type": "custommachinery:item",
+        "locked": true,
+        "id": "goods_slot_5",
+        "variant": "custommachinery:result"
+      },
+      {
+        "type": "custommachinery:item",
+        "locked": true,
+        "id": "goods_slot_6",
+        "variant": "custommachinery:result"
+      },
+      {
+        "type": "custommachinery:item",
+        "locked": true,
+        "id": "goods_slot_7",
+        "variant": "custommachinery:result"
+      },
+      {
+        "type": "custommachinery:item",
+        "locked": true,
+        "id": "goods_slot_8",
+        "variant": "custommachinery:result"
+      },
+      {
+        "type": "custommachinery:item",
+        "locked": true,
+        "id": "goods_slot_9",
+        "variant": "custommachinery:result"
+      }
+    ],
+    "gui": [
+      {
+        "type": "custommachinery:player_inventory",
+        "x": 49,
+        "y": 111
+      },
+      {
+        "type": "custommachinery:slot",
+        "id": "input_slot_1",
+        "x": 120,
+        "y": 84,
+        "ghost": {
+          "items": [
+            "minecraft:air"
+          ],
+          "color": {}
+        }
+      },
+      {
+        "type": "custommachinery:slot",
+        "id": "input_slot_2",
+        "x": 222,
+        "y": 128,
+        "ghost": {
+          "items": [
+            "minecraft:air"
+          ],
+          "color": {}
+        }
+      },
+      {
+        "type": "custommachinery:button",
+        "text": {
+          "text": ""
+        },
+        "item": {
+          "id": "minecraft:stone_axe",
+          "tag": "{Damage:0}"
+        },
+        "hold_time": 5,
+        "id": "debug",
+        "priority": 10,
+        "x": 221,
+        "y": 104
+      }
+    ]
+  }

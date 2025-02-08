@@ -85,52 +85,62 @@
       "type": "custommachinery:item",
       "locked": true,
       "id": "goods_slot_0",
-      "mode": "none"
+      "mode": "none",
+      "variant": "custommachinery:result"
     },
     {
       "type": "custommachinery:item",
       "locked": true,
-      "id": "goods_slot_1"
+      "id": "goods_slot_1",
+      "variant": "custommachinery:result"
     },
     {
       "type": "custommachinery:item",
       "locked": true,
-      "id": "goods_slot_2"
+      "id": "goods_slot_2",
+      "variant": "custommachinery:result"
     },
     {
       "type": "custommachinery:item",
       "locked": true,
-      "id": "goods_slot_3"
+      "id": "goods_slot_3",
+      "variant": "custommachinery:result"
     },
     {
       "type": "custommachinery:item",
       "locked": true,
-      "id": "goods_slot_4"
+      "id": "goods_slot_4",
+      "variant": "custommachinery:result"
     },
     {
       "type": "custommachinery:item",
       "locked": true,
-      "id": "goods_slot_5"
+      "id": "goods_slot_5",
+      "variant": "custommachinery:result"
     },
     {
       "type": "custommachinery:item",
       "locked": true,
-      "id": "goods_slot_6"
+      "id": "goods_slot_6",
+      "variant": "custommachinery:result"
     },
     {
       "type": "custommachinery:item",
       "locked": true,
-      "id": "goods_slot_7"
+      "id": "goods_slot_7",
+      "variant": "custommachinery:result"
     },
     {
       "type": "custommachinery:item",
       "locked": true,
-      "id": "goods_slot_8"
+      "id": "goods_slot_8",
+      "variant": "custommachinery:result"
     },
     {
       "type": "custommachinery:item",
       "locked": true,
-      "id": "goods_slot_9"
+      "id": "goods_slot_9",
+      "variant": "custommachinery:result"
     }
   ],
   "gui": [

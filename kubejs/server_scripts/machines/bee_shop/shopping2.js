@@ -1,5 +1,5 @@
 ServerEvents.recipes(event => {
-    event.recipes.custommachinery.custom_machine("kubejs:bee_shop", 20 * 10).resetOnError()
+    event.recipes.custommachinery.custom_machine("kubejs:bee_shop2", 20 * 10).resetOnError()
         .requireFunctionEachTick(ctx => {
             let machine = ctx.machine
             let itemInput = machine.getItemStored("input_slot_1")
@@ -14,9 +14,6 @@ ServerEvents.recipes(event => {
             // 检测菜单
             if (itemInput.id == "kubejs:shop_order") {
                 let orderNbt = itemInput.getNbt()
-                if (!ctx.block.entity.persistentData.contains('order')) ctx.block.entity.persistentData.put('order', {})
-                if (ctx.block.entity.persistentData.get('order').equals(orderNbt)) return ctx.success()
-                ctx.block.entity.persistentData.put('order', orderNbt)
                 if(!orderNbt || !orderNbt.get("TradeList")){
                     return ctx.error("no trade list")
                 }
@@ -52,7 +49,6 @@ ServerEvents.recipes(event => {
             // todo:
             for(let i = 0; i < 10; i++){
                 machine.setItemStored("goods_slot_" + i, "minecraft:air")
-                ctx.block.entity.persistentData.put('order', {})
             }
             return ctx.error("no item")
         })

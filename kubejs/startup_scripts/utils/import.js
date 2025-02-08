@@ -1,0 +1,1 @@
+const $EffectData = Java.loadClass('forestry.core.genetics.EffectData')

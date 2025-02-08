@@ -19,6 +19,8 @@ StartupEvents.registry('block', event => {
 
     event.create('kubejs:bee_shop', "custommachinery")
         .machine("kubejs:bee_shop")
+    event.create('kubejs:bee_shop2', "custommachinery")
+    .machine("kubejs:bee_shop2")
         
     
 })
