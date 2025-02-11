@@ -7,19 +7,17 @@ ItemEvents.rightClicked("kubejs:debugger", event=>{
 
     if(player.isShiftKeyDown()){
         let bbb = new BeeBoxBuilder(level, playerPos)//.setBoxSize(16, 10)
-        // bbb.buildBox().door(0).door(1).door(2)
-        // bbb.extend(0).buildBox().door(0 + 3)
-        // bbb.extend(1).buildBox().door(1 + 3)
-        // bbb.extend(2).buildBox().door(2 + 3)
-
-        bbb.setAllWallBlock("kubejs:beebox_float").buildBox().buildDoor(0).buildDoor(1)
-        bbb.extend(0).addStructure("kubejs:test_2", new BlockPos(-1, 1, -1)).buildBox().buildDoor(0 + 3).buildFlat(BeeBoxDefautlSize.boxHigh, "air", "replace")
-        bbb.extend(0).extend(-1).addStructure("kubejs:test_2", new BlockPos(-1, 1, -1)).buildBox().buildFlat(0, "air", "replace")
-        bbb.extend(1).buildBox().buildDoor(1 + 3).buildFlat(0, "air", "replace")
-        bbb.extend(1).extend(-2)
-        .addStructure("kubejs:test_1", new BlockPos(-1, 1, -1))
-        .buildBox()
-        .buildFlat(BeeBoxDefautlSize.boxHigh, "air", "replace")
+        // bbb.setAllWallBlock("air").addStructure("kubejs:biome/forest_1", BeeBoxStructureOffset["kubejs:biome/forest_1"]).buildBox()
+        // bbb.setAllWallBlock("air").addStructure("kubejs:biome/swamp_1", BeeBoxStructureOffset["kubejs:biome/swamp_1"]).setBiome("minecraft:swamp").buildBox()
+        bbb.template(BeeBoxTemplate["swamp_box_1"]).buildBox()
+        // bbb.setAllWallBlock("kubejs:beebox_top").buildBox().buildDoor(0).buildDoor(1)
+        // bbb.extend(0).addStructure("kubejs:test_2", new BlockPos(-1, 1, -1)).buildBox().buildDoor(0 + 3).buildFlat(BeeBoxDefautlSize.boxHigh, "air", "replace")
+        // bbb.extend(0).extend(-1).addStructure("kubejs:test_2", new BlockPos(-1, 1, -1)).buildBox().buildFlat(0, "air", "replace")
+        // bbb.extend(1).buildBox().buildDoor(1 + 3).buildFlat(0, "air", "replace")
+        // bbb.extend(1).extend(-2)
+        // .addStructure("kubejs:test_1", new BlockPos(-1, 1, -1))
+        // .buildBox()
+        // .buildFlat(BeeBoxDefautlSize.boxHigh, "air", "replace")
 
         player.tell(`build box center at [${playerPos.x}, ${playerPos.y}, ${playerPos.z}]`)
     }

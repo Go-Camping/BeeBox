@@ -1,0 +1,20 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "081B6A27819C2D28"
+	group: "05D754500E3492CD"
+	id: "081B6A27819C2D28"
+	order_index: 0
+	quest_links: [ ]
+	quests: [{
+		id: "6522C1A13EE7E1B5"
+		tasks: [{
+			id: "41F6021E2B8C3A5B"
+			item: "minecraft:damaged_anvil"
+			type: "item"
+		}]
+		x: -2.5d
+		y: -1.0d
+	}]
+	title: "铁砧工艺"
+}

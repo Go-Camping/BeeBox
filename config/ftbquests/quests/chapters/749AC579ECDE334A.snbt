@@ -1,0 +1,20 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "749AC579ECDE334A"
+	group: "1E50C9E8EDCD00B9"
+	id: "749AC579ECDE334A"
+	order_index: 1
+	quest_links: [ ]
+	quests: [{
+		id: "21DFA784BEE4EEA6"
+		tasks: [{
+			id: "5542D504FB1C4207"
+			item: "minecraft:iron_ingot"
+			type: "item"
+		}]
+		x: 1.5d
+		y: 0.0d
+	}]
+	title: "铁"
+}

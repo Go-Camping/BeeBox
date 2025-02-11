@@ -44,5 +44,4 @@ shopRunningPage.prototype = {
     buildGui : function(){
         return this.gui
     }
-// Item.of('kubejs:shop_order', '{TradeList:[{cost:10,count:10,goods:"stone"},{cost:3,count:1,goods:"stick"},{cost:500,count:12,goods:"diamond"}]}')
 }

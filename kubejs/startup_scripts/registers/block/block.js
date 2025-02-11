@@ -9,7 +9,7 @@ StartupEvents.registry('block', event => {
         .noDrops()
         .unbreakable()
 
-    event.create('kubejs:beebox_float', "basic")
+    event.create('kubejs:beebox_top', "basic")
         .hardness(-1)
         .unbreakable()   
         .noDrops()
@@ -19,8 +19,9 @@ StartupEvents.registry('block', event => {
 
     event.create('kubejs:bee_shop', "custommachinery")
         .machine("kubejs:bee_shop")
+
     event.create('kubejs:bee_shop2', "custommachinery")
-    .machine("kubejs:bee_shop2")
+        .machine("kubejs:bee_shop2")
         
     
 })

@@ -17,8 +17,8 @@ ItemEvents.rightClicked("kubejs:nesting_order", event=>{
     }
     // player.tell('§edebug start')
     let playerPos = new BlockPos(player.x, player.y - 2, player.z)
-    let boxLength = BeeBoxDefautlSize.boxLength
-    let boxHigh = BeeBoxDefautlSize.boxHigh
+    let boxLength = BeeBoxDefaultSize.boxLength
+    let boxHigh = BeeBoxDefaultSize.boxHigh
     let CurrentBoxPos = findCurrentBoxCenter(level, playerPos, boxLength - 1, boxHigh)
     if(CurrentBoxPos == null){
         player.tell(`§5附近没有找到箱子中心`)

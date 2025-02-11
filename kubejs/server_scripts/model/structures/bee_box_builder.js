@@ -10,9 +10,9 @@ function BeeBoxBuilder (level, centerPos){
     this.centerX = centerPos.x
     this.centerY = centerPos.y
     this.centerZ = centerPos.z
-    this.halfSideLength = Math.round(BeeBoxDefautlSize.boxLength / 2)
-    this.wallHeight = BeeBoxDefautlSize.boxHigh - 1
-    this.floatBlock = 'minecraft:yellow_stained_glass'
+    this.halfSideLength = Math.round(BeeBoxDefaultSize.boxLength / 2)
+    this.wallHeight = BeeBoxDefaultSize.boxHigh - 1
+    this.topBlock = 'minecraft:yellow_stained_glass'
     this.wallBlock = [
         "minecraft:stone",
         "minecraft:blue_ice",
@@ -33,15 +33,15 @@ BeeBoxBuilder.prototype = {
      * @returns 
      */
     buildBox: function(){
-        // 生成墙
-        for(let i = 0; i < 6; i++){
-            this.buildWall(i)
-        }        
-        // 生成地面、封顶和生物群系
-        this.buildFlat(this.wallHeight, this.floatBlock, "replace")
+        // 生成地面、封顶、生物群系、结构
+        this.buildFlat(this.wallHeight, this.topBlock, "replace")
         this.buildFlat(0, this.floorBlock, "replace")
         this.fillBiome(this.biome)
         this.buildStructure()
+        // 生成墙
+        for(let i = 0; i < 6; i++){
+            this.buildWall(i)
+        }    
         this.buildCenter()
         return this
     },
@@ -105,8 +105,8 @@ BeeBoxBuilder.prototype = {
         this.floorBlock = block
         return this
     },
-    setFloatBlock : function(block){
-        this.floatBlock = block
+    setTopBlock : function(block){
+        this.topBlock = block
         return this
     },
     /**
@@ -237,6 +237,34 @@ BeeBoxBuilder.prototype = {
         this.level.getBlock(this.centerX + 1, this.centerY, this.centerZ + 1).set(this.floorBlock)
         return this
     },
+    /**
+     * 使用BeeBoxTemplate设置蜂巢参数
+     * @param {Object} template  BeeBoxTemplate[str]
+     */
+    template : function(template){
+        if(template.biome){
+            this.setBiome(template.biome ?? this.biome)
+        }
+        if(template.structures){
+            template.structures.forEach(structure => {
+                let id = structure.id
+                let offset = structure.offset ?? new BlockPos(0, 1, 0)
+                this.addStructure(id, offset)
+            })
+        }
+        if(template.walls){
+            for(let i = 0; i < template.walls.length; i++){
+                this.setWallBlock(i, template.walls[i])
+            }
+        }
+        if(template.floor){
+            this.setFloorBlock(template.floor)
+        }
+        if(template.top){
+            this.setTopBlock(template.top)
+        }
+        return this
+    },
     clone : function(){
         let newBox = new BeeBoxBuilder(this.level, new BlockPos(this.centerX, this.centerY, this.centerZ))
            .setWallBlock(0, this.wallBlock[0])
@@ -246,7 +274,7 @@ BeeBoxBuilder.prototype = {
            .setWallBlock(4, this.wallBlock[4])
            .setWallBlock(5, this.wallBlock[5])
            .setFloorBlock(this.floorBlock)
-           .setFloatBlock(this.floatBlock)
+           .setTopBlock(this.topBlock)
            .setBiome(this.biome)
            .setBoxSize(this.halfSideLength * 2, this.wallHeight + 1)
         newBox.sideUnits = this.sideUnits

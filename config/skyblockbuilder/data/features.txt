@@ -196,3 +196,9 @@ minecraft:warped_forest_vegetation_bonemeal
 minecraft:warped_fungus
 minecraft:warped_fungus_planted
 minecraft:weeping_vines
+mna:aum
+mna:cerublossom
+mna:desert_nova
+mna:overworld_vinteum_ore
+mna:tarma_root
+mna:wakebloom
