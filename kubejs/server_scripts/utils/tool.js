@@ -1,7 +1,7 @@
 /**
  * 使用指令为背包内物品注册价格
  * 方法有：
- * /beebox price_register 玩家名（注册该玩家背包内的物品） 基础单价（单价，背包内有多个物品会自动乘以数量） 价格浮动范围（单价在基础价格基础上正负波动） boolean（决定是否连同nbt一起注册） 文件名（会自动保存至kubejs/server_scripts/util/price_data文件夹下的该文件名下，并自动注册为常量）
+ * /beebox price_register 玩家名（注册该玩家背包内的物品） 基础单价（单价，背包内有多个物品会自动乘以数量） 价格浮动范围（单价在基础价格基础上正负波动） boolean（决定是否连同nbt一起注册） 文件名（会自动保存至kubejs/server_scripts/utils/price_data文件夹下的该文件名下，并自动注册为常量）
  * /beebox shop_order 玩家名 文件名（只能使用上面命令注册的文件名，直接得到一张对应的商店清单）
  * /beebox clear_data 文件名（删除注册过的数据，若为ALL，则删除所有）
  */
@@ -34,7 +34,7 @@ ServerEvents.commandRegistry(event=>{
             files.push(file_name)
             player.server.persistentData.put('files', files)
             let data = price_list.join(', ')
-            FilesJS.saveScript(`kubejs/server_scripts/util/price_data/${file_name}`, `const ${file_name} = [ ${data} ]`)
+            FilesJS.saveScript(`kubejs/server_scripts/utils/price_data/${file_name}`, `const ${file_name} = [ ${data} ]`)
             player.tell('背包物品价格注册完毕！')
             player.level.runCommand('/kubejs reload server_scripts')
             return 1
@@ -68,13 +68,13 @@ ServerEvents.commandRegistry(event=>{
             ctx.source.server.persistentData.remove(file_name)
             files = files.filter(file => {return file != file_name})
             ctx.source.server.persistentData.put('files', files)
-            FilesJS.delete(`kubejs/server_scripts/util/price_data/${file_name}.js`)
+            FilesJS.delete(`kubejs/server_scripts/utils/price_data/${file_name}.js`)
             return 1
         }
         else {
             files.forEach(file =>{
                 file_name = JSON.parse(file)
-                FilesJS.delete(`kubejs/server_scripts/util/price_data/${file_name}.js`)
+                FilesJS.delete(`kubejs/server_scripts/utils/price_data/${file_name}.js`)
             })
         }
         ctx.source.server.persistentData.put('files', [])
