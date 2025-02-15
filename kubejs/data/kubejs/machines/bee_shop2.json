@@ -1,192 +1,235 @@
 {
-    "name": {
-      "text": "Bee Shop2"
+  "name": {
+    "text": "Bee Shop2"
+  },
+  "appearance": {
+    "running": {
+      "custommachinery:block": "forestry:alveary_fan",
+      "custommachinery:item": "forestry:alveary_fan"
     },
-    "appearance": {
-      "running": {
-        "custommachinery:block": "forestry:alveary_fan",
-        "custommachinery:item": "forestry:alveary_fan"
+    "errored": {
+      "custommachinery:block": "forestry:alveary_fan",
+      "custommachinery:item": "forestry:alveary_fan"
+    },
+    "paused": {
+      "custommachinery:block": "forestry:alveary_fan",
+      "custommachinery:item": "forestry:alveary_fan"
+    },
+    "custommachinery:block": "minecraft:birch_wood",
+    "custommachinery:item": "minecraft:birch_wood",
+    "idle": {
+      "custommachinery:block": "forestry:alveary_fan",
+      "custommachinery:item": "forestry:alveary_fan"
+    }
+  },
+  "components": [
+    {
+      "type": "custommachinery:item",
+      "id": "money_slot_1",
+      "locked": true,
+      "variant": "custommachinery:result"
+    },
+    {
+      "type": "custommachinery:item",
+      "id": "money_slot_2",
+      "locked": true,
+      "variant": "custommachinery:result"
+    },
+    {
+      "type": "custommachinery:item",
+      "id": "money_slot_3",
+      "locked": true,
+      "variant": "custommachinery:result"
+    },
+    {
+      "type": "custommachinery:item",
+      "id": "input_slot_1"
+    },
+    {
+      "type": "custommachinery:item",
+      "id": "output_slot_0",
+      "mode": "output"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "id": "goods_slot_1",
+      "mode": "none",
+      "variant": "custommachinery:result"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "id": "goods_slot_2",
+      "mode": "none",
+      "variant": "custommachinery:result"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "id": "goods_slot_3",
+      "mode": "none",
+      "variant": "custommachinery:result"
+    }
+  ],
+  "gui": [
+    {
+      "type": "custommachinery:button",
+      "text": {
+        "text": ""
       },
-      "errored": {
-        "custommachinery:block": "forestry:alveary_fan",
-        "custommachinery:item": "forestry:alveary_fan"
+      "item": {
+        "id": "minecraft:stone_axe",
+        "tag": "{Damage:0}"
       },
-      "paused": {
-        "custommachinery:block": "forestry:alveary_fan",
-        "custommachinery:item": "forestry:alveary_fan"
-      },
-      "custommachinery:block": "minecraft:birch_wood",
-      "custommachinery:item": "minecraft:birch_wood",
-      "idle": {
-        "custommachinery:block": "forestry:alveary_fan",
-        "custommachinery:item": "forestry:alveary_fan"
+      "hold_time": 20,
+      "id": "reflash",
+      "priority": 10,
+      "x": 221,
+      "y": 104
+    },
+    {
+      "type": "custommachinery:player_inventory",
+      "x": 49,
+      "y": 111
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "money_slot_2",
+      "x": 73,
+      "y": 43,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
       }
     },
-    "components": [
-      {
-        "type": "custommachinery:item",
-        "id": "input_slot_1"
-      },
-      {
-        "type": "custommachinery:item",
-        "id": "input_slot_2"
-      },
-      {
-        "type": "custommachinery:item",
-        "id": "output_slot_0",
-        "mode": "output"
-      },
-      {
-        "type": "custommachinery:item",
-        "id": "output_slot_1",
-        "mode": "output"
-      },
-      {
-        "type": "custommachinery:item",
-        "id": "output_slot_2",
-        "mode": "output"
-      },
-      {
-        "type": "custommachinery:item",
-        "id": "output_slot_3",
-        "mode": "output"
-      },
-      {
-        "type": "custommachinery:item",
-        "id": "output_slot_4",
-        "mode": "output"
-      },
-      {
-        "type": "custommachinery:item",
-        "id": "output_slot_5",
-        "mode": "output"
-      },
-      {
-        "type": "custommachinery:item",
-        "id": "output_slot_6",
-        "mode": "output"
-      },
-      {
-        "type": "custommachinery:item",
-        "id": "output_slot_7",
-        "mode": "output"
-      },
-      {
-        "type": "custommachinery:item",
-        "id": "output_slot_8",
-        "mode": "output"
-      },
-      {
-        "type": "custommachinery:item",
-        "id": "output_slot_9",
-        "mode": "output"
-      },
-      {
-        "type": "custommachinery:item",
-        "locked": true,
-        "id": "goods_slot_0",
-        "mode": "none",
-        "variant": "custommachinery:result"
-      },
-      {
-        "type": "custommachinery:item",
-        "locked": true,
-        "id": "goods_slot_1",
-        "variant": "custommachinery:result"
-      },
-      {
-        "type": "custommachinery:item",
-        "locked": true,
-        "id": "goods_slot_2",
-        "variant": "custommachinery:result"
-      },
-      {
-        "type": "custommachinery:item",
-        "locked": true,
-        "id": "goods_slot_3",
-        "variant": "custommachinery:result"
-      },
-      {
-        "type": "custommachinery:item",
-        "locked": true,
-        "id": "goods_slot_4",
-        "variant": "custommachinery:result"
-      },
-      {
-        "type": "custommachinery:item",
-        "locked": true,
-        "id": "goods_slot_5",
-        "variant": "custommachinery:result"
-      },
-      {
-        "type": "custommachinery:item",
-        "locked": true,
-        "id": "goods_slot_6",
-        "variant": "custommachinery:result"
-      },
-      {
-        "type": "custommachinery:item",
-        "locked": true,
-        "id": "goods_slot_7",
-        "variant": "custommachinery:result"
-      },
-      {
-        "type": "custommachinery:item",
-        "locked": true,
-        "id": "goods_slot_8",
-        "variant": "custommachinery:result"
-      },
-      {
-        "type": "custommachinery:item",
-        "locked": true,
-        "id": "goods_slot_9",
-        "variant": "custommachinery:result"
+    {
+      "type": "custommachinery:slot",
+      "id": "money_slot_1",
+      "x": 73,
+      "y": 20,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
       }
-    ],
-    "gui": [
-      {
-        "type": "custommachinery:player_inventory",
-        "x": 49,
-        "y": 111
-      },
-      {
-        "type": "custommachinery:slot",
-        "id": "input_slot_1",
-        "x": 120,
-        "y": 84,
-        "ghost": {
-          "items": [
-            "minecraft:air"
-          ],
-          "color": {}
-        }
-      },
-      {
-        "type": "custommachinery:slot",
-        "id": "input_slot_2",
-        "x": 222,
-        "y": 128,
-        "ghost": {
-          "items": [
-            "minecraft:air"
-          ],
-          "color": {}
-        }
-      },
-      {
-        "type": "custommachinery:button",
-        "text": {
-          "text": ""
-        },
-        "item": {
-          "id": "minecraft:stone_axe",
-          "tag": "{Damage:0}"
-        },
-        "hold_time": 5,
-        "id": "debug",
-        "priority": 10,
-        "x": 221,
-        "y": 104
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "money_slot_3",
+      "x": 73,
+      "y": 68,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
       }
-    ]
-  }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "input_slot_1",
+      "x": 222,
+      "y": 128,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "goods_slot_1",
+      "x": 112,
+      "y": 21,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "goods_slot_2",
+      "x": 113,
+      "y": 44,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "goods_slot_3",
+      "x": 113,
+      "y": 69,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "output_slot_0",
+      "x": 222,
+      "y": 149,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:button",
+      "text": {
+        "text": ""
+      },
+      "item": {
+        "id": "minecraft:air",
+        "count": 0
+      },
+      "hold_time": 20,
+      "id": "gd1",
+      "x": 146,
+      "y": 20
+    },
+    {
+      "type": "custommachinery:button",
+      "text": {
+        "text": ""
+      },
+      "item": {
+        "id": "minecraft:air",
+        "count": 0
+      },
+      "hold_time": 20,
+      "id": "gd2",
+      "x": 146,
+      "y": 44
+    },
+    {
+      "type": "custommachinery:button",
+      "text": {
+        "text": ""
+      },
+      "item": {
+        "id": "minecraft:air",
+        "count": 0
+      },
+      "hold_time": 20,
+      "id": "gd3",
+      "x": 146,
+      "y": 69
+    }
+  ]
+}

@@ -15,7 +15,8 @@ ServerEvents.recipes(event => {
             if (itemInput.id == "kubejs:shop_order") {
                 let orderNbt = itemInput.getNbt()
                 if (!ctx.block.entity.persistentData.contains('order')) ctx.block.entity.persistentData.put('order', {})
-                if (ctx.block.entity.persistentData.get('order').equals(orderNbt)) return ctx.success()
+                //TODO:尽量尝试把基于tick的方法修一下，改成基于按钮按下的方法
+                //if (ctx.block.entity.persistentData.get('order').equals(orderNbt)) return ctx.success()
                 ctx.block.entity.persistentData.put('order', orderNbt)
                 if(!orderNbt || !orderNbt.get("TradeList")){
                     return ctx.error("no trade list")
@@ -31,7 +32,7 @@ ServerEvents.recipes(event => {
                     let goods = trade.getString("goods")
                     let count = trade.getInt("count")
                     let cost = trade.getInt("cost")
-                    let goods_nbt = trade.getString("goods_nbt")
+                    let goods_nbt = trade.get("goods_nbt")
                     machine.setItemStored("goods_slot_" + i, Item.of(goods, `${goods_nbt}`).withCount(count))
                 }
 
