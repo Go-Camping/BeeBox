@@ -21,16 +21,17 @@ ShopOrder.prototype = {
         this.tradeList[this.tradeList.length - 1].putInt("count", itemStack.getCount())
         this.tradeList[this.tradeList.length - 1].putInt("cost", cost)
         this.tradeList[this.tradeList.length - 1].putString("goods", itemStack.getId())
-        this.tradeList[this.tradeList.length - 1].putString("goods_nbt", itemStack.getNbtString())
+        this.tradeList[this.tradeList.length - 1].put("goods_nbt", itemStack.hasNBT() ? itemStack.nbt : new $CompoundTag())  //尽量别把NBT当文本存储，可能出问题
         return this
     },
     getTrade : function(index) {
-        return {
-            "goods" : this.tradeList[index].getString("goods"),
-            "count" : this.tradeList[index].getInt("count"),
-            "cost" : this.tradeList[index].getInt("cost"),
-            "goods_nbt" : this.tradeList[index].getString("goods_nbt")
-        }
+        //建议这样定义tag，直接用中括号定义可能出问题
+        let trade = new $CompoundTag()
+        trade.putString('goods', this.tradeList[index].getString("goods"))
+        trade.putInt('count', this.tradeList[index].getInt("count"))
+        trade.putInt('cost', this.tradeList[index].getInt("cost"))
+        trade.put('goods_nbt', this.tradeList[index].contains("goods_nbt") ? this.tradeList[index].get("goods_nbt") : new $CompoundTag())
+        return trade
     },
     /**
      * 

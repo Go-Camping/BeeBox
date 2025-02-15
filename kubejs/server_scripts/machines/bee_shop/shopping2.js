@@ -1,110 +1,94 @@
 ServerEvents.recipes(event => {
-    event.recipes.custommachinery.custom_machine("kubejs:bee_shop2", 20 * 10).resetOnError()
-        .requireFunctionEachTick(ctx => {
-            let machine = ctx.machine
-            let pdata = ctx.tile.persistentData
-            let itemInput = machine.getItemStored("input_slot_1")
+    event.recipes.custommachinery.custom_machine("kubejs:bee_shop2", 1)
+    .requireFunctionToStart(ctx =>{
+        let data = ctx.block.entity.persistentData
+        if (data.contains('shop_data')) return ctx.error('done')
+        data.put('shop_data', bee_drone_ge_unit_price)
+        let machine = ctx.machine
+        for (var i = 0; i < 3; i++){
+            var index = Math.round(Math.random() * (bee_drone_ge_unit_price.length - 1))
+            var trade = new $CompoundTag().merge(bee_drone_ge_unit_price[index])
+            var goods = trade.getString('goods')
+            var goods_nbt = trade.get('goods_nbt')
+            var money = trade.getString('money')
+            var money_nbt = trade.get('money_nbt')
+            var randomNum = Math.round(Math.random() * 3) + 1
+            var count = trade.getInt('count') * randomNum
+            var cost = trade.getInt('cost') * randomNum
+            machine.setItemStored(`goods_slot_${i + 1}`, Item.of(goods, count).withNBT(goods_nbt))
+            machine.setItemStored(`money_slot_${i + 1}`, Item.of(money, cost).withNBT(money_nbt))
+        }
+        return ctx.success()
+    })
 
-            // Only for debug
-            let debugButtonState = machine.data.getBoolean("debug")
-            if(debugButtonState) { 
-                machine.getOwner().tell("§edebug: ") 
-                pdata.putInt("my_data", 777)
-                // machine.data.putInt("my_data", 666)
-                let my_data = pdata.getInt("my_data")
-                // machine.data.getInt("my_data")
-                machine.getOwner().tell(`§edebug: my_data=${my_data}`)
-                machine.data.putBoolean("debug", false)
-            }
+    event.recipes.custommachinery.custom_machine("kubejs:bee_shop2", 1)
+    .requireFunctionOnStart(ctx =>{
+        let data = ctx.block.entity.persistentData
+        if (!data.contains('shop_data')) return ctx.error()
+        /**@type {Internal.List<string>} */
+        let tradeData = data.get('shop_data')
+        let machine = ctx.machine
+        for (var i = 0; i < 3; i++){
+            var index = Math.round(Math.random() * (tradeData.length - 1))
+            var trade = new $CompoundTag().merge(tradeData[index])
+            var goods = trade.getString('goods')
+            var goods_nbt = trade.get('goods_nbt')
+            var money = trade.getString('money')
+            var money_nbt = trade.get('money_nbt')
+            var randomNum = Math.round(Math.random() * 3) + 1
+            var count = trade.getInt('count') * randomNum
+            var cost = trade.getInt('cost') * randomNum
+            machine.setItemStored(`goods_slot_${i + 1}`, Item.of(goods, count, goods_nbt))
+            machine.setItemStored(`money_slot_${i + 1}`, Item.of(money, cost, money_nbt))
+        }
+        return ctx.success()
+    })
+    .requireButtonPressed('reflash')
 
-            // 检测菜单
-            if (itemInput.id == "kubejs:shop_order") {
-                let orderNbt = itemInput.getNbt()
-                if(!orderNbt || !orderNbt.get("TradeList")){
-                    return ctx.error("no trade list")
-                }
-                let tradeList = orderNbt.get("TradeList")
+    event.recipes.custommachinery.custom_machine("kubejs:bee_shop2", 20)
+    .requireFunctionToStart(ctx =>{
+        let machine = ctx.machine
+        let pay = machine.getItemStored('input_slot_1')
+        let price = machine.getItemStored('money_slot_1')
+        if (pay.id == price.id && pay.count >= price.count){
 
-                // 售卖物品展示
-                for(let i = tradeList.length; i < 10; i++){
-                    machine.setItemStored("goods_slot_" + i, "minecraft:air")
-                }
-                for(let i = 0; i < tradeList.length; i++){
-                    let trade = tradeList[i]
-                    let goods = trade.getString("goods")
-                    let count = trade.getInt("count")
-                    let cost = trade.getInt("cost")
-                    let goods_nbt = trade.getString("goods_nbt")
-                    machine.setItemStored("goods_slot_" + i, Item.of(goods, `${goods_nbt}`).withCount(count))
-                }
-
-                // 购买按纽
-                for(let i = 0; i < tradeList.length; i++){
-                    let trade = tradeList[i]
-                    let buttonState = machine.data.getBoolean("goods_button_" + i)
-                    if(buttonState){
-                        let goods = machine.getItemStored("goods_slot_" + i)
-                        machine.addItemToSlot("output_slot_" + i, goods, false)
-                        machine.data.putBoolean("goods_button_" + i, false)
-                    }
-                }
-                return ctx.success()
-            }
-
-            // 没有菜单时商品栏清空
-            // todo:
-            for(let i = 0; i < 10; i++){
-                machine.setItemStored("goods_slot_" + i, "minecraft:air")
-            }
-            return ctx.error("no item")
-        })
-        .requireFunctionToStart(ctx => {
-            let machine = ctx.machine
-            let data = ctx.tile.persistentData
-            let itemInput = machine.getItemStored("input_slot_1")
-            if (itemInput.id == "kubejs:shop_order") {
-                let orderNbt = itemInput.getNbt()
-                if(!orderNbt || !orderNbt.get("TradeList")){
-                    return ctx.error("no trade list")
-                }
-                return ctx.success()
-            }
-            return ctx.error("no item")
-        })
-        .requireFunctionOnEnd(ctx => {
+            machine.setItemStored('output_slot_0', machine.getItemStored('goods_slot_1').copy())
+            machine.setItemStored('input_slot_1', Item.of(pay, pay.count - price.count))
             return ctx.success()
-        })
-        .gui(new shopRunningPage()
-            .addGui(new shopSlotGui("output_slot_0", 30, 30))
-            .addGui(new shopSlotGui("output_slot_1", 50, 30))
-            .addGui(new shopSlotGui("output_slot_2", 70, 30))
-            .addGui(new shopSlotGui("output_slot_3", 90, 30))
-            .addGui(new shopSlotGui("output_slot_4", 110, 30))
-            .addGui(new shopSlotGui("output_slot_5", 130, 30))
-            .addGui(new shopSlotGui("output_slot_6", 150, 30))
-            .addGui(new shopSlotGui("output_slot_7", 170, 30))
-            .addGui(new shopSlotGui("output_slot_8", 190, 30))
-            .addGui(new shopSlotGui("output_slot_9", 210, 30))
-            .addGui(new shopSlotGui("goods_slot_0", 30, 10))
-            .addGui(new shopSlotGui("goods_slot_1", 50, 10))
-            .addGui(new shopSlotGui("goods_slot_2", 70, 10))
-            .addGui(new shopSlotGui("goods_slot_3", 90, 10))
-            .addGui(new shopSlotGui("goods_slot_4", 110, 10))
-            .addGui(new shopSlotGui("goods_slot_5", 130, 10))
-            .addGui(new shopSlotGui("goods_slot_6", 150, 10))
-            .addGui(new shopSlotGui("goods_slot_7", 170, 10))
-            .addGui(new shopSlotGui("goods_slot_8", 190, 10))
-            .addGui(new shopSlotGui("goods_slot_9", 210, 10))
-            .addGui(new shopButtonGui("goods_button_0", 30 - 1, 10 - 1))
-            .addGui(new shopButtonGui("goods_button_1", 50 - 1, 10 - 1))
-            .addGui(new shopButtonGui("goods_button_2", 70 - 1, 10 - 1))
-            .addGui(new shopButtonGui("goods_button_3", 90 - 1, 10 - 1))
-            .addGui(new shopButtonGui("goods_button_4", 110 - 1, 10 - 1))
-            .addGui(new shopButtonGui("goods_button_5", 130 - 1, 10 - 1))
-            .addGui(new shopButtonGui("goods_button_6", 150 - 1, 10 - 1))
-            .addGui(new shopButtonGui("goods_button_7", 170 - 1, 10 - 1))
-            .addGui(new shopButtonGui("goods_button_8", 190 - 1, 10 - 1))
-            .addGui(new shopButtonGui("goods_button_9", 210 - 1, 10 - 1))
-            .buildGui()
-        )
+        }
+        else return ctx.error('穷逼滚开')
+    })
+    .requireButtonPressed('gd1')
+
+    event.recipes.custommachinery.custom_machine("kubejs:bee_shop2", 20)
+    .requireFunctionToStart(ctx =>{
+        let machine = ctx.machine
+        let pay = machine.getItemStored('input_slot_1')
+        let price = machine.getItemStored('money_slot_2')
+        if (pay.id == price.id && pay.count >= price.count){
+            machine.setItemStored('output_slot_0', machine.getItemStored('goods_slot_2').copy())
+            machine.setItemStored('input_slot_1', Item.of(pay, pay.count - price.count))
+            return ctx.success()
+        }
+        else return ctx.error('穷逼滚开')
+    })
+    .requireButtonPressed('gd2')
+
+    event.recipes.custommachinery.custom_machine("kubejs:bee_shop2", 20)
+    .requireFunctionToStart(ctx =>{
+        let machine = ctx.machine
+        let pay = machine.getItemStored('input_slot_1')
+        let price = machine.getItemStored('money_slot_3')
+        if (pay.id == price.id && pay.count >= price.count){
+            machine.setItemStored('output_slot_0', machine.getItemStored('goods_slot_3').copy())
+            machine.setItemStored('input_slot_1', Item.of(pay, pay.count - price.count))
+            return ctx.success()
+        }
+        else return ctx.error('穷逼滚开')
+    })
+    .requireButtonPressed('gd3')
+
+
 })
+
+// Item.of('forestry:butterfly_ge', '{ForgeCaps:{Parent:{analyzed:0b,genome:{"forestry:butterfly_effect":{active:"forestry:butterfly_effect_none",inactive:"forestry:butterfly_effect_none"},"forestry:butterfly_lifespan":{active:"forestry:20id",inactive:"forestry:20id"},"forestry:butterfly_species":{active:"forestry:butterfly_blue_duke",inactive:"forestry:butterfly_blue_duke"},"forestry:cocoon":{active:"forestry:cocoon_default",inactive:"forestry:cocoon_default"},"forestry:fertility":{active:"forestry:3i",inactive:"forestry:3i"},"forestry:fireproof":{active:"forestry:falsed",inactive:"forestry:falsed"},"forestry:flower_type":{active:"forestry:flower_type_vanilla",inactive:"forestry:flower_type_vanilla"},"forestry:humidity_tolerance":{active:"forestry:tolerance_none",inactive:"forestry:tolerance_none"},"forestry:metabolism":{active:"forestry:2i",inactive:"forestry:2i"},"forestry:never_sleeps":{active:"forestry:falsed",inactive:"forestry:falsed"},"forestry:size":{active:"forestry:0.5f",inactive:"forestry:0.5f"},"forestry:speed":{active:"forestry:0.3fd",inactive:"forestry:0.3fd"},"forestry:temperature_tolerance":{active:"forestry:tolerance_both_1d",inactive:"forestry:tolerance_both_1d"},"forestry:tolerates_rain":{active:"forestry:falsed",inactive:"forestry:falsed"}},health:20,max_heath:20}}}')
