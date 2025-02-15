@@ -25,8 +25,8 @@ ItemEvents.rightClicked("kubejs:nesting_order", event=>{
         return
     }
     doorNum = item.getNbt().getInt("DoorNum") 
-    let findBox = new BeeBoxBuilder(level, CurrentBoxPos)
-    let newBox = new BeeBoxBuilder(level, CurrentBoxPos).extend(doorNum)
+    let findBox = new BeeBoxBuilder(level, CurrentBoxPos).loadCenterData(CurrentBoxPos)
+    let newBox = findBox.extend(doorNum)
     if(level.getBlock(newBox.centerX, newBox.centerY, newBox.centerZ).id == "kubejs:beebox_center"){
         player.tell(`§5那里已经有一个蜂箱了`)
         return

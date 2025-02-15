@@ -2,12 +2,18 @@ ServerEvents.recipes(event => {
     event.recipes.custommachinery.custom_machine("kubejs:bee_shop2", 20 * 10).resetOnError()
         .requireFunctionEachTick(ctx => {
             let machine = ctx.machine
+            let pdata = ctx.tile.persistentData
             let itemInput = machine.getItemStored("input_slot_1")
 
             // Only for debug
             let debugButtonState = machine.data.getBoolean("debug")
             if(debugButtonState) { 
                 machine.getOwner().tell("§edebug: ") 
+                pdata.putInt("my_data", 777)
+                // machine.data.putInt("my_data", 666)
+                let my_data = pdata.getInt("my_data")
+                // machine.data.getInt("my_data")
+                machine.getOwner().tell(`§edebug: my_data=${my_data}`)
                 machine.data.putBoolean("debug", false)
             }
 

@@ -23,7 +23,7 @@ function BeeBoxBuilder (level, centerPos){
     ]
     this.floorBlock = "kubejs:beehive"
     this.biome = "minecraft:cold_ocean"
-    this.structure = []
+    this.structures = []
     this.sideUnits = []
     this.updateSideUnits()
 }
@@ -47,7 +47,7 @@ BeeBoxBuilder.prototype = {
     },
     /**
      * 根据wall_number对应的墙和当前box中心xyz，生成一个新的BeeBoxBuilder对象
-     * @param {number} wall_number 从正北（Z轴负方向）开始，顺时针计算，每个边代表一个方向，依次为从0至5, 若为负数，则代表上或下，-1代表上，-2代表下
+     * @param {number} wall_number 从正北（Z轴负方向）开始，顺时针计算，每个边代表一个方向，依次为从0至5; 若为负数，则代表上或下，-1代表上，-2代表下
      * @returns 新的BeeBoxBuilder对象
      */
     extend : function(wall_number){
@@ -143,7 +143,7 @@ BeeBoxBuilder.prototype = {
      * @returns 
      */
     addStructure : function(id, offsetPos){
-        this.structure.push({"id": id, "offsetPos": offsetPos})
+        this.structures.push({"id": id, "offsetPos": offsetPos})
         return this
     },
     /**
@@ -223,7 +223,7 @@ BeeBoxBuilder.prototype = {
      * @returns 
      */
     buildStructure : function(){
-        this.structure.forEach(template => {
+        this.structures.forEach(template => {
             let id = template.id
             let offsetPos = template.offsetPos
             this.level.server.runCommandSilent(`/place template ${id} ${this.centerX + offsetPos.x} ${this.centerY + offsetPos.y} ${this.centerZ + offsetPos.z}`)
@@ -231,15 +231,47 @@ BeeBoxBuilder.prototype = {
         return this
     },
     buildCenter : function(){
-        this.level.getBlock(this.centerX, this.centerY, this.centerZ).set("kubejs:beebox_center")
         this.level.getBlock(this.centerX + 1, this.centerY, this.centerZ).set(this.floorBlock)
         this.level.getBlock(this.centerX, this.centerY, this.centerZ + 1).set(this.floorBlock)
         this.level.getBlock(this.centerX + 1, this.centerY, this.centerZ + 1).set(this.floorBlock)
+        this.level.setBlockAndUpdate(new BlockPos(this.centerX, this.centerY, this.centerZ), Block.getBlock("kubejs:beebox_center").defaultBlockState())
+        let centerBlockContainerJS = this.level.getBlock(this.centerX, this.centerY, this.centerZ)
+        // 处理蜂巢信息
+        let BlockEntityData = centerBlockContainerJS.getEntityData()
+        BlockEntityData.getCompound("componentManager").getCompound("data_component").put("BeeboxData", NBT.compoundTag())
+        let boxData = BlockEntityData.getCompound("componentManager").getCompound("data_component").getCompound("BeeboxData")
+        boxData.putInt("boxLength", this.halfSideLength * 2)
+        boxData.putInt("boxHigh", this.wallHeight + 1)
+        boxData.putString("biome", this.biome)
+        boxData.put("structures", NBT.listTag())
+        for(let i = 0; i < this.structures.length; i++){
+            /**
+             * @type {Internal.CompoundTag[]} 
+             */
+            let structureList = boxData.get("structures")
+            if(structureList.length < i + 1){
+                structureList.push(NBT.compoundTag())
+            }
+            structureList[i].putString("id", this.structures[i].id)
+            structureList[i].put("offset", NBT.compoundTag())
+            structureList[i].getCompound("offset").putInt("x", this.structures[i].offsetPos.x)
+            structureList[i].getCompound("offset").putInt("y", this.structures[i].offsetPos.y)
+            structureList[i].getCompound("offset").putInt("z", this.structures[i].offsetPos.z)
+        }
+        boxData.put("walls", NBT.listTag())
+        for(let i = 0; i < 6; i++){
+            boxData.get("walls").push(NBT.stringTag(this.wallBlock[i]))
+        }
+        boxData.putString("floor", this.floorBlock)
+        boxData.putString("top", this.topBlock)
+        this.level.server.tell("§2" + boxData)
+        this.level.server.tell("§3" + BlockEntityData)
+        centerBlockContainerJS.mergeEntityData(BlockEntityData) 
         return this
     },
     /**
      * 使用BeeBoxTemplate设置蜂巢参数
-     * @param {Object} template  BeeBoxTemplate[str]
+     * @param {Object} template  BeeBoxTemplate[i]
      */
     template : function(template){
         if(template.biome){
@@ -267,17 +299,13 @@ BeeBoxBuilder.prototype = {
     },
     clone : function(){
         let newBox = new BeeBoxBuilder(this.level, new BlockPos(this.centerX, this.centerY, this.centerZ))
-           .setWallBlock(0, this.wallBlock[0])
-           .setWallBlock(1, this.wallBlock[1])
-           .setWallBlock(2, this.wallBlock[2])
-           .setWallBlock(3, this.wallBlock[3])
-           .setWallBlock(4, this.wallBlock[4])
-           .setWallBlock(5, this.wallBlock[5])
            .setFloorBlock(this.floorBlock)
            .setTopBlock(this.topBlock)
            .setBiome(this.biome)
            .setBoxSize(this.halfSideLength * 2, this.wallHeight + 1)
-        newBox.sideUnits = this.sideUnits
+        newBox.wallBlock = this.wallBlock.slice()
+        newBox.structures = this.structures.slice()
+        newBox.updateSideUnits()
         return newBox
     },
     /**
@@ -300,7 +328,39 @@ BeeBoxBuilder.prototype = {
             this.sideUnits[5][j] = {x: startPos.x - halfLength - 1 + j, y: startPos.y, z: startPos.z + halfLength * 2 - j * 2 - 2}
         }
         return this
+    },
+    /**
+     * 加载坐标处的蜂箱中心内的蜂箱信息
+     * @param {BlockPos} centerPos  若为空则默认使用当前蜂箱中心坐标
+     * @returns 
+     */
+    loadCenterData : function(centerPos){
+        centerPos = centerPos ?? new BlockPos(this.centerX, this.centerY, this.centerZ)
+        let centerBlockContainerJS = this.level.getBlock(centerPos.x, centerPos.y, centerPos.z)
+        if(centerBlockContainerJS.getId() != "kubejs:beebox_center") {return this}
+        let BlockEntityData = centerBlockContainerJS.getEntityData()
+        let boxData = BlockEntityData.getCompound("componentManager").getCompound("data_component").getCompound("BeeboxData")
+        this.halfSideLength = boxData.getInt("boxLength") / 2
+        this.wallHeight = boxData.getInt("boxHigh") - 1
+        this.biome = boxData.getString("biome")
+        this.floorBlock = boxData.getString("floor")
+        this.topBlock = boxData.getString("top")
+        /**
+         * @type {Internal.CompoundTag[]} 
+         */        
+        let structureList = boxData.get("structures")
+        for(let i = 0; i < structureList.length; i++){
+            let id = structureList[i].getString("id")
+            let offset = new BlockPos(structureList[i].getCompound("offset").getInt("x"), structureList[i].getCompound("offset").getInt("y"), structureList[i].getCompound("offset").getInt("z"))
+            this.addStructure(id, offset)
+        }
+        let wallsList = boxData.get("walls")
+        for(let i = 0; i < wallsList.length; i++){
+            this.setWallBlock(i, String(wallsList[i]))
+        }
+        return this
     }
+
 }
 
 /**
