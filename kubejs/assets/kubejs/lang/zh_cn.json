@@ -8,5 +8,6 @@
     "kubejs.status_msg.door_direction.2": "东南",
     "kubejs.status_msg.door_direction.3": "南",
     "kubejs.status_msg.door_direction.4": "西南",
-    "kubejs.status_msg.door_direction.5": "西北"
+    "kubejs.status_msg.door_direction.5": "西北",
+    "machine.kubejs.beebox_center.name": "蜂箱核心"
 }

@@ -23,7 +23,11 @@ function BeeBoxBuilder (level, centerPos){
     ]
     this.floorBlock = "kubejs:beehive"
     this.biome = "minecraft:cold_ocean"
+    this.decorations = []
     this.structures = []
+    /**
+     * @type {BlockPos[][]} 六边形蜂巢的六个边的单位块坐标
+     */
     this.sideUnits = []
     this.updateSideUnits()
 }
@@ -34,14 +38,15 @@ BeeBoxBuilder.prototype = {
      */
     buildBox: function(){
         // 生成地面、封顶、生物群系、结构
-        this.buildFlat(this.wallHeight, this.topBlock, "replace")
-        this.buildFlat(0, this.floorBlock, "replace")
         this.fillBiome(this.biome)
         this.buildStructure()
+        this.buildFlat(this.wallHeight, this.topBlock, "replace")
+        this.buildFlat(0, this.floorBlock, "replace")
         // 生成墙
         for(let i = 0; i < 6; i++){
             this.buildWall(i)
         }    
+        this.buildDecorations()
         this.buildCenter()
         return this
     },
@@ -146,6 +151,28 @@ BeeBoxBuilder.prototype = {
         this.structures.push({"id": id, "offsetPos": offsetPos})
         return this
     },
+    addDecoration : function(id){
+        this.decorations.push(id)
+        return this
+    },
+    /**
+     * 填充整个box的生物群系
+     * @param {String} biome 生物群系id
+     */
+    fillBiome : function(biome){
+        let currentStartPos
+        let currentEndPos
+        for(let i = 0; i < this.halfSideLength; i++){
+            currentStartPos = this.sideUnits[1][i]  
+            currentEndPos = this.sideUnits[4][i]
+            this.level.server.runCommandSilent(`fillbiome ${currentStartPos.x + 1} ${this.centerY} ${currentStartPos.z} ${currentEndPos.x} ${this.centerY + this.wallHeight} ${currentStartPos.z + 1} ${biome}`)
+            
+            currentStartPos = this.sideUnits[2][i]
+            currentEndPos = this.sideUnits[5][i]
+            this.level.server.runCommandSilent(`fillbiome ${currentStartPos.x + 1} ${this.centerY} ${currentStartPos.z} ${currentEndPos.x} ${this.centerY + this.wallHeight} ${currentStartPos.z + 1} ${biome}`)
+        }
+        return this
+    },
     /**
      * 在对应的墙上开个门
      * @param {number} wall_number 从正北（Z轴负方向）开始，顺时针计算，每个边代表一个方向，依次为从0至5
@@ -199,24 +226,6 @@ BeeBoxBuilder.prototype = {
        return this
     },
     /**
-     * 填充整个box的生物群系
-     * @param {String} biome 生物群系id
-     */
-    fillBiome : function(biome){
-        let currentStartPos
-        let currentEndPos
-        for(let i = 0; i < this.halfSideLength; i++){
-            currentStartPos = this.sideUnits[1][i]  
-            currentEndPos = this.sideUnits[4][i]
-            this.level.server.runCommandSilent(`fillbiome ${currentStartPos.x + 1} ${this.centerY} ${currentStartPos.z} ${currentEndPos.x} ${this.centerY + this.wallHeight} ${currentStartPos.z + 1} ${biome}`)
-            
-            currentStartPos = this.sideUnits[2][i]
-            currentEndPos = this.sideUnits[5][i]
-            this.level.server.runCommandSilent(`fillbiome ${currentStartPos.x + 1} ${this.centerY} ${currentStartPos.z} ${currentEndPos.x} ${this.centerY + this.wallHeight} ${currentStartPos.z + 1} ${biome}`)
-       }
-        return this
-    },
-    /**
      * 在相对中心位置建造一个模板结构
      * @param {string} id  template id
      * @param {BlockPos} offsetPos  相对坐标，相对于蜂箱中心的偏移量
@@ -227,6 +236,12 @@ BeeBoxBuilder.prototype = {
             let id = template.id
             let offsetPos = template.offsetPos
             this.level.server.runCommandSilent(`/place template ${id} ${this.centerX + offsetPos.x} ${this.centerY + offsetPos.y} ${this.centerZ + offsetPos.z}`)
+        })
+        return this
+    },
+    buildDecorations : function(){
+        this.decorations.forEach(id => {
+            BeeBoxDecorater[id](this)
         })
         return this
     },
@@ -258,43 +273,17 @@ BeeBoxBuilder.prototype = {
             structureList[i].getCompound("offset").putInt("y", this.structures[i].offsetPos.y)
             structureList[i].getCompound("offset").putInt("z", this.structures[i].offsetPos.z)
         }
+        boxData.putString("top", this.topBlock)
         boxData.put("walls", NBT.listTag())
         for(let i = 0; i < 6; i++){
             boxData.get("walls").push(NBT.stringTag(this.wallBlock[i]))
         }
         boxData.putString("floor", this.floorBlock)
-        boxData.putString("top", this.topBlock)
-        this.level.server.tell("§2" + boxData)
-        this.level.server.tell("§3" + BlockEntityData)
+        boxData.put("decorations", NBT.listTag())
+        for(let i = 0; i < this.decorations.length; i++){
+            boxData.get("decorations").push(NBT.stringTag(this.decorations[i]))
+        }
         centerBlockContainerJS.mergeEntityData(BlockEntityData) 
-        return this
-    },
-    /**
-     * 使用BeeBoxTemplate设置蜂巢参数
-     * @param {Object} template  BeeBoxTemplate[i]
-     */
-    template : function(template){
-        if(template.biome){
-            this.setBiome(template.biome ?? this.biome)
-        }
-        if(template.structures){
-            template.structures.forEach(structure => {
-                let id = structure.id
-                let offset = structure.offset ?? new BlockPos(0, 1, 0)
-                this.addStructure(id, offset)
-            })
-        }
-        if(template.walls){
-            for(let i = 0; i < template.walls.length; i++){
-                this.setWallBlock(i, template.walls[i])
-            }
-        }
-        if(template.floor){
-            this.setFloorBlock(template.floor)
-        }
-        if(template.top){
-            this.setTopBlock(template.top)
-        }
         return this
     },
     clone : function(){
@@ -305,6 +294,7 @@ BeeBoxBuilder.prototype = {
            .setBoxSize(this.halfSideLength * 2, this.wallHeight + 1)
         newBox.wallBlock = this.wallBlock.slice()
         newBox.structures = this.structures.slice()
+        newBox.decorations = this.decorations.slice()
         newBox.updateSideUnits()
         return newBox
     },
@@ -320,17 +310,17 @@ BeeBoxBuilder.prototype = {
             this.sideUnits[i] = []
         }
         for(let j = 0; j < halfLength; j++){
-            this.sideUnits[0][j] = {x: startPos.x + j * 2, y: startPos.y, z: startPos.z}
-            this.sideUnits[1][j] = {x: startPos.x + halfLength * 2 + j, y: startPos.y, z: startPos.z + j * 2}
-            this.sideUnits[2][j] = {x: startPos.x + halfLength * 3 - 1 - j, y: startPos.y, z: startPos.z + halfLength * 2 + j * 2}
-            this.sideUnits[3][j] = {x: startPos.x + (halfLength - 1) * 2 - j * 2, y: startPos.y, z: startPos.z + halfLength * 4 - 2}
-            this.sideUnits[4][j] = {x: startPos.x - 2 - j, y: startPos.y, z: startPos.z + halfLength * 4 - 2 - j * 2}
-            this.sideUnits[5][j] = {x: startPos.x - halfLength - 1 + j, y: startPos.y, z: startPos.z + halfLength * 2 - j * 2 - 2}
+            this.sideUnits[0][j] = new BlockPos(startPos.x + j * 2, startPos.y, startPos.z)
+            this.sideUnits[1][j] = new BlockPos(startPos.x + halfLength * 2 + j, startPos.y, startPos.z + j * 2)
+            this.sideUnits[2][j] = new BlockPos(startPos.x + halfLength * 3 - 1 - j, startPos.y, startPos.z + halfLength * 2 + j * 2)
+            this.sideUnits[3][j] = new BlockPos(startPos.x + (halfLength - 1) * 2 - j * 2, startPos.y, startPos.z + halfLength * 4 - 2)
+            this.sideUnits[4][j] = new BlockPos(startPos.x - 2 - j, startPos.y, startPos.z + halfLength * 4 - 2 - j * 2)
+            this.sideUnits[5][j] = new BlockPos(startPos.x - halfLength - 1 + j, startPos.y, startPos.z + halfLength * 2 - j * 2 - 2)
         }
         return this
     },
     /**
-     * 加载坐标处的蜂箱中心内的蜂箱信息
+     * 加载坐标处的蜂箱中心内的蜂箱组成数据
      * @param {BlockPos} centerPos  若为空则默认使用当前蜂箱中心坐标
      * @returns 
      */
@@ -358,9 +348,50 @@ BeeBoxBuilder.prototype = {
         for(let i = 0; i < wallsList.length; i++){
             this.setWallBlock(i, String(wallsList[i]))
         }
+        let decorationList = boxData.get("decorations")
+        for(let i = 0; i < decorationList.length; i++){
+            this.addDecoration(String(decorationList[i]))
+        }
+        this.updateSideUnits()
         return this
+    },
+    // todo：装饰器
+    /**
+     * 判断坐标是否在蜂箱范围内,返回在蜂箱范围内的坐标
+     * @param {BlockPos[] | BlockPos} blockPos 
+     * @returns {[]}
+     */
+    inBoxBlockList : function(blockPos){
+        function checkPos(bbb, targetPos){
+            if(targetPos.y < bbb.centerY || targetPos.y > bbb.centerY + bbb.wallHeight){return false}
+            for(let i = 0; i < bbb.halfSideLength; i++){
+                let enPos = bbb.sideUnits[1][i]
+                let esPos = bbb.sideUnits[2][i]
+                let wnPos = bbb.sideUnits[4][i]
+                let wsPos = bbb.sideUnits[5][i]
+                if(targetPos.x <= (enPos.x + 1) && targetPos.x >= wnPos.x && targetPos.z >= enPos.z && targetPos.z <= enPos.z + 1){
+                    return true
+                }
+                if(targetPos.x <= (esPos.x + 1) && targetPos.x >= wsPos.x && targetPos.z >= esPos.z && targetPos.z <= esPos.z + 1){
+                    return true
+                }
+            }
+            return false
+        }
+        let result = []
+        if(Array.isArray(blockPos)){
+            blockPos.forEach(pos => {
+                if(checkPos(this, pos)){
+                    result.push(pos) 
+                }
+            })
+        }else{
+            if(checkPos(this, blockPos)){
+                result.push(blockPos) 
+            }
+        }
+        return result
     }
-
 }
 
 /**

@@ -13,9 +13,6 @@ StartupEvents.registry('block', event => {
         .textureAll("minecraft:block/honeycomb_block")
 
     event.create('kubejs:beebox_center', "custommachinery")
-        // .hardness(-1)
-        // .noDrops()
-        // .unbreakable()
         .machine("kubejs:beebox_center")
 
     event.create('kubejs:bee_shop', "custommachinery")
@@ -24,4 +21,5 @@ StartupEvents.registry('block', event => {
     event.create('kubejs:bee_shop2', "custommachinery")
         .machine("kubejs:bee_shop2")
 
+    
 })
