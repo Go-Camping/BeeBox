@@ -1,7 +1,10 @@
-const BeeBoxTemplate = {
+const BeeBoxPresets = {
+    "default" : function(level, pos){
+        return new BeeBoxBuilder(level, pos)
+    },
     "forest_box_1" : function(level, pos){
         return new BeeBoxBuilder(level, pos)
-        .addDecoration("dress_top_by_block")
+        .addDecoration("dress_top_by_lime_stained_glass")
         .addStructure("kubejs:biome/forest_1", new BlockPos(-14, 1, -13))
         .setBiome("minecraft:forest")
         .setAllWallBlock("minecraft:stripped_oak_wood")
@@ -10,7 +13,7 @@ const BeeBoxTemplate = {
     },
     "swamp_box_1" : function(level, pos){
         return new BeeBoxBuilder(level, pos)
-        .addDecoration("dress_top_by_block")
+        .addDecoration("dress_top_by_lime_stained_glass")
         .addStructure("kubejs:biome/swamp_1", new BlockPos(-14, 1, -13))
         .setBiome("minecraft:swamp")
         .setAllWallBlock("minecraft:stripped_mangrove_wood")

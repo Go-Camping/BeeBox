@@ -1,10 +1,9 @@
-const BeeBoxDecorater = {
+const BeeBoxDecorator = {
     /**
      * 随机雕刻顶部方块，将其替换为【黄绿色染色玻璃】，一次最多10个
      * @param {BeeBoxBuilder} bbb 
-     * @param {*} block 
      */
-    "dress_top_by_block" : function(bbb){
+    "dress_top_by_lime_stained_glass" : function(bbb){
         let amount = 10
         let block = "minecraft:lime_stained_glass"
         let posList = []
@@ -18,7 +17,7 @@ const BeeBoxDecorater = {
             let z = Math.random() * (boxBorderZ2 - boxBorderZ1) + boxBorderZ1
             posList.push(new BlockPos(x,y,z))
         }
-        bbb.inBoxBlockList(posList).forEach(pos => {
+        bbb.findPosInBox(posList).forEach(pos => {
             bbb.level.getBlock(pos).set(block)
         })
     }

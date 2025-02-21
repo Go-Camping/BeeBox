@@ -116,7 +116,7 @@ BeeBoxBuilder.prototype = {
     },
     /**
      * 设置蜂巢的尺寸
-     * @param {number} sideLength 边长
+     * @param {number} sideLength 边长, 偶数整数
      * @param {number} high 蜂巢高度，至少为3
      * @returns 
      */
@@ -197,7 +197,32 @@ BeeBoxBuilder.prototype = {
         for(let j = 0; j < this.halfSideLength; j++){
             let unit = this.sideUnits[wall_number % 6][j]
             blockColumnUnit(this.level, this.wallBlock[wall_number % 6], unit.x, unit.y, unit.z, this.wallHeight)
+            unit.y
         }
+        let dooreye_1 = this.sideUnits[wall_number % 6][this.halfSideLength / 2].offset(0, this.wallHeight / 2, 0)
+        let dooreye_2 = this.sideUnits[wall_number % 6][this.halfSideLength / 2 - 1].offset(0, this.wallHeight / 2, 0)
+        let eyes_1 = blockColumnUnit(this.level, "kubejs:beebox_dooreye", dooreye_1.x, dooreye_1.y, dooreye_1.z, 1)
+        let eyes_2 = blockColumnUnit(this.level, "kubejs:beebox_dooreye", dooreye_2.x, dooreye_2.y, dooreye_2.z, 1)
+        eyes_1.forEach(block => {
+            let blockEntityData = block.getEntityData()
+            blockEntityData.getCompound("componentManager").getCompound("data_component").put("WallData", NBT.compoundTag())
+            let wallData = blockEntityData.getCompound("componentManager").getCompound("data_component").getCompound("WallData")
+            wallData.putInt("wall_number", wall_number % 6)
+            wallData.putInt("box_center_x", this.centerX)
+            wallData.putInt("box_center_y", this.centerY)
+            wallData.putInt("box_center_z", this.centerZ)
+            block.mergeEntityData(blockEntityData)
+        })
+        eyes_2.forEach(block => {
+            let blockEntityData = block.getEntityData()
+            blockEntityData.getCompound("componentManager").getCompound("data_component").put("WallData", NBT.compoundTag())
+            let wallData = blockEntityData.getCompound("componentManager").getCompound("data_component").getCompound("WallData")
+            wallData.putInt("wall_number", wall_number % 6)
+            wallData.putInt("box_center_x", this.centerX)
+            wallData.putInt("box_center_y", this.centerY)
+            wallData.putInt("box_center_z", this.centerZ)
+            block.mergeEntityData(blockEntityData)
+        })
         return this
     },
     /**
@@ -222,7 +247,7 @@ BeeBoxBuilder.prototype = {
                 this.level.server.runCommandSilent(`fill ${currentStartPos.x - 1} ${flatY} ${currentStartPos.z} ${currentEndPos.x + 2} ${flatY} ${currentStartPos.z + 1} ${block} ${type}`)
             }
        }
-       this.buildCenter()
+    //    this.buildCenter()
        return this
     },
     /**
@@ -241,7 +266,7 @@ BeeBoxBuilder.prototype = {
     },
     buildDecorations : function(){
         this.decorations.forEach(id => {
-            BeeBoxDecorater[id](this)
+            BeeBoxDecorator[id](this)
         })
         return this
     },
@@ -355,13 +380,38 @@ BeeBoxBuilder.prototype = {
         this.updateSideUnits()
         return this
     },
-    // todo：装饰器
+    /**
+     * 获取一个预设央视的筑巢令
+     * @param {Internal.Player} player
+     * @param {String} preset 
+     * @returns 
+     */
+    giveNestingOrderItem : function(player, preset){
+        Item.of("kubejs:nesting_order", `{presets:"${preset}"}`)
+        player.give(Item.of("kubejs:nesting_order", `{presets:"${preset}"}`))
+        return 
+    },
+    getCenterBlock : function(){
+        return this.level.getBlock(this.centerX, this.centerY, this.centerZ)
+    },
+    /**
+     * 使用预设方案
+     * @param {String} id 
+     * @returns {BeeBoxBuilder}
+     */
+    presets : function(id){
+        let pos = new BlockPos(this.centerX, this.centerY, this.centerZ)
+        if(BeeBoxPresets.hasOwnProperty(id)){
+            return BeeBoxPresets[id](this.level, pos)
+        }
+        else return BeeBoxPresets["default"](this.level, pos)
+    },
     /**
      * 判断坐标是否在蜂箱范围内,返回在蜂箱范围内的坐标
      * @param {BlockPos[] | BlockPos} blockPos 
      * @returns {[]}
      */
-    inBoxBlockList : function(blockPos){
+    findPosInBox : function(blockPos){
         function checkPos(bbb, targetPos){
             if(targetPos.y < bbb.centerY || targetPos.y > bbb.centerY + bbb.wallHeight){return false}
             for(let i = 0; i < bbb.halfSideLength; i++){
@@ -402,8 +452,18 @@ BeeBoxBuilder.prototype = {
  * @param {*} y 
  * @param {*} z 
  * @param {*} high 
+ * @returns 
  */
 function blockColumnUnit(level, block, x, y, z, high){
     level.server.runCommandSilent(`fill ${x} ${y} ${z} ${x + 1} ${y + high} ${z + 1} ${block}`)
+    let blockList = []
+    let baseBlockPos = new BlockPos(x, y, z)
+    for(let h = 0; h <= high; h++){
+        blockList.push(level.getBlock(baseBlockPos.offset(0, h, 0)))
+        blockList.push(level.getBlock(baseBlockPos.offset(1, h, 0)))
+        blockList.push(level.getBlock(baseBlockPos.offset(0, h, 1)))
+        blockList.push(level.getBlock(baseBlockPos.offset(1, h, 1)))
+    }
+    return blockList
 }
 

@@ -1,0 +1,11 @@
+{
+    "name": {
+      "text": "machine.kubejs.beebox_dooreye.name"
+    },
+    "appearance": {
+      "hardness": -1,
+      "resistance": 999999999,
+      "custommachinery:block": "minecraft:horn_coral_block",
+      "custommachinery:item": "minecraft:horn_coral_block"
+    }
+}

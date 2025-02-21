@@ -17,10 +17,10 @@ ItemEvents.tooltip(event => {
 
     event.addAdvanced("kubejs:nesting_order", (item, advanced, text) => {
         let nbt = item.getNbt()
-        if (nbt && nbt.getInt("DoorNum") != null) {
-            let door = nbt.getInt("DoorNum")
-            let direction = Text.translatable("kubejs.status_msg.door_direction." + door).getString()
-            text.add("当前选择方向: §e" + direction)
+        if (nbt && nbt.getString("presets") != null) {
+            let presets = nbt.getString("presets")
+            let direction = Text.translatable("§f预设：§3" + presets).getString()
+            text.add( direction)
         }
         else {
             text.add(Text.of("§c§knorth"))

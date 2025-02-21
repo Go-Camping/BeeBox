@@ -1,13 +1,14 @@
 {
     "block.kubejs.beehive": "蜂箱墙壁",
-    "block.kubejs.beebox_center": "蜂箱中心",
+    "block.kubejs.beebox_center": "蜂箱核心",
     "item.kubejs.shop_order": "交易清单",
-    "item.kubejs.nesting_order": "筑巢令",
+    "item.kubejs.nesting_order": "筑巢令(暂定名)",
     "kubejs.status_msg.door_direction.0": "北",
     "kubejs.status_msg.door_direction.1": "东北",
     "kubejs.status_msg.door_direction.2": "东南",
     "kubejs.status_msg.door_direction.3": "南",
     "kubejs.status_msg.door_direction.4": "西南",
     "kubejs.status_msg.door_direction.5": "西北",
-    "machine.kubejs.beebox_center.name": "蜂箱核心"
+    "machine.kubejs.beebox_center.name": "蜂箱核心",
+    "machine.kubejs.beebox_dooreye.name": "蜂箱门眼"
 }
