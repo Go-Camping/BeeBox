@@ -1,8 +1,8 @@
 
-const BeeBoxDefautlSize = {
-    boxLength : 14,
-    boxHigh : 14,
-}
+// const BeeBoxDefautlSize = {
+//     boxLength : 14,
+//     boxHigh : 14,
+// }
 
 //默认货币
 const DefaultMoney = "forestry:honey_drop"

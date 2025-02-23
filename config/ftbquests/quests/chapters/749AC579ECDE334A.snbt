@@ -6,15 +6,27 @@
 	id: "749AC579ECDE334A"
 	order_index: 1
 	quest_links: [ ]
-	quests: [{
-		id: "21DFA784BEE4EEA6"
-		tasks: [{
-			id: "5542D504FB1C4207"
-			item: "minecraft:iron_ingot"
-			type: "item"
-		}]
-		x: 1.5d
-		y: 0.0d
-	}]
-	title: "铁"
+	quests: [
+		{
+			id: "21DFA784BEE4EEA6"
+			tasks: [{
+				id: "5542D504FB1C4207"
+				item: "minecraft:iron_ingot"
+				type: "item"
+			}]
+			x: 1.5d
+			y: 0.0d
+		}
+		{
+			id: "23A0A66F665AAAD8"
+			tasks: [{
+				id: "6DFB91A5C7428240"
+				item: "minecraft:wheat_seeds"
+				type: "item"
+			}]
+			x: 3.5d
+			y: 0.0d
+		}
+	]
+	title: "重要的基础物资"
 }

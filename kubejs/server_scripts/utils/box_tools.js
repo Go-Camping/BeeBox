@@ -30,3 +30,27 @@ function findCurrentBoxCenter(level, startPos, range, verticalRange) {
     return centerPos
 }
 
+/**
+ * 
+ * @param {*} level 
+ * @param {*} pos 
+ * @returns 
+ */
+function BeeBoxPresetsWeightRegistry(level, pos){
+    Object.keys(BeeBoxPresets).forEach(key => {
+        /**
+         * @type {BeeBoxBuilder}
+         */
+        let bbb = BeeBoxPresets[key](level, pos)[0]
+        let weight = BeeBoxPresets[key](level, pos)[1]
+        global.BeeBoxTiers[bbb.tier][key] = weight
+    })
+    // 结构：
+    // BeeBoxTier = {
+    //     "t0" : {
+    //         "id": weight,
+    //         "id": weight,
+    //     },
+    // }
+    return 
+}

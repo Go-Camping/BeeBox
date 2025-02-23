@@ -1,6 +1,10 @@
 {
 	chapter_groups: [
-		{ id: "1E50C9E8EDCD00B9", title: "1z" }
-		{ id: "05D754500E3492CD", title: "2" }
+		{ id: "1E50C9E8EDCD00B9", title: "开始" }
+		{ id: "05D754500E3492CD", title: "科技线" }
+		{ id: "2DBE7CA154885467", title: "魔法线" }
+		{ id: "7F67F4A75CF57CDC", title: "生态线" }
+		{ id: "10FD0047EEC595A4", title: "维度" }
+		{ id: "6E53925153C89C44", title: "成就" }
 	]
 }

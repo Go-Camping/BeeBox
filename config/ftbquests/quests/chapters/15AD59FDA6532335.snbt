@@ -1,0 +1,32 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "15AD59FDA6532335"
+	group: "1E50C9E8EDCD00B9"
+	id: "15AD59FDA6532335"
+	order_index: 2
+	quest_links: [ ]
+	quests: [
+		{
+			id: "582F3E7A620805A0"
+			tasks: [{
+				id: "1F164D0392850673"
+				title: "了解你的世界"
+				type: "checkmark"
+			}]
+			x: -0.5d
+			y: -2.0d
+		}
+		{
+			id: "2B2391CCF8F6B11B"
+			tasks: [{
+				id: "6679F49D5909BCA1"
+				title: "装扮你的蜂巢"
+				type: "checkmark"
+			}]
+			x: -0.5d
+			y: 0.0d
+		}
+	]
+	title: "世界"
+}

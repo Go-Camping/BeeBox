@@ -9,6 +9,6 @@ StartupEvents.registry("item", event => {
 
     event.create("kubejs:nesting_order", "basic" )
         .texture("minecraft:item/honeycomb")
-        .maxDamage(10)
+        .maxDamage(2)
         .maxStackSize(1)
 })

@@ -1,0 +1,22 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "560BB07F4824079E"
+	group: "10FD0047EEC595A4"
+	id: "560BB07F4824079E"
+	order_index: 0
+	quest_links: [ ]
+	quests: [{
+		id: "50AA9A2696DC1A8B"
+		tasks: [{
+			id: "37685C288DC96FEF"
+			structure: "minecraft:mineshaft"
+			title: "蜂箱"
+			type: "structure"
+		}]
+		title: "六边形蜂箱"
+		x: -4.0d
+		y: -0.5d
+	}]
+	title: "主世界"
+}

@@ -7,18 +7,14 @@ ItemEvents.rightClicked("kubejs:debugger", event=>{
     let buildPos = playerPos.offset(0, -3, 0)
 
     if(player.isShiftKeyDown()){
-        let bbb = BeeBoxPresets["swamp_box_1"](level, buildPos)
+        let bbb = new BeeBoxBuilder(level, buildPos).preset("swamp_box_1")
         bbb.buildBox()
         player.tell(`build box center at [${buildPos.x}, ${buildPos.y}, ${buildPos.z}]`)
     }
     else{
-        let findPos = findCurrentBoxCenter(level, playerPos, 18, 20)
-        if(!findPos){player.tell("§2 no find box center")}
-        else{
-            let bbb = new BeeBoxBuilder(level, findPos).loadCenterData().addDecoration("dress_top_by_lime_stained_glass").giveNestingOrderItem(player, "forest_box_1")
-            // bbb.extend(0).buildBox().buildDoor(0 + 3)
-            player.tell(`§2 done`)
-        }
+        player.tell(global.BeeBoxTiers.t1)
+        let bbb = new BeeBoxBuilder(level, buildPos).giveNestingOrderItem(player, "romdom_in_tiers")
+
     }
         // let goods1 = Item.of('forestry:serum_ge', '{ForgeCaps:{Parent:{analyzed:0b,genome:{"forestry:butterfly_effect":{active:"forestry:butterfly_effect_none",inactive:"forestry:butterfly_effect_none"},"forestry:butterfly_lifespan":{active:"forestry:20id",inactive:"forestry:20id"},"forestry:butterfly_species":{active:"forestry:butterfly_cspeckled_wood",inactive:"forestry:butterfly_cspeckled_wood"},"forestry:cocoon":{active:"forestry:cocoon_default",inactive:"forestry:cocoon_default"},"forestry:fertility":{active:"forestry:2id",inactive:"forestry:2id"},"forestry:fireproof":{active:"forestry:falsed",inactive:"forestry:falsed"},"forestry:flower_type":{active:"forestry:flower_type_vanilla",inactive:"forestry:flower_type_vanilla"},"forestry:humidity_tolerance":{active:"forestry:tolerance_none",inactive:"forestry:tolerance_none"},"forestry:metabolism":{active:"forestry:2i",inactive:"forestry:2i"},"forestry:never_sleeps":{active:"forestry:falsed",inactive:"forestry:falsed"},"forestry:size":{active:"forestry:0.5f",inactive:"forestry:0.5f"},"forestry:speed":{active:"forestry:0.3fd",inactive:"forestry:0.3fd"},"forestry:temperature_tolerance":{active:"forestry:tolerance_none",inactive:"forestry:tolerance_none"},"forestry:tolerates_rain":{active:"forestry:falsed",inactive:"forestry:falsed"}},health:20,max_heath:20}}}')
         // let goods2 = Item.of('forestry:bee_drone_ge', '{ForgeCaps:{Parent:{analyzed:0b,genome:{"forestry:activity":{active:"forestry:activity_diurnal",inactive:"forestry:activity_diurnal"},"forestry:bee_effect":{active:"forestry:bee_effect_none",inactive:"forestry:bee_effect_none"},"forestry:bee_species":{active:"forestry:bee_monastic",inactive:"forestry:bee_monastic"},"forestry:cave_dwelling":{active:"forestry:trued",inactive:"forestry:trued"},"forestry:fertility":{active:"forestry:1id",inactive:"forestry:1id"},"forestry:flower_type":{active:"forestry:flower_type_wheat",inactive:"forestry:flower_type_wheat"},"forestry:humidity_tolerance":{active:"forestry:tolerance_both_1d",inactive:"forestry:tolerance_both_1d"},"forestry:lifespan":{active:"forestry:50i",inactive:"forestry:50i"},"forestry:pollination":{active:"forestry:30i",inactive:"forestry:30i"},"forestry:speed":{active:"forestry:0.6fd",inactive:"forestry:0.6fd"},"forestry:temperature_tolerance":{active:"forestry:tolerance_both_1d",inactive:"forestry:tolerance_both_1d"},"forestry:territory":{active:"forestry:9_6_9",inactive:"forestry:9_6_9"},"forestry:tolerates_rain":{active:"forestry:falsed",inactive:"forestry:falsed"}},health:50,max_heath:50,pristine:1b}}}')
