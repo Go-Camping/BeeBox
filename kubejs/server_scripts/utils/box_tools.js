@@ -54,3 +54,13 @@ function BeeBoxPresetsWeightRegistry(level, pos){
     // }
     return 
 }
+
+/**
+ * 
+ * @param {string} presetID 
+ * @param {string} tier 
+ * @param {number} weight 
+ */
+function AddPresetToTierPool(presetID, tier, weight){
+    global.BeeBoxTiers[tier][presetID] = weight
+}

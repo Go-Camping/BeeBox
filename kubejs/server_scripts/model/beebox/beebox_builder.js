@@ -13,17 +13,17 @@ function BeeBoxBuilder (level, centerPos){
     this.halfSideLength = Math.round(BeeBoxDefaultSize.boxLength / 2)
     this.wallHeight = BeeBoxDefaultSize.boxHigh - 1
     this.tier = "t0"
-    this.topBlock = 'minecraft:yellow_stained_glass'
+    this.topBlock = 'kubejs:beebox_honeycomb_block'
     this.wallBlock = [
-        "minecraft:stone",
-        "minecraft:blue_ice",
-        "minecraft:oak_log",
-        "minecraft:honeycomb_block",
-        "minecraft:smooth_red_sandstone",
-        "minecraft:prismarine"
+        "kubejs:beebox_honeycomb_block",
+        "kubejs:beebox_honeycomb_block",
+        "kubejs:beebox_honeycomb_block",
+        "kubejs:beebox_honeycomb_block",
+        "kubejs:beebox_honeycomb_block",
+        "kubejs:beebox_honeycomb_block"
     ]
     this.floorBlock = "kubejs:beehive"
-    this.biome = "minecraft:cold_ocean"
+    this.biome = "minecraft:the_void"
     this.decorations = []
     this.structures = []
     /**
@@ -34,19 +34,18 @@ function BeeBoxBuilder (level, centerPos){
 }
 BeeBoxBuilder.prototype = {
     /**
-     * 生成完整六边形蜂巢
+     * 生成完整六边形蜂巢； 
+     * 依次生成生物群系、结构、封顶、地面、墙、装饰器、中心
      * @returns 
      */
     buildBox: function(){
-        // 生成地面、封顶、生物群系、结构
         this.fillBiome(this.biome)
         this.buildStructure()
         this.buildFlat(this.wallHeight, this.topBlock, "replace")
+        this.buildFlat(this.wallHeight - 1, this.topBlock, "replace")
         this.buildFlat(0, this.floorBlock, "replace")
-        // 生成墙
-        for(let i = 0; i < 6; i++){
-            this.buildWall(i)
-        }    
+        this.buildFlat(1, this.floorBlock, "replace")
+        this.buildAllWalls(false)
         this.buildDecorations()
         this.buildCenter()
         return this
@@ -117,12 +116,13 @@ BeeBoxBuilder.prototype = {
     },
     /**
      * 设置蜂巢的尺寸
-     * @param {number} sideLength 边长, 偶数整数
-     * @param {number} high 蜂巢高度，至少为3
+     * @param {number} sideLength 边长, 偶数整数, 至少为4
+     * @param {number} high 蜂巢高度，至少为5
      * @returns 
      */
     setBoxSize : function(sideLength, high){
-        if(high < 3){high = 3}
+        if(high < 5){high = 5}
+        if(sideLength < 4){sideLength = 4}
         this.halfSideLength = Math.round(sideLength / 2)
         this.wallHeight = high - 1
         return this.updateSideUnits()
@@ -161,6 +161,11 @@ BeeBoxBuilder.prototype = {
         this.structures.push({"id": id, "offsetPos": offsetPos})
         return this
     },
+    /**
+     * 使用BeeBoxDecorator中定义的装饰器
+     * @param {string} id 
+     * @returns 
+     */
     addDecoration : function(id){
         this.decorations.push(id)
         return this
@@ -193,26 +198,28 @@ BeeBoxBuilder.prototype = {
         let blockColumn = this.sideUnits[wall_number % 6]
         for(let i = 1; i < this.halfSideLength - 1; i++){
             let unit = blockColumn[i]
-            blockColumnUnit(this.level, "air", unit.x, unit.y + 1, unit.z, this.wallHeight - 2)
+            blockColumnUnit(this.level, "air", unit.x, unit.y + 2, unit.z, this.wallHeight - 4)
         }
         return this
     },
     /**
      * 建造对应的墙
      * @param {number} wall_number 从正北（Z轴负方向）开始，顺时针计算，每个边代表一个方向，依次为从0至5
+     * @param {boolean?} spawnEyes 可选，是否生成门眼, 默认true
      * @returns 
      */
-    buildWall : function(wall_number){
-        if(wall_number < 0) return this
+    buildWall : function(wall_number, spawnEyes){
+        spawnEyes = spawnEyes ?? true
+        if(wall_number < 0) {return this}
         for(let j = 0; j < this.halfSideLength; j++){
             let unit = this.sideUnits[wall_number % 6][j]
             blockColumnUnit(this.level, this.wallBlock[wall_number % 6], unit.x, unit.y, unit.z, this.wallHeight)
-            unit.y
         }
-        let dooreye_1 = this.sideUnits[wall_number % 6][this.halfSideLength / 2].offset(0, this.wallHeight / 2, 0)
-        let dooreye_2 = this.sideUnits[wall_number % 6][this.halfSideLength / 2 - 1].offset(0, this.wallHeight / 2, 0)
-        let eyes_1 = blockColumnUnit(this.level, "kubejs:beebox_dooreye", dooreye_1.x, dooreye_1.y, dooreye_1.z, 1)
-        let eyes_2 = blockColumnUnit(this.level, "kubejs:beebox_dooreye", dooreye_2.x, dooreye_2.y, dooreye_2.z, 1)
+        if(!spawnEyes){return this}
+        let dooreye_1 = this.sideUnits[wall_number % 6][this.halfSideLength / 2].offset(0, this.wallHeight / 2 - 1, 0)
+        let dooreye_2 = this.sideUnits[wall_number % 6][this.halfSideLength / 2 - 1].offset(0, this.wallHeight / 2 - 1, 0)
+        let eyes_1 = blockColumnUnit(this.level, "kubejs:beebox_dooreye", dooreye_1.x, dooreye_1.y, dooreye_1.z, 3)
+        let eyes_2 = blockColumnUnit(this.level, "kubejs:beebox_dooreye", dooreye_2.x, dooreye_2.y, dooreye_2.z, 3)
         eyes_1.forEach(block => {
             let blockEntityData = block.getEntityData()
             blockEntityData.getCompound("componentManager").getCompound("data_component").put("WallData", NBT.compoundTag())
@@ -236,12 +243,25 @@ BeeBoxBuilder.prototype = {
         return this
     },
     /**
+     * 生成所有的墙
+     * @param {boolean?} spawnEyes 可选，是否生成门眼, 默认true
+     * @returns 
+     */
+    buildAllWalls : function(spawnEyes){
+        spawnEyes = spawnEyes ?? true
+        for(let i = 0; i < 6; i++){
+            this.buildWall(i, spawnEyes)
+        }
+        return this
+    },
+    /**
      * 建造一层六边形平面
      * @param {number} offsetY 距离BOX底部的Y偏移量
      * @param {*} block 
-     * @param {String} type "keep" | "replace"
+     * @param {String} type "keep" | "replace", 可选
      */
     buildFlat : function(offsetY, block, type){
+        type = type ?? "replace"
         let currentStartPos
         let currentEndPos
         let flatY = this.centerY + Math.min(offsetY, this.wallHeight)
@@ -274,6 +294,10 @@ BeeBoxBuilder.prototype = {
         })
         return this
     },
+    /**
+     * 
+     * @returns 
+     */
     buildDecorations : function(){
         this.decorations.forEach(id => {
             BeeBoxDecorator[id](this)
@@ -411,7 +435,58 @@ BeeBoxBuilder.prototype = {
         return this.level.getBlock(this.centerX, this.centerY, this.centerZ)
     },
     /**
-     * 使用预设方案
+     * 获取蜂巢尺寸
+     * @returns {number[]} [boxLength, boxHigh]
+     */
+    getBoxSize : function(){
+        return [this.halfSideLength * 2, this.wallHeight + 1]
+    },
+    /**
+     * 获取一个蜂箱平面内的方块
+     * @param {number} offsetY 
+     * @returns {Internal.BlockContainerJS[]}
+     */
+    getFlatBlocks : function(offsetY){
+        // let boxBorderX1 = this.getBoxPosScope("x")[0]
+        // let boxBorderX2 = this.getBoxPosScope("x")[1]
+        // let boxBorderZ1 = this.getBoxPosScope("z")[0]
+        // let boxBorderZ2 = this.getBoxPosScope("z")[1]
+        // let posList = []
+        // let result = []
+        // let y = this.centerY + offsetY
+        // for(let x = boxBorderX1; x <= boxBorderX2; x++){
+        //     for(let z = boxBorderZ1; z <= boxBorderZ2; z++){
+        //         let pos = new BlockPos(x,y,z)
+        //         posList.push(pos)
+        //     }
+        // }
+        // this.findPosInBox(posList).forEach(pos => {
+        //     result.push(this.level.getBlock(pos))
+        // })
+        let blockList = []
+        let y = this.centerY + offsetY
+        for(let i = 0; i < this.halfSideLength; i++){
+            let enPos = this.sideUnits[1][i]
+            let esPos = this.sideUnits[2][i]
+            let wnPos = this.sideUnits[4][i]
+            let wsPos = this.sideUnits[5][i]
+            for(let x = wnPos.x; x <= enPos.x + 1; x++){
+                for(let z = wnPos.z; z <= enPos.z + 1; z++){
+                    let pos = new BlockPos(x,y,z)
+                    blockList.push(this.level.getBlock(pos))
+                }
+            }
+            for(let x = wsPos.x; x <= esPos.x + 1; x++){
+                for(let z = wsPos.z; z <= esPos.z + 1; z++){
+                    let pos = new BlockPos(x,y,z)
+                    blockList.push(this.level.getBlock(pos))
+                }
+            }
+        }
+        return blockList
+    },
+    /**
+     * 使用BeeBoxPresets里的预设方案
      * @param {String} id 
      * @param {Object} ags 预设参数，可选
      * @returns {BeeBoxBuilder}
@@ -457,6 +532,7 @@ BeeBoxBuilder.prototype = {
      * @returns {[]}
      */
     findPosInBox : function(blockPos){
+        // 
         function checkPos(bbb, targetPos){
             if(targetPos.y < bbb.centerY || targetPos.y > bbb.centerY + bbb.wallHeight){return false}
             for(let i = 0; i < bbb.halfSideLength; i++){
@@ -473,6 +549,7 @@ BeeBoxBuilder.prototype = {
             }
             return false
         }
+
         let result = []
         if(Array.isArray(blockPos)){
             blockPos.forEach(pos => {
@@ -486,6 +563,30 @@ BeeBoxBuilder.prototype = {
             }
         }
         return result
+    },
+    /**
+     * 获取box的各轴坐标范围
+     * @param {string} xyz "x" | "y" | "z" | "all" (可选，默认all)
+     * @returns {Array} 一个数组，包含xScope, yScope, zScope
+     * @returns 
+     */
+    getBoxPosScope : function(xyz){
+        xyz = xyz ?? "all"
+        let xScope = [this.sideUnits[5][0].x, this.sideUnits[2][0].x + 1]
+        let yScope = [this.centerY, this.centerY + this.wallHeight]
+        let zScope = [this.sideUnits[0][0].z, this.sideUnits[3][0].z + 1]
+        switch(xyz){
+            case "x":
+                return xScope
+            case "y":
+                return yScope
+            case "z":
+                return zScope
+            case "all":
+                return [xScope, yScope, zScope]
+            default:
+                return [xScope, yScope, zScope]
+        }
     }
 }
 

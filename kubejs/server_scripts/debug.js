@@ -7,13 +7,36 @@ ItemEvents.rightClicked("kubejs:debugger", event=>{
     let buildPos = playerPos.offset(0, -3, 0)
 
     if(player.isShiftKeyDown()){
-        let bbb = new BeeBoxBuilder(level, buildPos).preset("swamp_box_1")
-        bbb.buildBox()
+        let bbb = new BeeBoxBuilder(level, buildPos).setBoxSize(18,22)
+        // .preset("swamp_box_1")
+        // .preset("start_box")
+        .preset("warm_ocean_box_1")
+        .buildBox()
         player.tell(`build box center at [${buildPos.x}, ${buildPos.y}, ${buildPos.z}]`)
+        player.tell(`Size: [${bbb.getBoxSize().toString()}]`)
     }
     else{
         player.tell(global.BeeBoxTiers.t1)
-        let bbb = new BeeBoxBuilder(level, buildPos).giveNestingOrderItem(player, "romdom_in_tiers")
+        let findPos = findCurrentBoxCenter(level, playerPos, 10, 10)
+        if(!findPos){return  player.tell('§eno find')}
+        let bbb = new BeeBoxBuilder(level, findPos).setBoxSize(16, 20)
+        let boxPosScope = bbb.getBoxPosScope("all")
+        let xScope = boxPosScope[0]
+        let yScope = boxPosScope[1]
+        let zScope = boxPosScope[2]
+        bbb.setAllWallBlock("air").buildAllWalls(false)
+        for(let y = yScope[0]; y <= yScope[1]; y++){
+            for(let x = xScope[0]; x <= xScope[1]; x++){
+                for(let z = zScope[0]; z <= zScope[1]; z++){
+                    let result = bbb.findPosInBox(new BlockPos(x, y, z))
+                    if(result.length > 0){continue}
+                    let block = level.getBlock(new BlockPos(x, y, z))
+                    block.set("air")
+                }
+            }
+        }
+
+        //.giveNestingOrderItem(player, "romdom_in_tiers")
 
     }
         // let goods1 = Item.of('forestry:serum_ge', '{ForgeCaps:{Parent:{analyzed:0b,genome:{"forestry:butterfly_effect":{active:"forestry:butterfly_effect_none",inactive:"forestry:butterfly_effect_none"},"forestry:butterfly_lifespan":{active:"forestry:20id",inactive:"forestry:20id"},"forestry:butterfly_species":{active:"forestry:butterfly_cspeckled_wood",inactive:"forestry:butterfly_cspeckled_wood"},"forestry:cocoon":{active:"forestry:cocoon_default",inactive:"forestry:cocoon_default"},"forestry:fertility":{active:"forestry:2id",inactive:"forestry:2id"},"forestry:fireproof":{active:"forestry:falsed",inactive:"forestry:falsed"},"forestry:flower_type":{active:"forestry:flower_type_vanilla",inactive:"forestry:flower_type_vanilla"},"forestry:humidity_tolerance":{active:"forestry:tolerance_none",inactive:"forestry:tolerance_none"},"forestry:metabolism":{active:"forestry:2i",inactive:"forestry:2i"},"forestry:never_sleeps":{active:"forestry:falsed",inactive:"forestry:falsed"},"forestry:size":{active:"forestry:0.5f",inactive:"forestry:0.5f"},"forestry:speed":{active:"forestry:0.3fd",inactive:"forestry:0.3fd"},"forestry:temperature_tolerance":{active:"forestry:tolerance_none",inactive:"forestry:tolerance_none"},"forestry:tolerates_rain":{active:"forestry:falsed",inactive:"forestry:falsed"}},health:20,max_heath:20}}}')

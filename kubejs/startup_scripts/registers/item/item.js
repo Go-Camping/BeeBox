@@ -11,4 +11,8 @@ StartupEvents.registry("item", event => {
         .texture("minecraft:item/honeycomb")
         .maxDamage(2)
         .maxStackSize(1)
+
+    event.create("kubejs:box_structure_helper")
+        .texture("minecraft:item/end_crystal")
+        .maxStackSize(1)
 })

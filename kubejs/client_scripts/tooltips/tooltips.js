@@ -26,4 +26,11 @@ ItemEvents.tooltip(event => {
             text.add(Text.of("§c§knorth"))
         }
     })
+
+    event.addAdvanced("kubejs:box_structure_helper", (item, advanced, text) => {
+        text.add("§3右键以寻找附近的蜂箱核心，在此生成一个结构")
+        text.add("§3该结构剔除了蜂箱内部以外的方块，方便圈选结构")
+        text.add("§3在框选结构范围的两个对角各生成一个方块")
+        text.add("§3范围内有大量水的话需要将gamerule waterSourceConversion设为false")
+    })
 })
