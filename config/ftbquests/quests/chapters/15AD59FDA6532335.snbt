@@ -3,19 +3,25 @@
 	default_quest_shape: ""
 	filename: "15AD59FDA6532335"
 	group: "1E50C9E8EDCD00B9"
+	icon: "minecraft:bee_nest"
 	id: "15AD59FDA6532335"
 	order_index: 2
 	quest_links: [ ]
 	quests: [
 		{
+			description: [
+				"--类似tier0这种能看到未解锁任务图标但不显示细节会不会好一点"
+				"--也可以部分隐藏部分可见"
+			]
 			id: "582F3E7A620805A0"
+			subtitle: "蜂箱类型"
 			tasks: [{
 				id: "1F164D0392850673"
 				title: "了解你的世界"
 				type: "checkmark"
 			}]
-			x: -0.5d
-			y: -2.0d
+			x: 2.5d
+			y: -8.0d
 		}
 		{
 			id: "2B2391CCF8F6B11B"
@@ -24,7 +30,436 @@
 				title: "装扮你的蜂巢"
 				type: "checkmark"
 			}]
+			x: 2.5d
+			y: -9.0d
+		}
+		{
+			dependencies: ["0198A3516C33AC63"]
+			icon: "minecraft:map"
+			id: "47232D36D478620D"
+			tasks: [{
+				id: "02CC0AD8F1EEF29D"
+				item: "minecraft:map"
+				type: "item"
+			}]
+			title: "tier1"
+			x: 2.5d
+			y: -4.0d
+		}
+		{
+			dependencies: [
+				"47232D36D478620D"
+				"0198A3516C33AC63"
+			]
+			id: "33C5EFFDC27F32E7"
+			subtitle: "举个例子"
+			tasks: [{
+				dimension: "minecraft:the_nether"
+				id: "1D65B6CBC41F0D44"
+				type: "dimension"
+			}]
+			title: "tier2"
+			x: 2.5d
+			y: -2.0d
+		}
+		{
+			dependencies: ["582F3E7A620805A0"]
+			id: "0198A3516C33AC63"
+			tasks: [{
+				id: "17FAE16E6D73EC2D"
+				title: "tier0"
+				type: "checkmark"
+			}]
+			x: 2.5d
+			y: -6.0d
+		}
+		{
+			dependencies: [
+				"47232D36D478620D"
+				"33C5EFFDC27F32E7"
+				"0198A3516C33AC63"
+			]
+			id: "42EA4CFE98EF507B"
+			subtitle: "举个例子"
+			tasks: [{
+				dimension: "minecraft:the_end"
+				id: "5F2FC79B2DB4C704"
+				type: "dimension"
+			}]
+			title: "tier3"
+			x: 2.5d
+			y: 0.0d
+		}
+		{
+			dependencies: [
+				"47232D36D478620D"
+				"33C5EFFDC27F32E7"
+				"42EA4CFE98EF507B"
+				"0198A3516C33AC63"
+			]
+			id: "7C1A0FE60C28EC68"
+			subtitle: "不知道放什么"
+			tasks: [{
+				id: "639E98880C29ABA8"
+				item: {
+					Count: 1
+					id: "minecraft:elytra"
+					tag: {
+						Damage: 0
+					}
+				}
+				type: "item"
+			}]
+			title: "tier4"
+			x: 2.5d
+			y: 2.0d
+		}
+		{
+			dependencies: ["0198A3516C33AC63"]
+			description: [
+				"其中有用于开局引导的物资"
+				"有可升级的“类商店”cm机器----随着升级产生一些方块和新的功能性机器"
+			]
+			hide_details_until_startable: true
+			id: "652920C7AF98D678"
+			subtitle: "出生点"
+			tasks: [{
+				id: "6646617734D7F34B"
+				item: "kubejs:beehive"
+				type: "item"
+			}]
+			title: "伊始之巢"
+			x: 4.0d
+			y: -6.0d
+		}
+		{
+			dependencies: ["0198A3516C33AC63"]
+			description: [
+				"真的什么都没有"
+				"（default的蜂巢）"
+			]
+			hide_details_until_startable: true
+			id: "282AB8EAFB42E87E"
+			subtitle: "什么都没有"
+			tasks: [{
+				id: "0E2EC8CEED29E7C1"
+				item: "minecraft:glass_pane"
+				type: "item"
+			}]
+			title: "空无之巢"
+			x: 1.0d
+			y: -6.0d
+		}
+		{
+			dependencies: ["47232D36D478620D"]
+			hide_until_deps_complete: true
+			icon: "minecraft:cherry_sapling"
+			id: "45B82479D9A6D3B0"
+			subtitle: "熟悉的景色"
+			title: "生息之巢"
+			x: 4.0d
+			y: -4.0d
+		}
+		{
+			dependencies: ["47232D36D478620D"]
+			hide_until_deps_complete: true
+			icon: "minecraft:crying_obsidian"
+			id: "313B6A6FDC9EAB37"
+			subtitle: "愿你有所收获"
+			tasks: [{
+				id: "5FB6942637E69E03"
+				structure: "minecraft:mineshaft"
+				title: "腐化之巢"
+				type: "structure"
+			}]
+			x: 1.0d
+			y: -4.0d
+		}
+		{
+			dependencies: ["33C5EFFDC27F32E7"]
+			hide_until_deps_complete: true
+			icon: "minecraft:clock"
+			id: "42405729C3E98A13"
+			subtitle: "luck？？"
+			tasks: [{
+				id: "4F02B5809FC3BC72"
+				structure: "minecraft:mineshaft"
+				title: "莫测之巢"
+				type: "structure"
+			}]
+			x: 4.0d
+			y: -2.0d
+		}
+		{
+			dependencies: ["33C5EFFDC27F32E7"]
+			hide_until_deps_complete: true
+			icon: "minecraft:gilded_blackstone"
+			id: "47B79943A0F120F9"
+			subtitle: "猪人堆"
+			tasks: [{
+				id: "69CA7FECF9A7BBE9"
+				observe_type: 0
+				timer: 0L
+				title: "残余之巢"
+				to_observe: "minecraft:air"
+				type: "observation"
+			}]
+			title: "远古之巢"
+			x: 1.0d
+			y: -2.0d
+		}
+		{
+			dependencies: ["42EA4CFE98EF507B"]
+			hide_until_deps_complete: true
+			icon: "minecraft:end_crystal"
+			id: "07CB19DE91A26D2F"
+			subtitle: "晶化之迷"
+			title: "结晶之巢"
+			x: 5.5d
+			y: 0.0d
+		}
+		{
+			dependencies: ["33C5EFFDC27F32E7"]
+			hide_until_deps_complete: true
+			id: "3E99DD092DDAAE85"
+			subtitle: "下界美景"
+			tasks: [{
+				amount: 1000L
+				fluid: "minecraft:lava"
+				id: "2E37504577F8DD94"
+				type: "fluid"
+			}]
+			title: "滕炎之巢"
 			x: -0.5d
+			y: -2.0d
+		}
+		{
+			dependencies: ["42EA4CFE98EF507B"]
+			hide_until_deps_complete: true
+			icon: "minecraft:sculk"
+			id: "5FA5124E3AC5F48F"
+			subtitle: "嘘——"
+			tasks: [{
+				entity: "minecraft:zombie"
+				icon: "minecraft:echo_shard"
+				id: "6B5590D815D73BBE"
+				title: "深谙之巢"
+				type: "kill"
+				value: 100L
+			}]
+			x: 1.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["33C5EFFDC27F32E7"]
+			hide_until_deps_complete: true
+			id: "1269AD1608730033"
+			subtitle: "经验宝宝"
+			tasks: [{
+				id: "73FCE092DB2BA783"
+				item: "minecraft:book"
+				type: "item"
+			}]
+			title: "知识之巢"
+			x: 5.5d
+			y: -2.0d
+		}
+		{
+			dependencies: ["2B2391CCF8F6B11B"]
+			id: "39084621461E9E35"
+			tasks: [{
+				id: "01FD40F9173C6B2E"
+				item: {
+					Count: 1
+					id: "kubejs:nesting_order"
+					tag: {
+						Damage: 0
+					}
+				}
+				type: "item"
+			}]
+			x: 2.5d
+			y: -11.0d
+		}
+		{
+			dependencies: ["2B2391CCF8F6B11B"]
+			id: "57CBC6B4FD24DCD8"
+			subtitle: "我是一个粉刷匠，粉刷本领强"
+			tasks: [{
+				id: "3472529426A6AF46"
+				item: "kubejs:debugger"
+				type: "item"
+			}]
+			title: "刷子（待实现）"
+			x: 4.0d
+			y: -11.0d
+		}
+		{
+			dependencies: ["2B2391CCF8F6B11B"]
+			id: "57A8415EA485AFA1"
+			subtitle: "用于修改蜂巢的其他物品"
+			tasks: [{
+				id: "378A31A2C4964E68"
+				item: "minecraft:chain"
+				type: "item"
+			}]
+			title: "其他工具（待实现）"
+			x: 1.0d
+			y: -11.0d
+		}
+		{
+			dependencies: ["47232D36D478620D"]
+			id: "77D4E1D5E82FBBF8"
+			subtitle: "必要的付出"
+			tasks: [{
+				biome: "minecraft:plains"
+				icon: "minecraft:andesite"
+				id: "7C4B5D01EB0DDC43"
+				type: "biome"
+			}]
+			title: "盤岩之巢"
+			x: 5.5d
+			y: -4.0d
+		}
+		{
+			dependencies: ["33C5EFFDC27F32E7"]
+			id: "2A53C50D1086A13E"
+			subtitle: "何物为上？"
+			tasks: [{
+				biome: "minecraft:plains"
+				icon: "minecraft:soul_soil"
+				id: "7D002829F99D1942"
+				type: "biome"
+			}]
+			title: "盘魂之巢"
+			x: -2.0d
+			y: -2.0d
+		}
+		{
+			dependencies: ["7C1A0FE60C28EC68"]
+			id: "780BD47335549696"
+			tasks: [{
+				icon: "anvilcraft:large_cake"
+				id: "546B6579632847DE"
+				title: "待定"
+				type: "custom"
+			}]
+			x: 2.5d
+			y: 4.0d
+		}
+		{
+			dependencies: ["47232D36D478620D"]
+			id: "058EFFC53169535A"
+			subtitle: "并非一无所有"
+			tasks: [{
+				icon: "minecraft:dead_bush"
+				id: "2B645D3C226EC805"
+				title: "荒芜之巢"
+				type: "custom"
+			}]
+			x: -0.5d
+			y: -4.0d
+		}
+		{
+			dependencies: ["33C5EFFDC27F32E7"]
+			icon: "minecraft:black_banner"
+			id: "767BB58F1A2E6280"
+			subtitle: "刂民村"
+			tasks: [{
+				id: "35838625F1DCD862"
+				title: "喧嚣之巢"
+				type: "custom"
+			}]
+			title: "喧嚣之巢"
+			x: 7.0d
+			y: -2.0d
+		}
+		{
+			dependencies: ["7C1A0FE60C28EC68"]
+			id: "662CF348011536E4"
+			subtitle: "殿堂"
+			tasks: [{
+				id: "53ED9DB3F886D2B5"
+				item: "minecraft:beacon"
+				type: "item"
+			}]
+			title: "荣誉之巢"
+			x: 4.0d
+			y: 2.0d
+		}
+		{
+			dependencies: ["7C1A0FE60C28EC68"]
+			id: "0CBCF7BFDB4041AD"
+			subtitle: "和解"
+			tasks: [{
+				id: "7D22D4B801FFDAE6"
+				item: "minecraft:music_disc_mellohi"
+				type: "item"
+			}]
+			title: "预示之巢"
+			x: 5.5d
+			y: 2.0d
+		}
+		{
+			dependencies: ["42EA4CFE98EF507B"]
+			id: "0FEFAADCBAC90BA4"
+			subtitle: "至高天"
+			tasks: [{
+				icon: "minecraft:white_concrete"
+				id: "258503C7249C4984"
+				title: "穹顶之巢"
+				type: "custom"
+			}]
+			x: 4.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["42EA4CFE98EF507B"]
+			icon: "minecraft:enchanted_golden_apple"
+			id: "3C6217449E857F5B"
+			subtitle: "食不休也"
+			title: "贪饕之巢"
+			x: -0.5d
+			y: 0.0d
+		}
+		{
+			dependencies: ["42EA4CFE98EF507B"]
+			id: "756BA952C30592BC"
+			tasks: [{
+				id: "4C983976840BD1B4"
+				type: "custom"
+			}]
+			x: 7.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["42EA4CFE98EF507B"]
+			id: "7B0B34F46D86439B"
+			tasks: [{
+				id: "5CA7DB590474B7D2"
+				type: "custom"
+			}]
+			x: -2.0d
+			y: 0.0d
+		}
+		{
+			dependencies: ["42EA4CFE98EF507B"]
+			id: "46EF095C6F4E03FD"
+			tasks: [{
+				id: "729C869982EA81E9"
+				type: "custom"
+			}]
+			x: -3.5d
+			y: 0.0d
+		}
+		{
+			dependencies: ["42EA4CFE98EF507B"]
+			id: "58AD5041C538DC9D"
+			tasks: [{
+				id: "31679E2A443F4E18"
+				type: "custom"
+			}]
+			x: 8.5d
 			y: 0.0d
 		}
 	]

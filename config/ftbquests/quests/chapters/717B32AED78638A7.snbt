@@ -6,6 +6,15 @@
 	id: "717B32AED78638A7"
 	order_index: 1
 	quest_links: [ ]
-	quests: [ ]
+	quests: [{
+		id: "786B1068191FC6C6"
+		tasks: [{
+			id: "620B24CBBF20B0F1"
+			item: "anthillinside:red_sugar"
+			type: "item"
+		}]
+		x: 0.0d
+		y: 0.0d
+	}]
 	title: "物流"
 }

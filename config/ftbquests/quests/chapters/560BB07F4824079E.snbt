@@ -3,6 +3,7 @@
 	default_quest_shape: ""
 	filename: "560BB07F4824079E"
 	group: "10FD0047EEC595A4"
+	icon: "minecraft:oak_door"
 	id: "560BB07F4824079E"
 	order_index: 0
 	quest_links: [ ]

@@ -1,0 +1,42 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "30B87D604B8CCBC7"
+	group: "6E53925153C89C44"
+	id: "30B87D604B8CCBC7"
+	order_index: 0
+	quest_links: [ ]
+	quests: [
+		{
+			id: "683C58EF2C45DF12"
+			tasks: [{
+				id: "6B4607E372650044"
+				item: "minecraft:dark_prismarine"
+				type: "item"
+			}]
+			x: 0.0d
+			y: 0.0d
+		}
+		{
+			id: "55AD1CEE68392D7B"
+			tasks: [{
+				id: "16A765539A9C21E2"
+				item: "anvilcraft:netherite_crystal_nucleus"
+				type: "item"
+			}]
+			x: 2.0d
+			y: 0.0d
+		}
+		{
+			id: "48C26F165009DB07"
+			tasks: [{
+				id: "451A8D9062FCC313"
+				item: "minecraft:phantom_membrane"
+				type: "item"
+			}]
+			x: 4.0d
+			y: 0.0d
+		}
+	]
+	title: "谜题"
+}

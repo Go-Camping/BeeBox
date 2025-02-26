@@ -1,0 +1,21 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "7A10B7919EE2A3C5"
+	group: "10FD0047EEC595A4"
+	icon: "minecraft:crimson_door"
+	id: "7A10B7919EE2A3C5"
+	order_index: 1
+	quest_links: [ ]
+	quests: [{
+		id: "720B7B043BE5E0AE"
+		tasks: [{
+			dimension: "minecraft:the_nether"
+			id: "187E926E8FFFFD0B"
+			type: "dimension"
+		}]
+		x: 0.0d
+		y: -0.5d
+	}]
+	title: "下界"
+}

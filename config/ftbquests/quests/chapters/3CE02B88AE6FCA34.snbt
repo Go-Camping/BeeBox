@@ -1,0 +1,21 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "3CE02B88AE6FCA34"
+	group: "10FD0047EEC595A4"
+	icon: "minecraft:warped_door"
+	id: "3CE02B88AE6FCA34"
+	order_index: 2
+	quest_links: [ ]
+	quests: [{
+		id: "74CD78452E3B97C9"
+		tasks: [{
+			dimension: "minecraft:the_end"
+			id: "1AF5000FAD7C15B0"
+			type: "dimension"
+		}]
+		x: 0.0d
+		y: 0.0d
+	}]
+	title: "末地"
+}

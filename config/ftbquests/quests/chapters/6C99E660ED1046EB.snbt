@@ -6,6 +6,50 @@
 	id: "6C99E660ED1046EB"
 	order_index: 1
 	quest_links: [ ]
-	quests: [ ]
+	quests: [{
+		id: "4AF4AD9B74506A1A"
+		tasks: [{
+			id: "73CD6D7D86985E3E"
+			item: {
+				Count: 1
+				id: "agricraft:seed"
+				tag: {
+					genes: {
+						fertility: {
+							dom: 1
+							rec: 1
+						}
+						gain: {
+							dom: 1
+							rec: 1
+						}
+						growth: {
+							dom: 1
+							rec: 1
+						}
+						mutativity: {
+							dom: 1
+							rec: 1
+						}
+						resistance: {
+							dom: 1
+							rec: 1
+						}
+						species: {
+							dom: "minecraft:cactus"
+							rec: "minecraft:cactus"
+						}
+						strength: {
+							dom: 1
+							rec: 1
+						}
+					}
+				}
+			}
+			type: "item"
+		}]
+		x: -1.0d
+		y: -0.5d
+	}]
 	title: "农业工艺"
 }

@@ -1,0 +1,21 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "bosses"
+	group: "6E53925153C89C44"
+	id: "69B6272AEC87B0B7"
+	order_index: 1
+	quest_links: [ ]
+	quests: [{
+		id: "52EE303824E9D929"
+		tasks: [{
+			icon: "minecraft:wither_skeleton_spawn_egg"
+			id: "2D467C5E489A0853"
+			title: "?"
+			type: "custom"
+		}]
+		x: -1.5d
+		y: -0.5d
+	}]
+	title: "Bosses"
+}

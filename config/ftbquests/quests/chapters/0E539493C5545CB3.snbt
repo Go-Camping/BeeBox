@@ -6,6 +6,114 @@
 	id: "0E539493C5545CB3"
 	order_index: 0
 	quest_links: [ ]
-	quests: [ ]
+	quests: [{
+		id: "0C78087A4B8DF1C3"
+		tasks: [{
+			id: "13B8370889DF342D"
+			item: {
+				Count: 1
+				ForgeCaps: {
+					Parent: {
+						analyzed: 0b
+						genome: {
+							"forestry:fireproof": {
+								active: "forestry:falsed"
+								inactive: "forestry:falsed"
+							}
+							"forestry:fruits": {
+								active: "forestry:fruit_apple"
+								inactive: "forestry:fruit_apple"
+							}
+							"forestry:girth": {
+								active: "forestry:1i"
+								inactive: "forestry:1i"
+							}
+							"forestry:height": {
+								active: "forestry:0.75f"
+								inactive: "forestry:0.75f"
+							}
+							"forestry:maturation": {
+								active: "forestry:2i"
+								inactive: "forestry:2i"
+							}
+							"forestry:saplings": {
+								active: "forestry:0.05fd"
+								inactive: "forestry:0.05fd"
+							}
+							"forestry:sappiness": {
+								active: "forestry:0.1fd"
+								inactive: "forestry:0.1fd"
+							}
+							"forestry:tree_effect": {
+								active: "forestry:tree_effect_none"
+								inactive: "forestry:tree_effect_none"
+							}
+							"forestry:tree_species": {
+								active: "forestry:tree_oak"
+								inactive: "forestry:tree_oak"
+							}
+							"forestry:yield": {
+								active: "forestry:0.025fd"
+								inactive: "forestry:0.025fd"
+							}
+						}
+					}
+				}
+				id: "forestry:sapling"
+				tag: {
+					ForgeCaps: {
+						Parent: {
+							analyzed: 0b
+							genome: {
+								"forestry:fireproof": {
+									active: "forestry:falsed"
+									inactive: "forestry:falsed"
+								}
+								"forestry:fruits": {
+									active: "forestry:fruit_apple"
+									inactive: "forestry:fruit_apple"
+								}
+								"forestry:girth": {
+									active: "forestry:1i"
+									inactive: "forestry:1i"
+								}
+								"forestry:height": {
+									active: "forestry:0.75f"
+									inactive: "forestry:0.75f"
+								}
+								"forestry:maturation": {
+									active: "forestry:2i"
+									inactive: "forestry:2i"
+								}
+								"forestry:saplings": {
+									active: "forestry:0.05fd"
+									inactive: "forestry:0.05fd"
+								}
+								"forestry:sappiness": {
+									active: "forestry:0.1fd"
+									inactive: "forestry:0.1fd"
+								}
+								"forestry:tree_effect": {
+									active: "forestry:tree_effect_none"
+									inactive: "forestry:tree_effect_none"
+								}
+								"forestry:tree_species": {
+									active: "forestry:tree_oak"
+									inactive: "forestry:tree_oak"
+								}
+								"forestry:yield": {
+									active: "forestry:0.025fd"
+									inactive: "forestry:0.025fd"
+								}
+							}
+						}
+					}
+				}
+			}
+			type: "item"
+		}]
+		x: 0.0d
+		y: -0.5d
+	}]
 	title: "林业"
 }

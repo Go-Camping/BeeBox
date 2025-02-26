@@ -33,7 +33,7 @@
 			y: -2.0d
 		}
 		{
-			dependencies: ["40EC173E0A9F0193"]
+			dependencies: ["037B8E0D5856F39C"]
 			id: "029ED71476C99A20"
 			tasks: [{
 				id: "7A108EE76F3B885A"
@@ -46,7 +46,7 @@
 				}
 				type: "item"
 			}]
-			x: 2.5d
+			x: 4.0d
 			y: -2.0d
 		}
 		{
@@ -57,7 +57,7 @@
 				item: "forestry:bee_comb_honey"
 				type: "item"
 			}]
-			x: 5.0d
+			x: 6.0d
 			y: -2.0d
 		}
 		{
@@ -68,7 +68,7 @@
 				item: "forestry:bee_house"
 				type: "item"
 			}]
-			x: 7.5d
+			x: 8.0d
 			y: -2.0d
 		}
 		{
@@ -211,6 +211,20 @@
 				weak_nbt_match: true
 			}]
 			x: 10.5d
+			y: -2.0d
+		}
+		{
+			dependencies: [
+				"4D66C5EF1B591D84"
+				"40EC173E0A9F0193"
+			]
+			id: "037B8E0D5856F39C"
+			tasks: [{
+				id: "08237D2BC7B29229"
+				item: "kubejs:bee_shop"
+				type: "item"
+			}]
+			x: 2.0d
 			y: -2.0d
 		}
 	]

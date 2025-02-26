@@ -3,30 +3,33 @@
 	default_quest_shape: ""
 	filename: "749AC579ECDE334A"
 	group: "1E50C9E8EDCD00B9"
+	icon: "minecraft:frogspawn"
 	id: "749AC579ECDE334A"
 	order_index: 1
 	quest_links: [ ]
 	quests: [
 		{
-			id: "21DFA784BEE4EEA6"
+			id: "4D66C5EF1B591D84"
+			subtitle: "用于引导“商店”的升级流程"
 			tasks: [{
-				id: "5542D504FB1C4207"
-				item: "minecraft:iron_ingot"
-				type: "item"
+				id: "550057F4FBEE43B2"
+				title: "本章核心"
+				type: "checkmark"
 			}]
-			x: 1.5d
-			y: 0.0d
+			x: 2.5d
+			y: -1.5d
 		}
 		{
-			id: "23A0A66F665AAAD8"
+			dependencies: ["4D66C5EF1B591D84"]
+			id: "030852EA8BBC98B9"
 			tasks: [{
-				id: "6DFB91A5C7428240"
-				item: "minecraft:wheat_seeds"
+				id: "0CC92C30139E6F12"
+				item: "kubejs:bee_shop"
 				type: "item"
 			}]
-			x: 3.5d
-			y: 0.0d
+			x: 4.5d
+			y: -1.5d
 		}
 	]
-	title: "重要的基础物资"
+	title: "进化"
 }
