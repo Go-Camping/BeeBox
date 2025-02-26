@@ -17,10 +17,26 @@ ItemEvents.tooltip(event => {
 
     event.addAdvanced("kubejs:nesting_order", (item, advanced, text) => {
         let nbt = item.getNbt()
-        if (nbt && nbt.getString("presets") != null) {
-            let presets = nbt.getString("presets")
-            let direction = Text.translatable("§f预设：§3" + presets).getString()
-            text.add( direction)
+        if (nbt && nbt.getString("box_preset") != null) {
+            let presets = nbt.getString("box_preset")
+            let type = nbt.getString("box_type")
+            let tier = nbt.getString("box_tier")
+            let str
+            switch (true) {
+                case (presets ? true:false):
+                    str = Text.translatable("§f预设：§3").append(Text.translatable(`${presets}`)).getString()
+                    break
+                case (type ? true:false):
+                    str = Text.translatable("§f生成类型：§3").append(Text.translatable(`kubejs.beebox.type.${type}`)).getString()
+                    break
+                case (tier ? true:false):
+                    str = Text.translatable("§f生成等级：§3").append(Text.translatable(`${tier}`)).getString()
+                    break
+                default:
+                    str = Text.translatable("kubejs.beebox.type.default").getString()
+                    break
+            }
+            text.add(str)
         }
         else {
             text.add(Text.of("§c§knorth"))

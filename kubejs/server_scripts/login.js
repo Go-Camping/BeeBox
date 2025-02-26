@@ -1,3 +1,3 @@
 PlayerEvents.loggedIn(event => {
-    BeeBoxPresetsWeightRegistry(event.level, event.player.blockPosition())
+    BeeBoxPresetsWeightInit(event.level, event.player.blockPosition())
 })

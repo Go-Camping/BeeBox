@@ -152,11 +152,12 @@
 		}
 		{
 			dependencies: ["47232D36D478620D"]
+			description: ["global.BeeBoxTypes.natural"]
 			hide_until_deps_complete: true
 			icon: "minecraft:cherry_sapling"
 			id: "45B82479D9A6D3B0"
 			subtitle: "熟悉的景色"
-			title: "生息之巢"
+			title: "自然之巢"
 			x: 4.0d
 			y: -4.0d
 		}

@@ -11,5 +11,9 @@
     "kubejs.status_msg.door_direction.4": "西南",
     "kubejs.status_msg.door_direction.5": "西北",
     "machine.kubejs.beebox_center.name": "蜂箱核心",
-    "machine.kubejs.beebox_dooreye.name": "蜂箱门眼"
+    "machine.kubejs.beebox_dooreye.name": "蜂箱门眼",
+    "kubejs.beebox.type.default": "§3空无之巢",
+    "kubejs.beebox.type.start_box": "§3伊始之巢",
+    "kubejs.beebox.type.natural": "§3自然之巢",
+    "kubejs.beebox.type.putrefy": "§3腐化之巢"
 }

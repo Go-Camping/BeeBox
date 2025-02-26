@@ -51,6 +51,7 @@ const BeeBoxDecorator = {
             "minecraft:dirt",
             "minecraft:sandstone",
             "minecraft:sandstone",
+            "minecraft:sand",
             "minecraft:tuff",
             "minecraft:tuff",
             "minecraft:deepslate_iron_ore"
@@ -64,21 +65,15 @@ const BeeBoxDecorator = {
             if(bL > 4){
                 muteBox.setBoxSize(bL - 2 * i, bH)
                 muteBox.getFlatBlocks(offsetY1).forEach(block => {
-                    block.set(blockList[randomIndex(blockList)])
+                    block.set(randomInList(blockList))
                 })
                 muteBox.getFlatBlocks(offsetY2).forEach(block => {
-                    block.set(blockList[randomIndex(blockList)])
+                    block.set(randomInList(blockList))
                 })
             }
         }
         bbb.buildAllWalls()
+        bbb.buildAllDoors()
     }
 }
 
-function randomIndex(list){
-    let random = Math.random()
-    for(; random == 1;){
-        random = Math.random()
-    }
-    return Math.floor(random * (list.length))
-}
