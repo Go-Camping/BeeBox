@@ -16,7 +16,7 @@ ItemEvents.rightClicked("kubejs:debugger", event=>{
         player.tell(`Size: [${bbb.getBoxSize().toString()}]`)
     }
     else{
-        player.tell(global.BeeBoxTypesPool["natural"])
+        player.tell(level.getTime())
         let order = getNestingOrderItem("none", "natural")
         player.give(order)
     }

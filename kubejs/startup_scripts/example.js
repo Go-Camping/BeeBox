@@ -23,4 +23,11 @@ ForestryEvents.apiculture(event => {
 // ForestryEvents.genetics(event => {
 //     event.
 // })
-// ForestryEvents.genetics()
+ForestryEvents.genetics(event => {
+    // event.defineTaxon()
+})
+ForestryEvents.apiculture(event => {
+    // event.modifySpecies("a", (species) => {
+        
+    // })
+})

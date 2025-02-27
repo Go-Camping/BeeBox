@@ -8,8 +8,6 @@ ForestryEvents.apiculture(event=>{
         //todo: 效果注册中的那个布尔值似乎指的是基因显隐性，有待进一步测试
         event.registerBeeEffect(effect, effectDataValidation[dataValidation], true, serverDoEffect[effect], clientDoEffect[clientEffect], true)
     }
-
-
 })
 
 
@@ -32,7 +30,6 @@ const effectDataValidation = {
  * @constant
  * @type {Object<string,function(Internal.IGenome, Internal.IEffectData, Internal.IBeeHousing):Internal.IEffectData>}
  */
-
 const serverDoEffect = {
     "kubejs:example_effect" : function(iGenome, iEffectdata, iBeeHousing){
         //每两秒从16格附近玩家手里拿一个物品的实例     
@@ -52,7 +49,19 @@ const serverDoEffect = {
             }
         }
         return iEffectdata
-    }
+    },
+    "kubejs:eat_dirt_effect" : function(iGenome, iEffectdata, iBeeHousing){
+        // // 概率产出1个dirt或石子     
+        // let level = iBeeHousing.getWorldObj()
+        // let owner = iBeeHousing.owner
+        // let player = level.getPlayerByUUID(owner.id)
+        // let beeListeners = iBeeHousing.getBeeListeners()
+        // level.tell("1")
+        // if(level.getTime() % 10 == 0){
+        //     player.tell(beeListeners.keys())
+        // }
+        return iEffectdata
+    },
 }
 
 /**
@@ -75,5 +84,6 @@ const clientDoEffect = {
  */
 
 const effectAlleles = {
-    "example_alleles" : ForestryAlleles.REGISTRY.registryAllele(new ResourceLocation("kubejs","example_effect"), BeeChromosomes.EFFECT)
+    "example_alleles" : ForestryAlleles.REGISTRY.registryAllele(new ResourceLocation("kubejs","example_effect"), BeeChromosomes.EFFECT),
+    "eat_dirt_alleles" : ForestryAlleles.REGISTRY.registryAllele(new ResourceLocation("kubejs","eat_dirt_effect"), BeeChromosomes.EFFECT)
 }

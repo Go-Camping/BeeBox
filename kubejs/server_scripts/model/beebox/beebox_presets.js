@@ -12,13 +12,12 @@ function BeeBoxPoolsWeight(bbb, tierWeight, typeWeight){
     this.type = bbb.type
 }
 
+/**
+ * 蜂箱预设
+ * @constant
+ * @type {Object<string,function(Internal.Level, BlockPos):BeeBoxPoolsWeight}
+ */
 const BeeBoxPresets = {
-    /**
-     * 默认的蜂箱预设
-     * @param {*} level 
-     * @param {*} pos 
-     * @returns 返回一个由BeeBoxBuilder和权重组成的数组
-     */
     "default" : function(level, pos){
         let bbb = new BeeBoxBuilder(level, pos)
         let tierWeight = 100
@@ -67,7 +66,6 @@ const BeeBoxPresets = {
         .addStructure("kubejs:biome/swamp_2", new BlockPos(-14, 2, -13))
         .setBiome("minecraft:swamp")
         .setAllWallBlock("minecraft:stripped_mangrove_wood")
-        // .setTopBlock("minecraft:yellow_stained_glass")
         .setFloorBlock("kubejs:beehive")
         .setTier("t1")
         .setType("natural")
@@ -79,10 +77,8 @@ const BeeBoxPresets = {
         let bbb = new BeeBoxBuilder(level, pos)
         .addStructure("kubejs:biome/warm_ocean_1", new BlockPos(-14, 2, -13))
         .setBiome("minecraft:warm_ocean")
-        .setAllWallBlock("minecraft:glass")
+        .setAllWallBlock("minecraft:barrier")
         .addDecoration("hourglass")
-        // .setTopBlock("minecraft:light_blue_terracotta")
-        // .setFloorBlock("kubejs:beehive")
         .setTier("t1")
         .setType("natural")
         let tierWeight = 100

@@ -204,6 +204,7 @@ BeeBoxBuilder.prototype = {
             currentEndPos = this.sideUnits[5][i]
             this.level.server.runCommandSilent(`fillbiome ${currentStartPos.x + 1} ${this.centerY} ${currentStartPos.z} ${currentEndPos.x} ${this.centerY + this.wallHeight} ${currentStartPos.z + 1} ${biome}`)
         }
+        this.setBiome(biome)
         return this
     },
     /**
@@ -243,6 +244,7 @@ BeeBoxBuilder.prototype = {
             blockColumnUnit(this.level, this.wallBlock[wall_number % 6], unit.x, unit.y, unit.z, this.wallHeight)
         }
         if(!spawnEyes){return this}
+        // 墙的信息
         let dooreye_1 = this.sideUnits[wall_number % 6][this.halfSideLength / 2].offset(0, this.wallHeight / 2 - 1, 0)
         let dooreye_2 = this.sideUnits[wall_number % 6][this.halfSideLength / 2 - 1].offset(0, this.wallHeight / 2 - 1, 0)
         let eyes_1 = blockColumnUnit(this.level, "kubejs:beebox_dooreye", dooreye_1.x, dooreye_1.y, dooreye_1.z, 3)
@@ -304,7 +306,6 @@ BeeBoxBuilder.prototype = {
                 this.level.server.runCommandSilent(`fill ${currentStartPos.x - 1} ${flatY} ${currentStartPos.z} ${currentEndPos.x + 2} ${flatY} ${currentStartPos.z + 1} ${block} ${type}`)
             }
        }
-    //    this.buildCenter()
        return this
     },
     /**
@@ -453,12 +454,9 @@ BeeBoxBuilder.prototype = {
         for(let i = 0; i < wallsList.length; i++){
             this.setWallBlock(i, String(wallsList[i]))
         }
-        /**
-         * @type {Internal.ByteTag[]} 
-         */   
         let doorsList = boxData.get("doors")
         for(let i = 0; i < doorsList.length; i++){
-            this.setDoor(i, doorsList[i].getAsByte())
+            this.setDoor(i, doorsList[i])
         }
         let decorationList = boxData.get("decorations")
         for(let i = 0; i < decorationList.length; i++){
@@ -615,26 +613,5 @@ BeeBoxBuilder.prototype = {
     }
 }
 
-/**
- * 柱子单元
- * @param {Internal.Level} level 
- * @param {*} block 
- * @param {*} x 
- * @param {*} y 
- * @param {*} z 
- * @param {*} high 
- * @returns 
- */
-function blockColumnUnit(level, block, x, y, z, high){
-    level.server.runCommandSilent(`fill ${x} ${y} ${z} ${x + 1} ${y + high} ${z + 1} ${block}`)
-    let blockList = []
-    let baseBlockPos = new BlockPos(x, y, z)
-    for(let h = 0; h <= high; h++){
-        blockList.push(level.getBlock(baseBlockPos.offset(0, h, 0)))
-        blockList.push(level.getBlock(baseBlockPos.offset(1, h, 0)))
-        blockList.push(level.getBlock(baseBlockPos.offset(0, h, 1)))
-        blockList.push(level.getBlock(baseBlockPos.offset(1, h, 1)))
-    }
-    return blockList
-}
+
 

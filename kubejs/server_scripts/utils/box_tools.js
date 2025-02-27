@@ -104,3 +104,26 @@ function getNestingOrderItem(tiers, type){
     }
     return Item.of("kubejs:nesting_order", `${nbt.toString()}`)
 }
+
+/**
+ * 用于建筑蜂箱的柱子单元
+ * @param {Internal.Level} level 
+ * @param {*} block 
+ * @param {*} x 
+ * @param {*} y 
+ * @param {*} z 
+ * @param {*} high 
+ * @returns  该次建筑的方块列表
+ */
+function blockColumnUnit(level, block, x, y, z, high){
+    level.server.runCommandSilent(`fill ${x} ${y} ${z} ${x + 1} ${y + high} ${z + 1} ${block}`)
+    let blockList = []
+    let baseBlockPos = new BlockPos(x, y, z)
+    for(let h = 0; h <= high; h++){
+        blockList.push(level.getBlock(baseBlockPos.offset(0, h, 0)))
+        blockList.push(level.getBlock(baseBlockPos.offset(1, h, 0)))
+        blockList.push(level.getBlock(baseBlockPos.offset(0, h, 1)))
+        blockList.push(level.getBlock(baseBlockPos.offset(1, h, 1)))
+    }
+    return blockList
+}

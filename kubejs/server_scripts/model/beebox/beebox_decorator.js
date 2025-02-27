@@ -1,10 +1,15 @@
+/**
+ * 蜂箱装饰器
+ * @constant
+ * @type {Object<string,function(BeeBoxBuilder):void}
+ */
 const BeeBoxDecorator = {
     /**
-     * 随机雕刻顶部方块，将其替换为【黄绿色染色玻璃】，一次最多10个
+     * 随机雕刻顶部方块，将其替换为【屏障】，一次最多10个
      * @param {BeeBoxBuilder} bbb 
      */
     "dress_top_by_blocks" : function(bbb){
-        let blockList = ["minecraft:lime_stained_glass"]
+        let blockList = ["minecraft:barrier"]
         let amount = 10
         let offetY = bbb.wallHeight
         let boxBorderX1 = bbb.sideUnits[5][0].x

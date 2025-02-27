@@ -16,7 +16,7 @@ BlockEvents.rightClicked("kubejs:beebox_dooreye", event => {
     let presetId = itemNbt.getString("box_preset")
     let type = itemNbt.getString("box_type")
     let tier = itemNbt.getString("box_tier")
-    let thisBox = new BeeBoxBuilder(event.level, centerPos)
+    let thisBox = new BeeBoxBuilder(event.level, centerPos).loadDataFromCenter()
     let newBox
     if(BeeBoxPresets.hasOwnProperty(presetId)){
         newBox = thisBox.extend(wallNum).preset(presetId)

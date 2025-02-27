@@ -16,5 +16,9 @@ ForestryEvents.apiculture(event=>{
 const bees = {
     'example_specie': new beeModel('example_specie').setGenus('apis').setSpecies('mySpecies').setDominant(true)
     //通过此处可以快捷为物种附加效果，特性等基因，可以用列表批量添加
-    .registerGenomes(ctx =>{ctx.set(BeeChromosomes.EFFECT, effectAlleles['example_alleles'])})
+    .registerGenomes(ctx =>{ctx.set(BeeChromosomes.EFFECT, effectAlleles['example_alleles'])}),
+    "eat_dirt_specie": new beeModel("eat_dirt_specie").setGenus("apis").setSpecies("dirtSpecies").setDominant(false)
+    .registerGenomes(ctx => {
+        ctx.set(BeeChromosomes.EFFECT, effectAlleles["eat_dirt_alleles"])
+    }),
 }
