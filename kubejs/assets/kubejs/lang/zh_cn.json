@@ -1,6 +1,8 @@
 {
     "block.kubejs.beehive": "蜂箱墙壁",
     "block.kubejs.beebox_center": "蜂箱核心",
+    "block.kubejs.royal_jelly_crystal_block": "晶化蜂王浆块",
+    "item.kubejs.royal_jelly_crystal": "晶化蜂王浆",
     "item.kubejs.shop_order": "交易清单",
     "item.kubejs.nesting_order": "筑巢令(暂定名)",
     "item.kubejs.box_structure_helper": "蜂箱结构助手",
@@ -10,7 +12,7 @@
     "kubejs.status_msg.door_direction.3": "南",
     "kubejs.status_msg.door_direction.4": "西南",
     "kubejs.status_msg.door_direction.5": "西北",
-    "machine.kubejs.beebox_center.name": "蜂箱核心",
+    "machine.kubejs.bee_egg.name": "蜂卵",
     "machine.kubejs.beebox_dooreye.name": "蜂箱门眼",
     "kubejs.beebox.type.default": "§3空无之巢",
     "kubejs.beebox.type.start_box": "§3伊始之巢",

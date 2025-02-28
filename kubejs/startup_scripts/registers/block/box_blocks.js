@@ -21,6 +21,9 @@ StartupEvents.registry('block', event => {
         .unbreakable()
 
     event.create('kubejs:beebox_center', "basic")
+        .noDrops()
+        .noValidSpawns(true)
+        .unbreakable()
         .blockEntity(entity => {
             entity.initialData({
                 "BeeBoxData":{
@@ -45,20 +48,6 @@ StartupEvents.registry('block', event => {
                 }
             })
         })
-        .noDrops()
-        .noValidSpawns(true)
-        .unbreakable()
-    // event.create('kubejs:beebox_center', "custommachinery")
-    //     .machine("kubejs:beebox_center")
-
-    // event.create("kubejs:beebox_dooreye", "custommachinery")
-    //     .machine("kubejs:beebox_dooreye")
-
-    event.create('kubejs:bee_shop', "custommachinery")
-        .machine("kubejs:bee_shop")
-
-    event.create('kubejs:bee_shop2', "custommachinery")
-        .machine("kubejs:bee_shop2")
 
     event.create('kubejs:beebox_honeycomb_block', "basic")
         .hardness(-1)
@@ -66,28 +55,28 @@ StartupEvents.registry('block', event => {
         .noDrops()
         .noValidSpawns(true)
         .textureAll("minecraft:block/honeycomb_block")
-        
+
     event.create('kubejs:beebox_dirt', "basic")
         .hardness(-1)
         .unbreakable()   
         .noDrops()
         .noValidSpawns(true)
         .textureAll("minecraft:block/dirt")
-    
+
     event.create('kubejs:beebox_oak_planks', "basic")
         .hardness(-1)
         .unbreakable()   
         .noDrops()
         .noValidSpawns(true)
         .textureAll("minecraft:block/oak_planks")
-        
+
     event.create('kubejs:beebox_stripped_oak_wood', "basic")
         .hardness(-1)
         .unbreakable()   
         .noDrops()
         .noValidSpawns(true)
         .textureAll("minecraft:block/stripped_oak_wood")
-    
+
     event.create('kubejs:beebox_lime_stained_glass', "basic")
         .hardness(-1)
         .unbreakable()   
@@ -95,4 +84,5 @@ StartupEvents.registry('block', event => {
         .noValidSpawns(true)
         .transparent(true)
         .textureAll("kubejs:block/beebox_lime_stained_glass")
+
 })

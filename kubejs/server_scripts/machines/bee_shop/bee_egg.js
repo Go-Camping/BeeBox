@@ -1,5 +1,5 @@
 ServerEvents.recipes(event => {
-    event.recipes.custommachinery.custom_machine("kubejs:bee_shop2", 1)
+    event.recipes.custommachinery.custom_machine("kubejs:bee_egg", 1)
     .requireFunctionToStart(ctx =>{
         let data = ctx.block.entity.persistentData
         if (data.contains('shop_data')) return ctx.error('done')
@@ -21,7 +21,7 @@ ServerEvents.recipes(event => {
         return ctx.success()
     })
 
-    event.recipes.custommachinery.custom_machine("kubejs:bee_shop2", 1)
+    event.recipes.custommachinery.custom_machine("kubejs:bee_egg", 1)
     .requireFunctionOnStart(ctx =>{
         let data = ctx.block.entity.persistentData
         if (!data.contains('shop_data')) return ctx.error()
@@ -45,7 +45,7 @@ ServerEvents.recipes(event => {
     })
     .requireButtonPressed('reflash')
 
-    event.recipes.custommachinery.custom_machine("kubejs:bee_shop2", 20)
+    event.recipes.custommachinery.custom_machine("kubejs:bee_egg", 20)
     .requireFunctionToStart(ctx =>{
         let machine = ctx.machine
         let pay = machine.getItemStored('input_slot_1')
@@ -60,7 +60,7 @@ ServerEvents.recipes(event => {
     })
     .requireButtonPressed('gd1')
 
-    event.recipes.custommachinery.custom_machine("kubejs:bee_shop2", 20)
+    event.recipes.custommachinery.custom_machine("kubejs:bee_egg", 20)
     .requireFunctionToStart(ctx =>{
         let machine = ctx.machine
         let pay = machine.getItemStored('input_slot_1')
@@ -74,7 +74,7 @@ ServerEvents.recipes(event => {
     })
     .requireButtonPressed('gd2')
 
-    event.recipes.custommachinery.custom_machine("kubejs:bee_shop2", 20)
+    event.recipes.custommachinery.custom_machine("kubejs:bee_egg", 20)
     .requireFunctionToStart(ctx =>{
         let machine = ctx.machine
         let pay = machine.getItemStored('input_slot_1')

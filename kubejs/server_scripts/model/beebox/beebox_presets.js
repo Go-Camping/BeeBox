@@ -27,6 +27,7 @@ const BeeBoxPresets = {
     "start_box" : function(level, pos){
         let bbb = new BeeBoxBuilder(level, pos)
         .addDecorator("dress_top_by_blocks")
+        .addStructure("kubejs:start_1", new BlockPos(-14, 2, -13))
         .setType("start_box")
         let tierWeight = 0
         let typeWeight = 0

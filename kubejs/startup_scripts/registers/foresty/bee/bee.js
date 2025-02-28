@@ -15,6 +15,8 @@ function beeModel(Id){
     this.color = Color.RED
     //注册染色体
     this.genomes = []
+    this.produce = []
+    this.mutations = []
 }
 
 beeModel.prototype = {
@@ -35,6 +37,32 @@ beeModel.prototype = {
     },
     setDominant : function(boolean){
         this.dominant = boolean
+        return this
+    },
+    /**
+     * 
+     * @param {Internal.ItemStack} itemStack 
+     * @param {number} weight 
+     */
+    addProduce : function(itemStack, weight){
+        this.produce.push({
+            "weight" : weight,
+            "itemStack" : itemStack
+        })
+        return this
+    },
+    /**
+     * 
+     * @param {ResourceLocation} specieA 
+     * @param {ResourceLocation} specieB 
+     * @param {number} chance 
+     */
+    addMutation : function(specieA, specieB, chance){
+        this.mutations.push({
+            "specieA" : specieA,
+            "specieB" : specieB,
+            "chance" : chance
+        })
         return this
     },
     /**

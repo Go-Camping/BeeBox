@@ -11,8 +11,8 @@ ItemEvents.rightClicked("kubejs:box_structure_helper", event => {
     let yScope = boxPosScope[1]
     let zScope = boxPosScope[2]
     bbb.setAllWallBlock("air").buildAllWalls(false)
-    .buildFlat(bbb.wallHeight, "minecraft:blue_glazed_terracotta", "replace")
-    .buildFlat(0, "minecraft:blue_glazed_terracotta", "replace")
+    .buildFlat(bbb.wallHeight - 1, "minecraft:blue_glazed_terracotta", "replace")
+    .buildFlat(1, "minecraft:blue_glazed_terracotta", "replace")
     .buildCenter()
     for(let y = yScope[0]; y <= yScope[1]; y++){
         for(let x = xScope[0]; x <= xScope[1]; x++){
@@ -24,8 +24,8 @@ ItemEvents.rightClicked("kubejs:box_structure_helper", event => {
             }
         }
     }
-    let structureCornerPos1 = new BlockPos(xScope[0] + 2, yScope[0] + 1, zScope[0] + 2)
-    let structureCornerPos2 = new BlockPos(xScope[1] - 2, yScope[1] - 1, zScope[1] - 2)
+    let structureCornerPos1 = new BlockPos(xScope[0] + 2, yScope[0] + 2, zScope[0] + 2)
+    let structureCornerPos2 = new BlockPos(xScope[1] - 2, yScope[1] - 2, zScope[1] - 2)
     level.getBlock(structureCornerPos1).set("minecraft:magenta_glazed_terracotta")
     level.getBlock(structureCornerPos2).set("minecraft:magenta_glazed_terracotta")
     player.tell(`§e角落1坐标:§3${structureCornerPos1}`)

@@ -15,4 +15,8 @@ StartupEvents.registry("item", event => {
     event.create("kubejs:box_structure_helper")
         .texture("minecraft:item/end_crystal")
         .maxStackSize(1)
+
+    event.create("kubejs:royal_jelly_crystal", "basic" )
+        .maxStackSize(64)
+
 })

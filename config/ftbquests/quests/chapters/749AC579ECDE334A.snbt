@@ -9,6 +9,7 @@
 	quest_links: [ ]
 	quests: [
 		{
+			dependencies: ["59B2B5856083AAAF"]
 			id: "4D66C5EF1B591D84"
 			subtitle: "用于引导“商店”的升级流程"
 			tasks: [{
@@ -16,15 +17,15 @@
 				title: "本章核心"
 				type: "checkmark"
 			}]
-			x: 2.5d
+			x: 6.0d
 			y: -1.5d
 		}
 		{
-			dependencies: ["4D66C5EF1B591D84"]
-			id: "030852EA8BBC98B9"
+			dependencies: ["22C5918825A0B482"]
+			id: "59B2B5856083AAAF"
 			tasks: [{
-				id: "0CC92C30139E6F12"
-				item: "kubejs:bee_shop"
+				id: "15449CEAA636B265"
+				item: "kubejs:bee_shop2"
 				type: "item"
 			}]
 			x: 4.5d
