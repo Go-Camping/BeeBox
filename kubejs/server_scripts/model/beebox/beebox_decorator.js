@@ -1,16 +1,28 @@
 /**
  * 蜂箱装饰器
  * @constant
- * @type {Object<string,function(BeeBoxBuilder):void}
+ * @type {Object<string,function(BeeBoxBuilder, Internal.CompoundTag):void}
  */
 const BeeBoxDecorator = {
     /**
-     * 随机雕刻顶部方块，将其替换为【屏障】，一次最多10个
-     * @param {BeeBoxBuilder} bbb 
+     * 随机雕刻顶部方块，将其替换为【args中的方块】，一次最多32个,默认为16个屏障
+     * @param args :{"block_id" : weight, "block_id" : weight ...}
      */
-    "dress_top_by_blocks" : function(bbb){
+    "dress_top_by_blocks" : function(bbb, args){
         let blockList = ["minecraft:barrier"]
-        let amount = 10
+        let amount = 16
+        if(!args.isEmpty()){
+            blockList = []
+            amount = args.getInt("amount") ?? amount
+            let blockListData = args.getCompound("block_list_data")
+            let blockListKeys = blockListData.getAllKeys()
+            blockListKeys.forEach(blockId => {
+                let weight = blockListData.getInt(blockId)
+                for(let i = 0; i < weight; i++){
+                    blockList.push(blockId)
+                }
+            })
+        }
         let offetY = bbb.wallHeight
         let boxBorderX1 = bbb.sideUnits[5][0].x
         let boxBorderX2 = bbb.sideUnits[2][0].x + 1
@@ -33,9 +45,9 @@ const BeeBoxDecorator = {
     },
     /**
      * 蜂箱内生成一个沙漏状的装饰柱
-     * @param {BeeBoxBuilder} bbb 
+     * @param args :{"block_id" : weight, "block_id" : weight ...}
      */
-    "hourglass" : function(bbb){
+    "hourglass" : function(bbb, args){
         let blockList = [
             "minecraft:air",
             "minecraft:air",
@@ -48,19 +60,22 @@ const BeeBoxDecorator = {
             "minecraft:stone",
             "minecraft:stone",
             "minecraft:stone",
-            "minecraft:stone",
-            "minecraft:stone",
             "minecraft:dirt",
             "minecraft:dirt",
             "minecraft:dirt",
             "minecraft:dirt",
-            "minecraft:sandstone",
-            "minecraft:sandstone",
-            "minecraft:sand",
-            "minecraft:tuff",
-            "minecraft:tuff",
-            "minecraft:deepslate_iron_ore"
         ]
+        if(!args.isEmpty()){
+            blockList = []
+            let blockWeightDataList = args.getCompound("block_weight_data_list")
+            let blockListKeys = blockWeightDataList.getAllKeys()
+            blockListKeys.forEach(blockId => {
+                let weight = blockWeightDataList.getInt(blockId)
+                for(let i = 0; i < weight; i++){
+                    blockList.push(blockId)
+                }
+            })
+        }
         const bL = bbb.getBoxSize()[0]
         const bH = bbb.getBoxSize()[1]
         for(let i = 0; i < bbb.wallHeight / 2; i++){

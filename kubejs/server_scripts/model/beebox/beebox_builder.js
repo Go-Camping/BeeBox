@@ -23,10 +23,10 @@ function BeeBoxBuilder (level, centerPos){
         "kubejs:beebox_honeycomb_block",
         "kubejs:beebox_honeycomb_block"
     ]
-    this.floorBlock = "kubejs:beehive"
+    this.floorBlock = "kubejs:beebox_honeycomb_block"
     this.biome = "minecraft:the_void"
     this.doors = [0, 0, 0, 0, 0, 0]
-    this.decorations = []
+    this.decorators = []
     this.structures = []
     /**
      * @type {BlockPos[][]} 六边形蜂巢的六个边的单位块坐标
@@ -42,15 +42,24 @@ BeeBoxBuilder.prototype = {
      */
     buildBox: function(){
         this.fillBiome(this.biome)
+        // this.level.tell("biome done")
         this.buildStructure()
+        // this.level.tell("structure done")
         this.buildFlat(this.wallHeight, this.topBlock, "replace")
         this.buildFlat(this.wallHeight - 1, this.topBlock, "replace")
+        // this.level.tell("top done")
         this.buildFlat(0, this.floorBlock, "replace")
         this.buildFlat(1, this.floorBlock, "replace")
+        // this.level.tell("floor done")
         this.buildAllWalls()
+        // this.level.tell("walls done")
         this.buildAllDoors()
-        this.buildDecorations()
+        // this.level.tell("doors done")
+        this.level.tell(this.decorators.toString())
+        this.buildDecorators()
+        // this.level.tell("decorators done")
         this.buildCenter()
+        // this.level.tell("center done")
         return this
     },
     /**
@@ -176,16 +185,32 @@ BeeBoxBuilder.prototype = {
      * @returns 
      */
     addStructure : function(id, offsetPos){
-        this.structures.push({"id": id, "offsetPos": offsetPos})
+        this.structures.push({
+            "id": id, 
+            "offsetX": offsetPos.x,
+            "offsetY": offsetPos.y,
+            "offsetZ": offsetPos.z
+        })
+        // let structureData = new $CompoundTag()
+        // structureData.putString("id", id)
+        // structureData.putInt("offsetX", offsetPos.x)
+        // structureData.putInt("offsetY", offsetPos.y)
+        // structureData.putInt("offsetZ", offsetPos.z)
+        // this.structures.push(structureData)
         return this
     },
     /**
      * 使用BeeBoxDecorator中定义的装饰器
      * @param {string} id 
+     * @param {Internal.CompoundTag?} args 装饰器参数
      * @returns 
      */
-    addDecoration : function(id){
-        this.decorations.push(id)
+    addDecorator : function(id, args){
+        args = args ?? new $CompoundTag()
+        this.decorators.push({
+            "id" : id,
+            "args" : args
+        })
         return this
     },
     /**
@@ -251,18 +276,25 @@ BeeBoxBuilder.prototype = {
         let eyes_2 = blockColumnUnit(this.level, "kubejs:beebox_dooreye", dooreye_2.x, dooreye_2.y, dooreye_2.z, 3)
         eyes_1.forEach(block => {
             let blockEntityData = block.getEntityData()
-            blockEntityData.getCompound("componentManager").getCompound("data_component").put("WallData", NBT.compoundTag())
-            let wallData = blockEntityData.getCompound("componentManager").getCompound("data_component").getCompound("WallData")
+            // blockEntityData.getCompound("componentManager").getCompound("data_component").put("WallData", NBT.compoundTag())
+            let wallData = blockEntityData.getCompound("data").getCompound("WallData")
             wallData.putInt("wall_number", wall_number % 6)
             wallData.putInt("box_center_x", this.centerX)
             wallData.putInt("box_center_y", this.centerY)
             wallData.putInt("box_center_z", this.centerZ)
             block.mergeEntityData(blockEntityData)
+            // block.mergeEntityData({
+            //     "WallData" : {
+            //         "wall_number" : wall_number % 6,
+            //         "box_center_x" : this.centerX,
+            //         "box_center_y" : this.centerY,
+            //         "box_center_z" : this.centerZ
+            //     }
+            // })
         })
         eyes_2.forEach(block => {
             let blockEntityData = block.getEntityData()
-            blockEntityData.getCompound("componentManager").getCompound("data_component").put("WallData", NBT.compoundTag())
-            let wallData = blockEntityData.getCompound("componentManager").getCompound("data_component").getCompound("WallData")
+            let wallData = blockEntityData.getCompound("data").getCompound("WallData")
             wallData.putInt("wall_number", wall_number % 6)
             wallData.putInt("box_center_x", this.centerX)
             wallData.putInt("box_center_y", this.centerY)
@@ -310,15 +342,15 @@ BeeBoxBuilder.prototype = {
     },
     /**
      * 在相对中心位置建造一个模板结构
-     * @param {string} id  template id
-     * @param {BlockPos} offsetPos  相对坐标，相对于蜂箱中心的偏移量
      * @returns 
      */
     buildStructure : function(){
-        this.structures.forEach(template => {
+        this.structures.forEach((template) => {
             let id = template.id
-            let offsetPos = template.offsetPos
-            this.level.server.runCommandSilent(`/place template ${id} ${this.centerX + offsetPos.x} ${this.centerY + offsetPos.y} ${this.centerZ + offsetPos.z}`)
+            let offsetX = template.offsetX
+            let offsetY = template.offsetY
+            let offsetZ = template.offsetZ
+            this.level.server.runCommandSilent(`/place template ${id} ${this.centerX + offsetX} ${this.centerY + offsetY} ${this.centerZ + offsetZ}`)
         })
         return this
     },
@@ -326,9 +358,9 @@ BeeBoxBuilder.prototype = {
      * 
      * @returns 
      */
-    buildDecorations : function(){
-        this.decorations.forEach(id => {
-            BeeBoxDecorator[id](this)
+    buildDecorators : function(){
+        this.decorators.forEach(decorator => {
+            BeeBoxDecorator[decorator.id](this, decorator.args)
         })
         return this
     },
@@ -351,7 +383,7 @@ BeeBoxBuilder.prototype = {
         newBox.wallBlock = this.wallBlock.slice()
         newBox.doors = this.doors.slice()
         newBox.structures = this.structures.slice()
-        newBox.decorations = this.decorations.slice()
+        newBox.decorators = this.decorators.slice()
         newBox.updateSideUnits()
         return newBox
     },
@@ -384,8 +416,9 @@ BeeBoxBuilder.prototype = {
         if(centerBlockContainerJS.getId() != "kubejs:beebox_center") {return this}
         // 处理蜂巢信息
         let BlockEntityData = centerBlockContainerJS.getEntityData()
-        BlockEntityData.getCompound("componentManager").getCompound("data_component").put("BeeboxData", NBT.compoundTag())
-        let boxData = BlockEntityData.getCompound("componentManager").getCompound("data_component").getCompound("BeeboxData")
+        // BlockEntityData.getCompound("componentManager").getCompound("data_component").put("BeeBoxData", NBT.compoundTag())
+        // let boxData = BlockEntityData.getCompound("componentManager").getCompound("data_component").getCompound("BeeboxData")
+        let boxData = BlockEntityData.getCompound("data").getCompound("BeeBoxData")
         boxData.putInt("boxLength", this.halfSideLength * 2)
         boxData.putInt("boxHigh", this.wallHeight + 1)
         boxData.putString("boxTier", this.tier)
@@ -401,10 +434,9 @@ BeeBoxBuilder.prototype = {
                 structureList.push(NBT.compoundTag())
             }
             structureList[i].putString("id", this.structures[i].id)
-            structureList[i].put("offset", NBT.compoundTag())
-            structureList[i].getCompound("offset").putInt("x", this.structures[i].offsetPos.x)
-            structureList[i].getCompound("offset").putInt("y", this.structures[i].offsetPos.y)
-            structureList[i].getCompound("offset").putInt("z", this.structures[i].offsetPos.z)
+            structureList[i].putInt("offsetX", this.structures[i].offsetX)
+            structureList[i].putInt("offsetY", this.structures[i].offsetY)
+            structureList[i].putInt("offsetZ", this.structures[i].offsetZ)
         }
         boxData.putString("top", this.topBlock)
         boxData.put("walls", NBT.listTag())
@@ -416,11 +448,34 @@ BeeBoxBuilder.prototype = {
             boxData.get("doors").push(NBT.byteTag(this.doors[i]))
         }
         boxData.putString("floor", this.floorBlock)
-        boxData.put("decorations", NBT.listTag())
-        for(let i = 0; i < this.decorations.length; i++){
-            boxData.get("decorations").push(NBT.stringTag(this.decorations[i]))
+        boxData.put("decorators", NBT.listTag())
+        for(let i = 0; i < this.decorators.length; i++){
+             /**
+             * @type {Internal.CompoundTag[]} 
+             */
+            let decorationList = boxData.get("decorators")
+            if(decorationList.length < i + 1){
+                decorationList.push(NBT.compoundTag())
+            }
+            decorationList[i].putString("id", this.decorators[i].id)
+            decorationList[i].put("args", this.decorators[i].args)
         }
         centerBlockContainerJS.mergeEntityData(BlockEntityData) 
+        // centerBlockContainerJS.mergeEntityData({
+        //     "BeeBoxData":{
+        //         "boxLength" : this.getBoxSize()[0],
+        //         "boxHigh" : this.getBoxSize()[1],
+        //         "boxTier" : this.tier,
+        //         "boxType" : this.type,
+        //         "biome" : this.biome,
+        //         "floor" : this.floorBlock,
+        //         "top" : this.topBlock,
+        //         "structures" : this.structures.slice(),
+        //         "walls" : this.wallBlock.slice(),
+        //         "doors" : this.doors.slice(),
+        //         "decorators" : this.decorators.slice()
+        //     }
+        // }) 
         return this
     },
     /**
@@ -433,7 +488,8 @@ BeeBoxBuilder.prototype = {
         let centerBlockContainerJS = this.level.getBlock(centerPos.x, centerPos.y, centerPos.z)
         if(centerBlockContainerJS.getId() != "kubejs:beebox_center") {return this}
         let BlockEntityData = centerBlockContainerJS.getEntityData()
-        let boxData = BlockEntityData.getCompound("componentManager").getCompound("data_component").getCompound("BeeboxData")
+        // let boxData = BlockEntityData.getCompound("componentManager").getCompound("data_component").getCompound("BeeBoxData")
+        let boxData = BlockEntityData.getCompound("data").getCompound("BeeBoxData")
         this.halfSideLength = boxData.getInt("boxLength") / 2
         this.wallHeight = boxData.getInt("boxHigh") - 1
         this.tier = boxData.getString("boxTier")
@@ -447,7 +503,7 @@ BeeBoxBuilder.prototype = {
         let structureList = boxData.get("structures")
         for(let i = 0; i < structureList.length; i++){
             let id = structureList[i].getString("id")
-            let offset = new BlockPos(structureList[i].getCompound("offset").getInt("x"), structureList[i].getCompound("offset").getInt("y"), structureList[i].getCompound("offset").getInt("z"))
+            let offset = new BlockPos(structureList[i].getInt("offsetX"), structureList[i].getInt("offsetY"), structureList[i].getInt("offsetZ"))
             this.addStructure(id, offset)
         }
         let wallsList = boxData.get("walls")
@@ -458,9 +514,12 @@ BeeBoxBuilder.prototype = {
         for(let i = 0; i < doorsList.length; i++){
             this.setDoor(i, doorsList[i])
         }
-        let decorationList = boxData.get("decorations")
+        /**
+         * @type {Internal.CompoundTag[]} 
+         */     
+        let decorationList = boxData.get("decorators")
         for(let i = 0; i < decorationList.length; i++){
-            this.addDecoration(String(decorationList[i]))
+            this.addDecorator(String(decorationList[i]), decorationList[i].getCompound("args"))
         }
         this.updateSideUnits()
         return this
@@ -512,9 +571,9 @@ BeeBoxBuilder.prototype = {
     preset : function(id){
         let pos = new BlockPos(this.centerX, this.centerY, this.centerZ)
         if(BeeBoxPresets.hasOwnProperty(id)){
-            return BeeBoxPresets[id](this.level, pos).bbb
+            return BeeBoxPresets[id](this.level, pos).builder
         }
-        else return BeeBoxPresets["default"](this.level, pos).bbb
+        else return BeeBoxPresets["default"](this.level, pos).builder
     },
     /**
      * 在预设权重map中随机选择一个预设方案

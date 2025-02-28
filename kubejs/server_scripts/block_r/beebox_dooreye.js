@@ -6,7 +6,7 @@ BlockEvents.rightClicked("kubejs:beebox_dooreye", event => {
         event.cancel()
         return
     }
-    let wallData = block.getEntityData().getCompound("componentManager").getCompound("data_component").getCompound("WallData")
+    let wallData = block.getEntityData().getCompound("data").getCompound("WallData")
     if(!wallData || !itemNbt){
         event.cancel()
         return

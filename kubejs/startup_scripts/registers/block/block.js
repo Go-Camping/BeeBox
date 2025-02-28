@@ -5,11 +5,54 @@ StartupEvents.registry('block', event => {
         .noValidSpawns(true)
         .unbreakable()
 
-    event.create('kubejs:beebox_center', "custommachinery")
-        .machine("kubejs:beebox_center")
+    event.create('kubejs:beebox_dooreye', "basic")
+        .blockEntity(entity => {
+            entity.initialData({
+                "WallData":{
+                    "wall_number" : 0,
+                    "box_center_x" : 0,
+                    "box_center_y" : 0,
+                    "box_center_z" : 0
+                }
+            })
+        })
+        .noDrops()
+        .noValidSpawns(true)
+        .unbreakable()
 
-    event.create("kubejs:beebox_dooreye", "custommachinery")
-        .machine("kubejs:beebox_dooreye")
+    event.create('kubejs:beebox_center', "basic")
+        .blockEntity(entity => {
+            entity.initialData({
+                "BeeBoxData":{
+                    "boxLength" : 16,
+                    "boxHigh" : 20,
+                    "boxTier" : "t0",
+                    "boxType" : "default",
+                    "biome" : "the_void",
+                    "floor" : "kubejs:beebox_honeycomb_block",
+                    "top" : "kubejs:beebox_honeycomb_block",
+                    "structures" : [],
+                    "walls" : [
+                        "kubejs:beebox_honeycomb_block",
+                        "kubejs:beebox_honeycomb_block",
+                        "kubejs:beebox_honeycomb_block",
+                        "kubejs:beebox_honeycomb_block",
+                        "kubejs:beebox_honeycomb_block",
+                        "kubejs:beebox_honeycomb_block",
+                    ],
+                    "doors" : [0,0,0,0,0,0],
+                    "decorators" : []
+                }
+            })
+        })
+        .noDrops()
+        .noValidSpawns(true)
+        .unbreakable()
+    // event.create('kubejs:beebox_center', "custommachinery")
+    //     .machine("kubejs:beebox_center")
+
+    // event.create("kubejs:beebox_dooreye", "custommachinery")
+    //     .machine("kubejs:beebox_dooreye")
 
     event.create('kubejs:bee_shop', "custommachinery")
         .machine("kubejs:bee_shop")

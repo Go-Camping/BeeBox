@@ -42,7 +42,7 @@ function BeeBoxPresetsWeightInit(level, pos){
          * @type {BeeBoxPoolsWeight}
          */
         let poolsWeight = BeeBoxPresets[persetId](level, pos)
-        let bbb = poolsWeight.bbb
+        let bbb = poolsWeight.builder
         let tierWeight = poolsWeight.tierWeight
         let typeWeight = poolsWeight.typeWeight
         if(global.BeeBoxTiersPool[bbb.tier]){
@@ -116,14 +116,21 @@ function getNestingOrderItem(tiers, type){
  * @returns  该次建筑的方块列表
  */
 function blockColumnUnit(level, block, x, y, z, high){
-    level.server.runCommandSilent(`fill ${x} ${y} ${z} ${x + 1} ${y + high} ${z + 1} ${block}`)
     let blockList = []
     let baseBlockPos = new BlockPos(x, y, z)
     for(let h = 0; h <= high; h++){
-        blockList.push(level.getBlock(baseBlockPos.offset(0, h, 0)))
-        blockList.push(level.getBlock(baseBlockPos.offset(1, h, 0)))
-        blockList.push(level.getBlock(baseBlockPos.offset(0, h, 1)))
-        blockList.push(level.getBlock(baseBlockPos.offset(1, h, 1)))
+        let block_1 = level.getBlock(baseBlockPos.offset(0, h, 0))
+        let block_2 = level.getBlock(baseBlockPos.offset(1, h, 0))
+        let block_3 = level.getBlock(baseBlockPos.offset(0, h, 1))
+        let block_4 = level.getBlock(baseBlockPos.offset(1, h, 1))
+        block_1.set(block)
+        block_2.set(block)
+        block_3.set(block)
+        block_4.set(block)
+        blockList.push(block_1)
+        blockList.push(block_2)
+        blockList.push(block_3)
+        blockList.push(block_4)
     }
     return blockList
 }

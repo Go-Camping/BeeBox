@@ -7,10 +7,11 @@ ItemEvents.rightClicked("kubejs:debugger", event=>{
     let buildPos = playerPos.offset(0, -3, 0)
 
     if(player.isShiftKeyDown()){
-        let bbb = new BeeBoxBuilder(level, buildPos).setBoxSize(18,22)
+        let bbb = new BeeBoxBuilder(level, buildPos)
+        // .setBoxSize(18,22)
         // .preset("swamp_box_1")
-        // .preset("start_box")
-        .preset("warm_ocean_box_1")
+        .preset("start_box")
+        // .preset("warm_ocean_box_1")
         .buildBox()
         player.tell(`build box center at [${buildPos.x}, ${buildPos.y}, ${buildPos.z}]`)
         player.tell(`Size: [${bbb.getBoxSize().toString()}]`)
