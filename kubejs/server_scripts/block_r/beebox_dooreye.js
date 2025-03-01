@@ -20,10 +20,10 @@ BlockEvents.rightClicked("kubejs:beebox_dooreye", event => {
     let newBox
     if(BeeBoxPresets.hasOwnProperty(presetId)){
         newBox = thisBox.extend(wallNum).preset(presetId)
-    }else if(global.BeeBoxTypesPool[type]){
-        newBox = thisBox.extend(wallNum).presetInRandom(global.BeeBoxTypesPool[type])
-    }else if(global.BeeBoxTiersPool[tier]){
-        newBox = thisBox.extend(wallNum).presetInRandom(global.BeeBoxTiersPool[tier])
+    }else if(global.BeeBoxTypesPools[type]){
+        newBox = thisBox.extend(wallNum).presetRandomInPool(global.BeeBoxTypesPools[type])
+    }else if(global.BeeBoxTiersPools[tier]){
+        newBox = thisBox.extend(wallNum).presetRandomInPool(global.BeeBoxTiersPools[tier])
     }else{
         newBox = thisBox.extend(wallNum).preset("default")
     }
