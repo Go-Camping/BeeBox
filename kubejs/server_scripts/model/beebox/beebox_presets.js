@@ -32,7 +32,7 @@ const BeeBoxPresets = {
         .setType("start_box")
         let tierWeight = 0
         let typeWeight = 0
-        console.log(structure)
+        // console.log(structure)
         return new BeeBoxPoolsWeight(bbb, tierWeight, typeWeight)
     },
     "forest_box_1" : function(level, pos){

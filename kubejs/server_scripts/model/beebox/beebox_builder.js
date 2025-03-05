@@ -554,25 +554,34 @@ BeeBoxBuilder.prototype = {
         return [this.halfSideLength * 2, this.wallHeight + 1]
     },
     /**
-     * 获取一个蜂箱平面内的方块
+     * 获取一个蜂箱中心Y轴偏移平面内的方块
      * @param {number} offsetY 
+     * @param {boolean} includeWall 是否包含墙壁，默认为false
      * @returns {Internal.BlockContainerJS[]}
      */
-    getFlatBlocks : function(offsetY){
+    getFlatBlocks : function(offsetY, includeWall){
         let blockList = []
+        includeWall = includeWall ?? false
         let y = this.centerY + offsetY
-        for(let i = 0; i < this.halfSideLength; i++){
+        let iMax = this.halfSideLength - 1
+        for(let i = includeWall ? 0 : 1; i < iMax + 1; i++){
             let enPos = this.sideUnits[1][i]
-            let esPos = this.sideUnits[2][i]
-            let wnPos = this.sideUnits[4][i]
-            let wsPos = this.sideUnits[5][i]
-            for(let x = wnPos.x; x <= enPos.x + 1; x++){
+            let esPos = this.sideUnits[2][iMax - i]
+            let wnPos = this.sideUnits[5][iMax - i]
+            let wsPos = this.sideUnits[4][i]
+            // 北半部分
+            let nx1 = includeWall ? wnPos.x : wnPos.x + 2
+            let nx2 = includeWall ? enPos.x + 1: enPos.x - 1
+            for(let x = nx1; x <= nx2; x++){
                 for(let z = wnPos.z; z <= enPos.z + 1; z++){
                     let pos = new BlockPos(x,y,z)
                     blockList.push(this.level.getBlock(pos))
                 }
             }
-            for(let x = wsPos.x; x <= esPos.x + 1; x++){
+            // 南半部分
+            let sx1 = includeWall ? wsPos.x : wsPos.x + 2
+            let sx2 = includeWall ? esPos.x + 1 : esPos.x - 1
+            for(let x = sx1; x <= sx2; x++){
                 for(let z = wsPos.z; z <= esPos.z + 1; z++){
                     let pos = new BlockPos(x,y,z)
                     blockList.push(this.level.getBlock(pos))
