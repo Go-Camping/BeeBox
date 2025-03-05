@@ -18,9 +18,10 @@ ItemEvents.rightClicked("kubejs:debugger", event=>{
     }
     else{
         // player.tell(global.StructuresTypesPools["natural"])
-        console.log(global.StructuresTypesPools["natural"]["kubejs:natural/swamp_2"].path)
+        // console.log(global.StructuresTypesPools["natural"]["kubejs:natural/swamp_2"].path)
         // player.tell(global.BeeBoxTypesPools)
-        let order = getNestingOrderItem("none", "natural", "natural_box_1")
+        // let order = getNestingOrderItem("none", "natural", "natural_box_1")
+        let order = getNestingOrderItem("none", "natural", "start_box")
         player.give(order)
     }
         // let goods1 = Item.of('forestry:serum_ge', '{ForgeCaps:{Parent:{analyzed:0b,genome:{"forestry:butterfly_effect":{active:"forestry:butterfly_effect_none",inactive:"forestry:butterfly_effect_none"},"forestry:butterfly_lifespan":{active:"forestry:20id",inactive:"forestry:20id"},"forestry:butterfly_species":{active:"forestry:butterfly_cspeckled_wood",inactive:"forestry:butterfly_cspeckled_wood"},"forestry:cocoon":{active:"forestry:cocoon_default",inactive:"forestry:cocoon_default"},"forestry:fertility":{active:"forestry:2id",inactive:"forestry:2id"},"forestry:fireproof":{active:"forestry:falsed",inactive:"forestry:falsed"},"forestry:flower_type":{active:"forestry:flower_type_vanilla",inactive:"forestry:flower_type_vanilla"},"forestry:humidity_tolerance":{active:"forestry:tolerance_none",inactive:"forestry:tolerance_none"},"forestry:metabolism":{active:"forestry:2i",inactive:"forestry:2i"},"forestry:never_sleeps":{active:"forestry:falsed",inactive:"forestry:falsed"},"forestry:size":{active:"forestry:0.5f",inactive:"forestry:0.5f"},"forestry:speed":{active:"forestry:0.3fd",inactive:"forestry:0.3fd"},"forestry:temperature_tolerance":{active:"forestry:tolerance_none",inactive:"forestry:tolerance_none"},"forestry:tolerates_rain":{active:"forestry:falsed",inactive:"forestry:falsed"}},health:20,max_heath:20}}}')

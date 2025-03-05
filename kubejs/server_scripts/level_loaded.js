@@ -4,6 +4,7 @@
 LevelEvents.loaded(event => {
     console.log("Level loaded")
     let level = event.getLevel()
-    BeeBoxInit(level)
-    // todo: set初始蜂箱
+    BeeBoxPoolsInit(level)
+    BeeBoxLevelStartUpInit(level)
+
 })

@@ -48,8 +48,8 @@
 			id: "6DC1C0EAD946B1B9"
 			subtitle: "用晶化蜂王浆唤醒蜜蜂"
 			tasks: [{
-				id: "5CFC676661CF9A70"
-				item: "kubejs:bee_shop2"
+				id: "6914FBCB5E0FB1D3"
+				item: "kubejs:bee_egg"
 				type: "item"
 			}]
 			x: 4.5d

@@ -31,11 +31,11 @@ function findCurrentBoxCenter(level, startPos, range, verticalRange) {
 }
 
 /**
- * 初始化
+ * 蜂箱权重池初始化
  * @param {Internal.Level} level 
  * @returns 
  */
-function BeeBoxInit(level){
+function BeeBoxPoolsInit(level){
     let pos = new BlockPos(0, 0, 0)
     Object.keys(BeeBoxStructures).forEach(structureId => {
         let currentStructure = BeeBoxStructures[structureId]
@@ -64,6 +64,21 @@ function BeeBoxInit(level){
         AddPresetToTypePool(presetId, bbb.type, typeWeight)
     })
     return 
+}
+
+/**
+ * 
+ * @param {Internal.Level} level 
+ */
+function BeeBoxLevelStartUpInit(level){
+    if(level.dimensionTypeId() != "minecraft:overworld"){return}
+    let startPos = new BlockPos(0, 62, 0)
+    if(level.getBlock(startPos).id != "minecraft:air"){return}
+    level.setBlockAndUpdate(startPos, Block.getBlock("kubejs:magic_bee_candy_block").defaultBlockState())
+    level.server.runCommandSilent(`/setworldspawn 0 64 0`)
+    // let startBox = new BeeBoxBuilder(level, startCenterPos)
+    // startBox.preset("start_box").buildBox()
+    console.log("BeeBox StartBox Done")
 }
 
 /**

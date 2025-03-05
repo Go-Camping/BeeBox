@@ -3,6 +3,7 @@
     "block.kubejs.beebox_center": "蜂箱核心",
     "block.kubejs.royal_jelly_crystal_block": "晶化蜂王浆块",
     "item.kubejs.royal_jelly_crystal": "晶化蜂王浆",
+    "item.kubejs.magic_bee_candy_block": "梦幻蜂糖块",
     "item.kubejs.shop_order": "交易清单",
     "item.kubejs.nesting_order": "筑巢令(暂定名)",
     "item.kubejs.box_structure_helper": "蜂箱结构助手",
@@ -18,4 +19,5 @@
     "kubejs.beebox.type.start_box": "§3伊始之巢",
     "kubejs.beebox.type.natural": "§3自然之巢",
     "kubejs.beebox.type.putrefy": "§3腐化之巢"
+    
 }

@@ -23,11 +23,6 @@
 		{
 			dependencies: ["22C5918825A0B482"]
 			id: "59B2B5856083AAAF"
-			tasks: [{
-				id: "15449CEAA636B265"
-				item: "kubejs:bee_shop2"
-				type: "item"
-			}]
 			x: 4.5d
 			y: -1.5d
 		}
