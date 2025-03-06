@@ -55,7 +55,6 @@ BeeBoxBuilder.prototype = {
         // this.level.tell("walls done")
         this.buildAllDoors()
         // this.level.tell("doors done")
-        this.level.tell(this.decorators.toString())
         this.buildDecorators()
         // this.level.tell("decorators done")
         this.buildCenter()
@@ -180,23 +179,42 @@ BeeBoxBuilder.prototype = {
     },
     /**
      * 向蜂箱中添加结构
-     * @param {string} id 结构id
+     * @param {string} path 结构路径
      * @param {BlockPos} offsetPos 相对坐标，相对于蜂箱中心的偏移量
      * @returns 
      */
-    addStructure : function(id, offsetPos){
+    addStructure : function(path, offsetPos){
         this.structures.push({
-            "id": id, 
+            "path": path, 
             "offsetX": offsetPos.x,
             "offsetY": offsetPos.y,
             "offsetZ": offsetPos.z
         })
-        // let structureData = new $CompoundTag()
-        // structureData.putString("id", id)
-        // structureData.putInt("offsetX", offsetPos.x)
-        // structureData.putInt("offsetY", offsetPos.y)
-        // structureData.putInt("offsetZ", offsetPos.z)
-        // this.structures.push(structureData)
+        return this
+    },
+    /**
+     * 
+     * @param {StructuresTypesPool} pool 
+     * @returns 
+     */
+    addStructureRandomInPool(pool){
+        let totalWeight = 0
+        let currentWeight = 0
+        Object.keys(pool).forEach(structureId => {
+            let weight = pool[structureId].weight
+            totalWeight += weight
+        })
+        let randomWeight = Math.random() * totalWeight
+        for(let i = 0; i < Object.keys(pool).length; i++){
+            let structureId = Object.keys(pool)[i]
+            let weight = pool[structureId].weight
+            currentWeight += weight
+            if(currentWeight >= randomWeight){
+                let offsetPos = pool[structureId].offset
+                this.addStructure(`${structureId}`, offsetPos)
+                break
+            }
+        }
         return this
     },
     /**
@@ -346,11 +364,12 @@ BeeBoxBuilder.prototype = {
      */
     buildStructure : function(){
         this.structures.forEach((template) => {
-            let id = template.id
+            let path = template.path
             let offsetX = template.offsetX
             let offsetY = template.offsetY
             let offsetZ = template.offsetZ
-            this.level.server.runCommandSilent(`/place template ${id} ${this.centerX + offsetX} ${this.centerY + offsetY} ${this.centerZ + offsetZ}`)
+            let startPos = this.getCenterBlock().pos.offset(offsetX, offsetY, offsetZ)
+            this.level.server.runCommandSilent(`/place template ${path} ${startPos.x} ${startPos.y} ${startPos.z}`)
         })
         return this
     },
@@ -433,7 +452,7 @@ BeeBoxBuilder.prototype = {
             if(structureList.length < i + 1){
                 structureList.push(NBT.compoundTag())
             }
-            structureList[i].putString("id", this.structures[i].id)
+            structureList[i].putString("path", this.structures[i].path)
             structureList[i].putInt("offsetX", this.structures[i].offsetX)
             structureList[i].putInt("offsetY", this.structures[i].offsetY)
             structureList[i].putInt("offsetZ", this.structures[i].offsetZ)
@@ -502,7 +521,7 @@ BeeBoxBuilder.prototype = {
          */        
         let structureList = boxData.get("structures")
         for(let i = 0; i < structureList.length; i++){
-            let id = structureList[i].getString("id")
+            let id = structureList[i].getString("path")
             let offset = new BlockPos(structureList[i].getInt("offsetX"), structureList[i].getInt("offsetY"), structureList[i].getInt("offsetZ"))
             this.addStructure(id, offset)
         }
@@ -535,25 +554,34 @@ BeeBoxBuilder.prototype = {
         return [this.halfSideLength * 2, this.wallHeight + 1]
     },
     /**
-     * 获取一个蜂箱平面内的方块
+     * 获取一个蜂箱中心Y轴偏移平面内的方块
      * @param {number} offsetY 
+     * @param {boolean} includeWall 是否包含墙壁，默认为false
      * @returns {Internal.BlockContainerJS[]}
      */
-    getFlatBlocks : function(offsetY){
+    getFlatBlocks : function(offsetY, includeWall){
         let blockList = []
+        includeWall = includeWall ?? false
         let y = this.centerY + offsetY
-        for(let i = 0; i < this.halfSideLength; i++){
+        let iMax = this.halfSideLength - 1
+        for(let i = includeWall ? 0 : 1; i < iMax + 1; i++){
             let enPos = this.sideUnits[1][i]
-            let esPos = this.sideUnits[2][i]
-            let wnPos = this.sideUnits[4][i]
-            let wsPos = this.sideUnits[5][i]
-            for(let x = wnPos.x; x <= enPos.x + 1; x++){
+            let esPos = this.sideUnits[2][iMax - i]
+            let wnPos = this.sideUnits[5][iMax - i]
+            let wsPos = this.sideUnits[4][i]
+            // 北半部分
+            let nx1 = includeWall ? wnPos.x : wnPos.x + 2
+            let nx2 = includeWall ? enPos.x + 1: enPos.x - 1
+            for(let x = nx1; x <= nx2; x++){
                 for(let z = wnPos.z; z <= enPos.z + 1; z++){
                     let pos = new BlockPos(x,y,z)
                     blockList.push(this.level.getBlock(pos))
                 }
             }
-            for(let x = wsPos.x; x <= esPos.x + 1; x++){
+            // 南半部分
+            let sx1 = includeWall ? wsPos.x : wsPos.x + 2
+            let sx2 = includeWall ? esPos.x + 1 : esPos.x - 1
+            for(let x = sx1; x <= sx2; x++){
                 for(let z = wsPos.z; z <= esPos.z + 1; z++){
                     let pos = new BlockPos(x,y,z)
                     blockList.push(this.level.getBlock(pos))
@@ -577,13 +605,13 @@ BeeBoxBuilder.prototype = {
     },
     /**
      * 在预设权重map中随机选择一个预设方案
-     * @param {Object} presetWeightMap 
+     * @param {BeeBoxTypesPool} pool globaxxxPool
      * @param {boolean} ignoreWeight 
      * @returns 
      */
-    presetInRandom : function(presetWeightMap, ignoreWeight){
+    presetRandomInPool : function(pool, ignoreWeight){
         ignoreWeight = ignoreWeight ?? false
-        let persetList = Object.keys(presetWeightMap)
+        let persetList = Object.keys(pool)
         if(ignoreWeight){
             let bbb = new BeeBoxBuilder(this.level, pos).preset(randomInList(persetList))
             return bbb
@@ -592,13 +620,13 @@ BeeBoxBuilder.prototype = {
             let totalWeight = 0
             let currentWeight = 0
             persetList.forEach(presetId => {
-                let weight = presetWeightMap[presetId]
+                let weight = pool[presetId]
                 totalWeight += weight
             })
             let randomWeight = Math.floor(Math.random() * totalWeight)
             for(let i = 0; i < persetList.length; i++){
                 let presetId = persetList[i]
-                let weight = presetWeightMap[presetId]
+                let weight = pool[presetId]
                 currentWeight += weight
                 if(randomWeight <= currentWeight){
                     let bbb = new BeeBoxBuilder(this.level, pos).preset(presetId)

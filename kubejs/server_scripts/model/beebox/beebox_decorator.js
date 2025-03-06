@@ -92,8 +92,6 @@ const BeeBoxDecorator = {
                 })
             }
         }
-        bbb.buildAllWalls()
-        bbb.buildAllDoors()
     }
 }
 

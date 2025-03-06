@@ -31,45 +31,80 @@ function findCurrentBoxCenter(level, startPos, range, verticalRange) {
 }
 
 /**
- * 初始化
- * @param {*} level 
- * @param {*} pos 
+ * 蜂箱权重池初始化
+ * @param {Internal.Level} level 
  * @returns 
  */
-function BeeBoxPresetsWeightInit(level, pos){
-    Object.keys(BeeBoxPresets).forEach(persetId => {
+function BeeBoxPoolsInit(level){
+    let pos = new BlockPos(0, 0, 0)
+    Object.keys(BeeBoxStructures).forEach(structureId => {
+        let currentStructure = BeeBoxStructures[structureId]
+        currentStructure.type_pools.forEach(poolId => {
+            if(global.StructuresTypesPools.hasOwnProperty(poolId)){
+                global.StructuresTypesPools[poolId][structureId] = {
+                    "path" : currentStructure.path,
+                    "weight" : currentStructure.weight,
+                    "offset" : currentStructure.offsetPos
+                }
+            }
+        })
+    })
+    Object.keys(BeeBoxPresets).forEach(presetId => {
         /**
          * @type {BeeBoxPoolsWeight}
          */
-        let poolsWeight = BeeBoxPresets[persetId](level, pos)
+        let poolsWeight = BeeBoxPresets[presetId](level, pos)
         let bbb = poolsWeight.builder
         let tierWeight = poolsWeight.tierWeight
         let typeWeight = poolsWeight.typeWeight
-        if(global.BeeBoxTiersPool[bbb.tier]){
-            global.BeeBoxTiersPool[bbb.tier][persetId] = tierWeight
-        }
-        if(global.BeeBoxTypesPool[bbb.type]){
-            global.BeeBoxTypesPool[bbb.type][persetId] = typeWeight
-        }
+        AddPresetToTierPool(presetId, bbb.tier, tierWeight)
+        // if(global.BeeBoxTypesPool[bbb.type]){
+        //     global.BeeBoxTypesPool[bbb.type][presetId] = typeWeight
+        // }
+        AddPresetToTypePool(presetId, bbb.type, typeWeight)
     })
-    // 结构：global.BeeBoxTiersPool
-    // global.BeeBoxTiersPool = {
-    //     "t0" : {
-    //         "id": weight,
-    //         "id": weight,
-    //     },
-    // }
     return 
 }
 
 /**
  * 
- * @param {string} presetID 
+ * @param {Internal.Level} level 
+ */
+function BeeBoxLevelStartUpInit(level){
+    if(level.dimensionTypeId() != "minecraft:overworld"){return}
+    let startPos = new BlockPos(0, 62, 0)
+    if(level.getBlock(startPos).id != "minecraft:air"){return}
+    level.setBlockAndUpdate(startPos, Block.getBlock("kubejs:magic_bee_candy_block").defaultBlockState())
+    level.server.runCommandSilent(`/setworldspawn 0 64 0`)
+    // let startBox = new BeeBoxBuilder(level, startCenterPos)
+    // startBox.preset("start_box").buildBox()
+    console.log("BeeBox StartBox Done")
+}
+
+/**
+ * 
+ * @param {string} presetId 
  * @param {string} tier 
  * @param {number} weight 
  */
-function AddPresetToTierPool(presetID, tier, weight){
-    global.BeeBoxTiersPool[tier][presetID] = weight
+function AddPresetToTierPool(presetId, tier, weight){
+    if(!BeeBoxPresets.hasOwnProperty(presetId)){return}
+    if(global.BeeBoxTiersPools.hasOwnProperty(tier)){
+        global.BeeBoxTiersPools[tier][presetId] = weight
+    }
+}
+
+/**
+ * 
+ * @param {string} presetId 
+ * @param {string} type 
+ * @param {number} weight 
+ */
+function AddPresetToTypePool(presetId, type, weight){
+    if(!BeeBoxPresets.hasOwnProperty(presetId)){return}
+    if(global.BeeBoxTypesPools.hasOwnProperty(type)){
+        global.BeeBoxTypesPools[type][presetId] = weight
+    }
 }
 
 /**
@@ -88,19 +123,22 @@ function randomInList(list){
 
 /**
  * 获取一个指定池子的筑巢令
- * @param {String?} tiers 蜂箱等级
- * @param {String?} type 蜂箱类型 生成时优先级高于tiers
- * @param {String?} presetId 预设id
+ * @param {String?} tiers 蜂箱等级，生成时优先级最低
+ * @param {String?} type 蜂箱类型 生成时优先级中等
+ * @param {String?} presetId 预设id生成时优先级最高
  * @returns 
  */
-function getNestingOrderItem(tiers, type){
+function getNestingOrderItem(tiers, type, presetId){
     let item = Item.of("kubejs:nesting_order")
     let nbt = item.getNbt()
-    if(global.BeeBoxTiersPool[tiers]){
+    if(global.BeeBoxTiersPools[tiers]){
         nbt.putString("box_tier", tiers)
     }
-    if(global.BeeBoxTypesPool[type]){
+    if(global.BeeBoxTypesPools[type]){
         nbt.putString("box_type", type)
+    }
+    if(presetId && BeeBoxPresets.hasOwnProperty(presetId)){
+        nbt.putString("box_preset", presetId)
     }
     return Item.of("kubejs:nesting_order", `${nbt.toString()}`)
 }

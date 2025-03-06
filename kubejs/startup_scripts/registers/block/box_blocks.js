@@ -5,6 +5,12 @@ StartupEvents.registry('block', event => {
         .noValidSpawns(true)
         .unbreakable()
 
+    event.create('kubejs:magic_bee_candy_block')
+        .hardness(-1)
+        .noDrops()
+        .noValidSpawns(true)
+        .unbreakable()
+
     event.create('kubejs:beebox_dooreye', "basic")
         .blockEntity(entity => {
             entity.initialData({

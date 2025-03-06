@@ -1,0 +1,10 @@
+BlockEvents.rightClicked("kubejs:magic_bee_candy_block", event => {
+    let block = event.getBlock()
+    let player = event.getPlayer()
+    let box = new BeeBoxBuilder(event.level, block.pos)
+    box.preset("start_box").buildBox()
+    player.potionEffects.add("minecraft:slow_falling", 20 * 5, 0)
+    player.potionEffects.add("minecraft:blindness", 20 * 5, 0)
+    player.potionEffects.add("minecraft:nausea", 20 * 5, 2)
+    player.teleportTo(box.centerX, box.centerY + box.wallHeight - 3, box.centerZ)
+})
