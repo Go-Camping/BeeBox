@@ -1,0 +1,404 @@
+{
+  "name": {
+    "text": "machine.kubejs.origin_hive.name"
+  },
+  "appearance": {
+    "running": {
+      "custommachinery:block": "anvilcraft:cream_block",
+      "custommachinery:item": "anvilcraft:cream_block"
+    },
+    "errored": {
+      "custommachinery:block": "anvilcraft:cream_block",
+      "custommachinery:item": "anvilcraft:cream_block"
+    },
+    "paused": {
+      "custommachinery:block": "anvilcraft:cream_block",
+      "custommachinery:item": "anvilcraft:cream_block"
+    },
+    "custommachinery:block": "anvilcraft:cream_block",
+    "custommachinery:item": "anvilcraft:cream_block",
+    "idle": {
+      "custommachinery:block": "anvilcraft:cream_block",
+      "custommachinery:item": "anvilcraft:cream_block"
+    }
+  },
+  "components": [
+    {
+      "type": "custommachinery:fluid",
+      "mode": "none",
+      "unique": true,
+      "id": "honey_store",
+      "capacity": 10000
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "filter": ["forestry:bee_drone_ge"],
+      "whitelist": true,
+      "capacity": 1,
+      "max_input": 64,
+      "max_output": 64,
+      "id": "drone_cell_2"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "filter": ["forestry:bee_drone_ge"],
+      "whitelist": true,
+      "capacity": 1,
+      "max_input": 64,
+      "max_output": 64,
+      "id": "drone_cell_3"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "filter": ["forestry:bee_drone_ge"],
+      "whitelist": true,
+      "capacity": 1,
+      "max_input": 64,
+      "max_output": 64,
+      "id": "drone_cell_4"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "filter": ["forestry:bee_drone_ge"],
+      "whitelist": true,
+      "capacity": 1,
+      "max_input": 64,
+      "max_output": 64,
+      "id": "drone_cell_5"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "filter": ["forestry:bee_drone_ge"],
+      "whitelist": true,
+      "capacity": 1,
+      "max_input": 64,
+      "max_output": 64,
+      "id": "drone_cell_6"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "filter": ["forestry:bee_drone_ge"],
+      "whitelist": true,
+      "capacity": 1,
+      "max_input": 64,
+      "max_output": 64,
+      "id": "drone_cell_7"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "filter": ["forestry:bee_drone_ge"],
+      "whitelist": true,
+      "capacity": 1,
+      "max_input": 64,
+      "max_output": 64,
+      "id": "drone_cell_8"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": false,
+      "filter": ["forestry:bee_drone_ge"],
+      "whitelist": true,
+      "capacity": 1,
+      "max_input": 64,
+      "max_output": 64,
+      "id": "drone_cell_1"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "filter": ["forestry:bee_drone_ge"],
+      "whitelist": true,
+      "capacity": 1,
+      "max_input": 64,
+      "max_output": 64,
+      "id": "drone_cell_9"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "id": "store_1"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "id": "store_2"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "id": "store_3"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "id": "store_4"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "id": "store_5"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "id": "store_6"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "id": "store_7"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "id": "store_8"
+    },
+    {
+      "type": "custommachinery:item",
+      "locked": true,
+      "id": "store_9"
+    }
+  ],
+  "gui": [
+    {
+      "type": "custommachinery:slot",
+      "id": "drone_cell_2",
+      "x": 27,
+      "y": 5,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "drone_cell_3",
+      "x": 45,
+      "y": 5,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "drone_cell_1",
+      "x": 9,
+      "y": 5,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "drone_cell_4",
+      "x": 9,
+      "y": 23,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "drone_cell_5",
+      "x": 27,
+      "y": 23,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "drone_cell_6",
+      "x": 45,
+      "y": 23,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "drone_cell_7",
+      "x": 9,
+      "y": 41,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "drone_cell_8",
+      "x": 27,
+      "y": 41,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "drone_cell_9",
+      "x": 45,
+      "y": 41,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:fluid",
+      "id": "honey_store",
+      "x": 66,
+      "y": 5
+    },
+    {
+      "type": "custommachinery:bar",
+      "id": "growth",
+      "x": 87,
+      "y": 5
+    },
+    {
+      "type": "custommachinery:player_inventory",
+      "x": 47,
+      "y": 115
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "store_1",
+      "x": 165,
+      "y": 5,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "store_2",
+      "x": 183,
+      "y": 5,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "store_3",
+      "x": 201,
+      "y": 5,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "store_4",
+      "x": 165,
+      "y": 23,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "store_5",
+      "x": 183,
+      "y": 23,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "store_6",
+      "x": 201,
+      "y": 23,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "store_7",
+      "x": 165,
+      "y": 41,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "store_8",
+      "x": 183,
+      "y": 41,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    },
+    {
+      "type": "custommachinery:slot",
+      "id": "store_9",
+      "x": 201,
+      "y": 41,
+      "ghost": {
+        "items": [
+          "minecraft:air"
+        ],
+        "color": {}
+      }
+    }
+  ]
+}
