@@ -58,9 +58,6 @@ function BeeBoxPoolsInit(level){
         let tierWeight = poolsWeight.tierWeight
         let typeWeight = poolsWeight.typeWeight
         AddPresetToTierPool(presetId, bbb.tier, tierWeight)
-        // if(global.BeeBoxTypesPool[bbb.type]){
-        //     global.BeeBoxTypesPool[bbb.type][presetId] = typeWeight
-        // }
         AddPresetToTypePool(presetId, bbb.type, typeWeight)
     })
     return 
@@ -76,9 +73,6 @@ function BeeBoxLevelStartUpInit(level){
     if(level.getBlock(startPos).id != "minecraft:air"){return}
     level.setBlockAndUpdate(startPos, Block.getBlock("kubejs:magic_bee_candy_block").defaultBlockState())
     level.server.runCommandSilent(`/setworldspawn 0 64 0`)
-    // let startBox = new BeeBoxBuilder(level, startCenterPos)
-    // startBox.preset("start_box").buildBox()
-    console.log("BeeBox StartBox Done")
 }
 
 /**
@@ -117,34 +111,76 @@ function randomInList(list){
     if(list.length > 0){
         return list[Math.floor(random * (list.length))]
     }else{
-        return
+        return null
     }
 }
 
 /**
- * 获取一个指定池子的筑巢令
- * @param {String?} tiers 蜂箱等级，生成时优先级最低
- * @param {String?} type 蜂箱类型 生成时优先级中等
- * @param {String?} presetId 预设id生成时优先级最高
- * @returns 
+ * 获取指定样式的筑巢令, 参数决定以何种方式生成蜂巢
+ * 
+ * 例如let order = NestingOrder("type_pool", "natural") 是指在global.BeeBoxTypesPools["natural"]中根据权重随机生成一个自然蜂巢类型的预设
+ * @param {string} pool_species  "tier_pool" | "type_pool" | "preset"
+ * 
+ * 用于选择池子的种类，分别对应global.BeeBoxTiersPools、global.BeeBoxTypesPools、BeeBoxPresets; 
+ * 如果为"preset"，则为指定蜂巢
+ * @param {string} pool_key 池子id或预设id
+ * @param {boolean?} ignoreWeight 是否忽略权重，默认false
  */
-function getNestingOrderItem(tiers, type, presetId){
-    let item = Item.of("kubejs:nesting_order")
-    let nbt = item.getNbt()
-    if(global.BeeBoxTiersPools[tiers]){
-        nbt.putString("box_tier", tiers)
+function getNestingOrderItem(pool_species, pool_key, ignoreWeight){
+    ignoreWeight = ignoreWeight ?? false
+    let order = Item.of('kubejs:nesting_order', '{Damage:0}')
+    // order.nbt.putString("pool_species", pool_species)
+    // order.nbt.putString("pool_key", pool_key)
+    // console.log(pool_key.length)
+    let pool
+    switch(pool_species){
+        case "preset":
+            order.nbt.putString("box_preset", pool_key)
+            return order
+            break
+        case "type_pool":
+            if(!global.BeeBoxTypesPools.hasOwnProperty(pool_key)){return order}
+            pool = global.BeeBoxTypesPools[pool_key] 
+            order.nbt.putString("box_type", pool_key)
+            break
+        case "tier_pool":
+            if(!global.BeeBoxTiersPools.hasOwnProperty(pool_key)){return order}
+            pool = global.BeeBoxTiersPools[pool_key] 
+            order.nbt.putString("box_tier", pool_key)
+            break
+        default:
+            return order
     }
-    if(global.BeeBoxTypesPools[type]){
-        nbt.putString("box_type", type)
+    let persetList = Object.keys(pool)
+    if(ignoreWeight){
+        if(persetList.length > 0){
+            let presetId = randomInList(persetList)
+            order.nbt.putString("box_preset", presetId)
+        }
+    }else{
+        let totalWeight = 0
+        let currentWeight = 0
+        persetList.forEach(presetId => {
+            let weight = pool[presetId]
+            totalWeight += weight
+        })
+        let randomWeight = Math.floor(Math.random() * totalWeight)
+        // console.log(randomWeight)
+        for(let i = 0; i < persetList.length; i++){
+            let presetId = persetList[i]
+            let weight = pool[presetId]
+            currentWeight += weight
+            if(randomWeight <= currentWeight){
+                order.nbt.putString("box_preset", presetId)
+                break
+            }
+        }
     }
-    if(presetId && BeeBoxPresets.hasOwnProperty(presetId)){
-        nbt.putString("box_preset", presetId)
-    }
-    return Item.of("kubejs:nesting_order", `${nbt.toString()}`)
+    return order
 }
 
 /**
- * 用于建筑蜂箱的柱子单元
+ * 用于建筑蜂箱墙壁的柱子单元
  * @param {Internal.Level} level 
  * @param {*} block 
  * @param {*} x 

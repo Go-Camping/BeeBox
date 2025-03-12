@@ -44,7 +44,7 @@ const BeeBoxPresets = {
         .setAllWallBlock("minecraft:stripped_oak_wood")
         .setTopBlock("minecraft:blue_glazed_terracotta")
         .setFloorBlock("kubejs:beehive")
-        .setTier("t1")
+        .setTier("T1")
         .setType("natural")
         let tierWeight = 100
         let typeWeight = 100
@@ -58,7 +58,7 @@ const BeeBoxPresets = {
         .setAllWallBlock("minecraft:stripped_mangrove_wood")
         .setTopBlock("minecraft:yellow_stained_glass")
         .setFloorBlock("kubejs:beehive")
-        .setTier("t1")
+        .setTier("T1")
         .setType("natural")
         let tierWeight = 100
         let typeWeight = 100
@@ -75,7 +75,7 @@ const BeeBoxPresets = {
         .setBiome("minecraft:swamp")
         .setAllWallBlock("minecraft:stripped_mangrove_wood")
         .setFloorBlock("kubejs:beehive")
-        .setTier("t1")
+        .setTier("T1")
         .setType("natural")
         let tierWeight = 100
         let typeWeight = 100
@@ -98,7 +98,7 @@ const BeeBoxPresets = {
         .setAllWallBlock("minecraft:barrier")
         .setBiome("minecraft:warm_ocean")
         .addDecorator("hourglass", decoratorArgs)
-        .setTier("t1")
+        .setTier("T1")
         .setType("natural")
         let tierWeight = 100
         let typeWeight = 100
@@ -122,7 +122,7 @@ const BeeBoxPresets = {
         .setAllWallBlock("minecraft:barrier")
         .setBiome("minecraft:warm_ocean")
         .addDecorator("hourglass", decoratorArgs)
-        .setTier("t1")
+        .setTier("T1")
         .setType("natural")
         let tierWeight = 100
         let typeWeight = 100

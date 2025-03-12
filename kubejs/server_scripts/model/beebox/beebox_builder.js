@@ -12,7 +12,7 @@ function BeeBoxBuilder (level, centerPos){
     this.centerZ = centerPos.z
     this.halfSideLength = Math.round(BeeBoxDefaultSize.boxLength / 2)
     this.wallHeight = BeeBoxDefaultSize.boxHigh - 1
-    this.tier = "t0"
+    this.tier = "T0"
     this.type = "default"
     this.topBlock = 'kubejs:beebox_honeycomb_block'
     this.wallBlock = [
@@ -140,7 +140,7 @@ BeeBoxBuilder.prototype = {
     },
     /**
      * 设置tier
-     * @param {string} tier "t0" | "t1" | "t2" | "t3" | "t4"
+     * @param {string} tier "T0" | "T1" | "T2" | "T3" | "T4"
      * @returns 
      */
     setTier : function(tier){
@@ -294,21 +294,12 @@ BeeBoxBuilder.prototype = {
         let eyes_2 = blockColumnUnit(this.level, "kubejs:beebox_dooreye", dooreye_2.x, dooreye_2.y, dooreye_2.z, 3)
         eyes_1.forEach(block => {
             let blockEntityData = block.getEntityData()
-            // blockEntityData.getCompound("componentManager").getCompound("data_component").put("WallData", NBT.compoundTag())
             let wallData = blockEntityData.getCompound("data").getCompound("WallData")
             wallData.putInt("wall_number", wall_number % 6)
             wallData.putInt("box_center_x", this.centerX)
             wallData.putInt("box_center_y", this.centerY)
             wallData.putInt("box_center_z", this.centerZ)
             block.mergeEntityData(blockEntityData)
-            // block.mergeEntityData({
-            //     "WallData" : {
-            //         "wall_number" : wall_number % 6,
-            //         "box_center_x" : this.centerX,
-            //         "box_center_y" : this.centerY,
-            //         "box_center_z" : this.centerZ
-            //     }
-            // })
         })
         eyes_2.forEach(block => {
             let blockEntityData = block.getEntityData()
@@ -480,21 +471,6 @@ BeeBoxBuilder.prototype = {
             decorationList[i].put("args", this.decorators[i].args)
         }
         centerBlockContainerJS.mergeEntityData(BlockEntityData) 
-        // centerBlockContainerJS.mergeEntityData({
-        //     "BeeBoxData":{
-        //         "boxLength" : this.getBoxSize()[0],
-        //         "boxHigh" : this.getBoxSize()[1],
-        //         "boxTier" : this.tier,
-        //         "boxType" : this.type,
-        //         "biome" : this.biome,
-        //         "floor" : this.floorBlock,
-        //         "top" : this.topBlock,
-        //         "structures" : this.structures.slice(),
-        //         "walls" : this.wallBlock.slice(),
-        //         "doors" : this.doors.slice(),
-        //         "decorators" : this.decorators.slice()
-        //     }
-        // }) 
         return this
     },
     /**
@@ -590,6 +566,18 @@ BeeBoxBuilder.prototype = {
         }
         return blockList
     },
+    getTierByNumber : function(){
+        let tierNumber = 0
+        switch(this.tier){
+            case "T0" : tierNumber = 0; break;
+            case "T1" : tierNumber = 1; break;
+            case "T2" : tierNumber = 2; break;
+            case "T3" : tierNumber = 3; break;
+            case "T4" : tierNumber = 4; break;
+            default: tierNumber = 0; break;
+        }
+        return tierNumber
+    },
     /**
      * 使用BeeBoxPresets里的预设方案
      * @param {String} id 
@@ -605,7 +593,7 @@ BeeBoxBuilder.prototype = {
     },
     /**
      * 在预设权重map中随机选择一个预设方案
-     * @param {BeeBoxTypesPool} pool globaxxxPool
+     * @param {BeeBoxTypesPool} pool    - global.xxxPool["xxx"]
      * @param {boolean} ignoreWeight 
      * @returns 
      */

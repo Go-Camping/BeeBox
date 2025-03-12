@@ -6,11 +6,11 @@
  * @type {Object<string,BeeBoxTiersPool>}
  */
 global.BeeBoxTiersPools = {
-    "t0" : {},
-    "t1" : {},
-    "t2" : {},
-    "t3" : {},
-    "t4" : {}
+    "T0" : {},
+    "T1" : {},
+    "T2" : {},
+    "T3" : {},
+    "T4" : {}
 }
 /**
  * @typedef {Object<string,number>} BeeBoxTypesPool

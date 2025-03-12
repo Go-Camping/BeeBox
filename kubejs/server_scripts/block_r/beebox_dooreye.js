@@ -1,3 +1,6 @@
+/**
+ * 在右击时，如果右键的物品是"nesting_order"，则尝试获取物品的NBT数据"box_preset"，并以此尝试生成一个新的蜂巢。
+ */
 BlockEvents.rightClicked("kubejs:beebox_dooreye", event => {
     let item = event.item
     let itemNbt = event.item.getNbt()
@@ -14,18 +17,12 @@ BlockEvents.rightClicked("kubejs:beebox_dooreye", event => {
     let centerPos = new BlockPos(wallData.getInt("box_center_x"), wallData.getInt("box_center_y"), wallData.getInt("box_center_z"))
     let wallNum = wallData.getInt("wall_number")
     let presetId = itemNbt.getString("box_preset")
-    let type = itemNbt.getString("box_type")
-    let tier = itemNbt.getString("box_tier")
+    // let type = itemNbt.getString("box_type")
+    // let tier = itemNbt.getString("box_tier")
     let thisBox = new BeeBoxBuilder(event.level, centerPos).loadDataFromCenter()
-    let newBox
+    let newBox = thisBox.extend(wallNum).preset("default")
     if(BeeBoxPresets.hasOwnProperty(presetId)){
         newBox = thisBox.extend(wallNum).preset(presetId)
-    }else if(global.BeeBoxTypesPools[type]){
-        newBox = thisBox.extend(wallNum).presetRandomInPool(global.BeeBoxTypesPools[type])
-    }else if(global.BeeBoxTiersPools[tier]){
-        newBox = thisBox.extend(wallNum).presetRandomInPool(global.BeeBoxTiersPools[tier])
-    }else{
-        newBox = thisBox.extend(wallNum).preset("default")
     }
     if(newBox.getCenterBlock().id != "kubejs:beebox_center"){
         thisBox.buildDoor(wallNum).saveDataToCenter()

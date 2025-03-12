@@ -35,3 +35,20 @@ function FindNearBlocks(mob, searchRange, verticalSearchRange, verticalOffset, i
     }
     return resBlockList
 }
+
+// /**
+//  * 
+//  * @param {Internal.Mob} mob 
+//  * @param {string} blockId 
+//  * @param {number} range 
+//  */
+// function mobGotoNearTargetBlock(mob, blockId, range){
+//     let blockList = FindNearBlocks(mob, range, 5, 0, (block) => {
+//         return block.id == blockId
+//     })
+//     if(blockList.length > 0){
+//         mob.getNavigation().stop()
+//         mob.getNavigation().moveTo(blockList[0].x, blockList[0].y + 1, blockList[0].z, 0.75)
+//     }
+//     return blockList
+// }

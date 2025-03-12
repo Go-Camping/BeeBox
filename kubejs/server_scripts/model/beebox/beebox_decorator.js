@@ -6,7 +6,7 @@
 const BeeBoxDecorator = {
     /**
      * 随机雕刻顶部方块，将其替换为【args中的方块】，一次最多32个,默认为16个屏障
-     * @param args :{"block_id" : weight, "block_id" : weight ...}
+     * @param args :{"block_list_data":["block_id" : weight, "block_id" : weight ...], "amount": number}
      */
     "dress_top_by_blocks" : function(bbb, args){
         let blockList = ["minecraft:barrier"]

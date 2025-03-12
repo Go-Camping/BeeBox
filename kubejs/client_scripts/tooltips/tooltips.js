@@ -18,25 +18,30 @@ ItemEvents.tooltip(event => {
     event.addAdvanced("kubejs:nesting_order", (item, advanced, text) => {
         let nbt = item.getNbt()
         if (nbt && nbt.getString("box_preset") != null) {
-            let presets = nbt.getString("box_preset")
-            let type = nbt.getString("box_type")
-            let tier = nbt.getString("box_tier")
+            let boxPresets = String(nbt.getString("box_preset"))
+            let boxType = String(nbt.getString("box_type"))
+            let boxTier = String(nbt.getString("box_tier"))
             let str
+            // console.log(boxPresets.length, boxType.length, boxTier.length)
+            // console.log("-------------------------")
             switch (true) {
-                case (presets ? true:false):
-                    str = Text.translatable("§f预设：§3").append(Text.translatable(`${presets}`)).getString()
+                case (boxType.length > 0):
+                    str = Text.translatable("§f类型：§3").append(Text.translatable(`kubejs.beebox.type.${boxType}`)).getString()
+                    text.add(str)
                     break
-                case (type ? true:false):
-                    str = Text.translatable("§f生成类型：§3").append(Text.translatable(`kubejs.beebox.type.${type}`)).getString()
+                case (boxTier.length > 0):
+                    str = Text.translatable("§f等级：§3").append(Text.translatable(`${boxTier}`)).getString()
+                    text.add(str)
                     break
-                case (tier ? true:false):
-                    str = Text.translatable("§f生成等级：§3").append(Text.translatable(`${tier}`)).getString()
+                case (boxPresets.length > 0):
+                    str = Text.translatable("§f预设：§3").append(Text.translatable(`${boxPresets}`)).getString()
+                    text.add(str)
                     break
                 default:
                     str = Text.translatable("kubejs.beebox.type.default").getString()
+                    text.add(str)
                     break
             }
-            text.add(str)
         }
         else {
             text.add(Text.of("§c§knorth"))

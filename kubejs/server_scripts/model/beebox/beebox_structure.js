@@ -4,8 +4,8 @@
 const BeeBoxStructures = {
     "kubejs:natural/forest_1" : {
         type_pools : ["natural"],
-        // path : "kubejs:natrual/forest_1", 
-        path : new ResourceLocation("kubejs", "natural/forest_1"), 
+        path : "kubejs:natural/forest_1", 
+        // path : new ResourceLocation("kubejs", "natural/forest_1"), 
         offsetPos : new BlockPos(-14, 2, -13),
         weight : 100
     },
