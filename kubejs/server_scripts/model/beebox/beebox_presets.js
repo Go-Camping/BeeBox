@@ -6,8 +6,8 @@
  */
 function BeeBoxPoolsWeight(bbb, tierWeight, typeWeight){
     this.builder = bbb
-    this.tierWeight = tierWeight
-    this.typeWeight = typeWeight
+    this.tierWeight = tierWeight ?? 100
+    this.typeWeight = typeWeight ?? 100
     this.tier = bbb.tier
     this.type = bbb.type
 }
@@ -32,7 +32,6 @@ const BeeBoxPresets = {
         .setType("start_box")
         let tierWeight = 0
         let typeWeight = 0
-        // console.log(structure)
         return new BeeBoxPoolsWeight(bbb, tierWeight, typeWeight)
     },
     "forest_box_1" : function(level, pos){
@@ -117,13 +116,22 @@ const BeeBoxPresets = {
         blockListData.putInt("minecraft:deepslate_iron_ore", 1)
         blockListData.putInt("air", 1)
         let bbb = new BeeBoxBuilder(level, pos)
-        // .addStructure("kubejs:natural/warm_ocean_1", new BlockPos(-14, 2, -13))
         .addStructureRandomInPool(global.StructuresTypesPools["natural"])
         .setAllWallBlock("minecraft:barrier")
-        .setBiome("minecraft:warm_ocean")
+        .setBiome("minecraft:plains")
         .addDecorator("hourglass", decoratorArgs)
         .setTier("T1")
         .setType("natural")
+        let tierWeight = 100
+        let typeWeight = 100
+        return new BeeBoxPoolsWeight(bbb, tierWeight, typeWeight)
+    },
+    "natural_box_2" : function(level, pos){
+        let bbb = new BeeBoxBuilder(level, pos).preset("natural_box_1").clearDecorators()
+        let decoratorArgs = new $CompoundTag()
+        decoratorArgs.put("start_pos", Pos2NBT(pos.offset(0, bbb.wallHeight - 1, 0)))
+        decoratorArgs.putString("block_id", "minecraft:redstone_block")
+        bbb.addDecorator("flat_growing_branches", decoratorArgs)
         let tierWeight = 100
         let typeWeight = 100
         return new BeeBoxPoolsWeight(bbb, tierWeight, typeWeight)

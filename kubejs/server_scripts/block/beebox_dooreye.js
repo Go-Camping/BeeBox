@@ -17,8 +17,6 @@ BlockEvents.rightClicked("kubejs:beebox_dooreye", event => {
     let centerPos = new BlockPos(wallData.getInt("box_center_x"), wallData.getInt("box_center_y"), wallData.getInt("box_center_z"))
     let wallNum = wallData.getInt("wall_number")
     let presetId = itemNbt.getString("box_preset")
-    // let type = itemNbt.getString("box_type")
-    // let tier = itemNbt.getString("box_tier")
     let thisBox = new BeeBoxBuilder(event.level, centerPos).loadDataFromCenter()
     let newBox = thisBox.extend(wallNum).preset("default")
     if(BeeBoxPresets.hasOwnProperty(presetId)){

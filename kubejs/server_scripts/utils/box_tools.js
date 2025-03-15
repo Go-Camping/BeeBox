@@ -129,9 +129,6 @@ function randomInList(list){
 function getNestingOrderItem(pool_species, pool_key, ignoreWeight){
     ignoreWeight = ignoreWeight ?? false
     let order = Item.of('kubejs:nesting_order', '{Damage:0}')
-    // order.nbt.putString("pool_species", pool_species)
-    // order.nbt.putString("pool_key", pool_key)
-    // console.log(pool_key.length)
     let pool
     switch(pool_species){
         case "preset":
@@ -165,12 +162,11 @@ function getNestingOrderItem(pool_species, pool_key, ignoreWeight){
             totalWeight += weight
         })
         let randomWeight = Math.floor(Math.random() * totalWeight)
-        // console.log(randomWeight)
         for(let i = 0; i < persetList.length; i++){
             let presetId = persetList[i]
             let weight = pool[presetId]
             currentWeight += weight
-            if(randomWeight <= currentWeight){
+            if(randomWeight < currentWeight){
                 order.nbt.putString("box_preset", presetId)
                 break
             }

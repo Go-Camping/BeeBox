@@ -218,7 +218,7 @@ BeeBoxBuilder.prototype = {
         return this
     },
     /**
-     * 使用BeeBoxDecorator中定义的装饰器
+     * 使用BeeBoxDecorator中定义的装饰器, 详见beebox_decorator.js
      * @param {string} id 
      * @param {Internal.CompoundTag?} args 装饰器参数
      * @returns 
@@ -248,6 +248,20 @@ BeeBoxBuilder.prototype = {
             this.level.server.runCommandSilent(`fillbiome ${currentStartPos.x + 1} ${this.centerY} ${currentStartPos.z} ${currentEndPos.x} ${this.centerY + this.wallHeight} ${currentStartPos.z + 1} ${biome}`)
         }
         this.setBiome(biome)
+        return this
+    },
+    /**
+     * 在box范围内放置某方块
+     * @param {BlockPos} pos 
+     * @param {string} block 
+     * @param {boolean?} includeShell 该范围是否包含外壳，默认true
+     * @returns 
+     */
+    buildBlock : function(pos, block, includeShell){
+        includeShell = includeShell ?? true
+        this.findPosInBox(pos, includeShell).forEach(blockPos => {
+            this.level.getBlock(blockPos).set(block)
+        })
         return this
     },
     /**
@@ -579,6 +593,30 @@ BeeBoxBuilder.prototype = {
         return tierNumber
     },
     /**
+     * 获取box的各轴坐标范围
+     * @param {string} xyz "x" | "y" | "z" | "all" (可选，默认all)
+     * @returns {Array} [xScope, yScope, zScope]
+     * @returns 
+     */
+    getBoxPosScope : function(xyz){
+        xyz = xyz ?? "all"
+        let xScope = [this.sideUnits[5][0].x, this.sideUnits[2][0].x + 1]
+        let yScope = [this.centerY, this.centerY + this.wallHeight]
+        let zScope = [this.sideUnits[0][0].z, this.sideUnits[3][0].z + 1]
+        switch(xyz){
+            case "x":
+                return xScope
+            case "y":
+                return yScope
+            case "z":
+                return zScope
+            case "all":
+                return [xScope, yScope, zScope]
+            default:
+                return [xScope, yScope, zScope]
+        }
+    },
+    /**
      * 使用BeeBoxPresets里的预设方案
      * @param {String} id 
      * @param {Object} ags 预设参数，可选
@@ -627,22 +665,34 @@ BeeBoxBuilder.prototype = {
     /**
      * 判断坐标是否在蜂箱范围内,返回在蜂箱范围内的坐标
      * @param {BlockPos[] | BlockPos} blockPos 
+     * @param {boolean?} includeShell 是否包含蜂箱壳体，默认为true
      * @returns {[]}
      */
-    findPosInBox : function(blockPos){
+    findPosInBox : function(blockPos, includeShell){
         // 
-        function checkPos(bbb, targetPos){
+        includeShell = includeShell ?? true
+        function checkPos(bbb, targetPos, includeShell){
             if(targetPos.y < bbb.centerY || targetPos.y > bbb.centerY + bbb.wallHeight){return false}
-            for(let i = 0; i < bbb.halfSideLength; i++){
+            let iMax = bbb.halfSideLength - 1
+            for(let i = includeShell ? 0 : 1; i < bbb.halfSideLength; i++){
                 let enPos = bbb.sideUnits[1][i]
-                let esPos = bbb.sideUnits[2][i]
-                let wnPos = bbb.sideUnits[4][i]
-                let wsPos = bbb.sideUnits[5][i]
-                if(targetPos.x <= (enPos.x + 1) && targetPos.x >= wnPos.x && targetPos.z >= enPos.z && targetPos.z <= enPos.z + 1){
-                    return true
-                }
-                if(targetPos.x <= (esPos.x + 1) && targetPos.x >= wsPos.x && targetPos.z >= esPos.z && targetPos.z <= esPos.z + 1){
-                    return true
+                let esPos = bbb.sideUnits[2][iMax - i]
+                let wnPos = bbb.sideUnits[5][iMax - i]
+                let wsPos = bbb.sideUnits[4][i]
+                if(includeShell){
+                    if(targetPos.x <= (enPos.x + 1) && targetPos.x >= wnPos.x && targetPos.z >= enPos.z && targetPos.z <= enPos.z + 1){
+                        return true
+                    }
+                    if(targetPos.x <= (esPos.x + 1) && targetPos.x >= wsPos.x && targetPos.z >= esPos.z && targetPos.z <= esPos.z + 1){
+                        return true
+                    }
+                }else{
+                    if(targetPos.x <= (enPos.x - 1) && targetPos.x >= wnPos.x + 2 && targetPos.z >= enPos.z && targetPos.z <= enPos.z + 1){
+                        return true
+                    }
+                    if(targetPos.x <= (esPos.x - 1) && targetPos.x >= wsPos.x + 2 && targetPos.z >= esPos.z && targetPos.z <= esPos.z + 1){
+                        return true
+                    }
                 }
             }
             return false
@@ -651,41 +701,25 @@ BeeBoxBuilder.prototype = {
         let result = []
         if(Array.isArray(blockPos)){
             blockPos.forEach(pos => {
-                if(checkPos(this, pos)){
+                if(checkPos(this, pos, includeShell)){
                     result.push(pos) 
                 }
             })
         }else{
-            if(checkPos(this, blockPos)){
+            if(checkPos(this, blockPos, includeShell)){
                 result.push(blockPos) 
             }
         }
         return result
     },
-    /**
-     * 获取box的各轴坐标范围
-     * @param {string} xyz "x" | "y" | "z" | "all" (可选，默认all)
-     * @returns {Array} 一个数组，包含xScope, yScope, zScope
-     * @returns 
-     */
-    getBoxPosScope : function(xyz){
-        xyz = xyz ?? "all"
-        let xScope = [this.sideUnits[5][0].x, this.sideUnits[2][0].x + 1]
-        let yScope = [this.centerY, this.centerY + this.wallHeight]
-        let zScope = [this.sideUnits[0][0].z, this.sideUnits[3][0].z + 1]
-        switch(xyz){
-            case "x":
-                return xScope
-            case "y":
-                return yScope
-            case "z":
-                return zScope
-            case "all":
-                return [xScope, yScope, zScope]
-            default:
-                return [xScope, yScope, zScope]
-        }
-    }
+    clearDecorators : function(){
+        this.decorators = []
+        return this
+    },
+    clearStructures : function(){
+        this.structures = []
+        return this
+    },
 }
 
 
