@@ -1,4 +1,5 @@
 StartupEvents.registry('block', event => {
+
     event.create('kubejs:zenith_clouds_log_root', 'basic')
     .hardness(10)
     .noDrops()
@@ -14,9 +15,19 @@ StartupEvents.registry('block', event => {
                 "limbPos" : [],
                 "fruitPos" : [],
                 "treeAge" : 0,
+                "maxTreeAge" : 25
             }
         })
-        // entity.serverTick()
+    })
+    .randomTick(tick => {
+        let block = tick.block
+        let level = block.level
+        if(block.id != 'kubejs:zenith_clouds_log_root'){return}
+        /**
+         * @type {GrowthTree}
+         */
+        let Gtree = global.ZenithCloudsTree(level, block.pos)
+        Gtree.loadDataFromRoot().growUp(Math.floor(Math.random() * 10))
     })
 
     event.create('kubejs:zenith_clouds_log', 'basic')
@@ -32,7 +43,7 @@ StartupEvents.registry('block', event => {
                 "y" : 320,
                 "z" : 0
             },
-            SonLimbPos : {
+            ParentLimbPos : {
                 "x" : 0,
                 "y" : 320,
                 "z" : 0
@@ -52,6 +63,30 @@ StartupEvents.registry('block', event => {
         })
     })
 
-    // event.create("kubejs:crop", "crop") //作物
+    event.create("kubejs:zenith_clouds_spaling", "crop") //树苗
+    .growTick(tick => {
+        // tick.block.setBlockState()
+        // let block = tick.block
+        // if(block.id != 'kubejs:zenith_clouds_spaling'){return}
+        // if(Math.random() < 0.5){
+        //     let level = block.level
+        //     let rootBlock = level.getBlock(block.pos.offset(0, -1, 0))
+        //     // level.tell("[crop: " + block.id + ", pos: " + rootBlock.id + "]")
+        //     rootBlock.set("kubejs:zenith_clouds_log_root")
+        //     /**
+        //      * @type {GrowthTree}
+        //      */
+        //     let Gtree = global.ZenithCloudsTree(block.level, rootBlock.pos)
+        //     Gtree.loadDataFromRoot().growUp(1)
+        //     // block.set(Gtree.leaveBlock)
+        // }
+    })
+    .randomTick(tick => {
 
+    })
+
+    event.create('kubejs:zenith_clouds_bud_leave', 'basic')
+    .hardness(10)
+    .noDrops()
+    .textureAll("minecraft:block/minecraft:moss_block")
 })

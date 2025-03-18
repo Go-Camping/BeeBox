@@ -12,6 +12,7 @@ function GrowthTree(level, rootPos, treeType) {
     this.nutrientBlock = "minecraft:honey_block"
     this.nutrientAmount = 0
     this.leaveBlock = 'minecraft:sculk'
+    this.budLeaveBlock = 'minecraft:moss_block'
     /**
      * 树干方块
      */
@@ -26,10 +27,7 @@ function GrowthTree(level, rootPos, treeType) {
     this.fruitPos = []
     this.fruitState = 0
     this.fruitBlock = "kubejs:zenith_clouds_fruit"
-    /**
-     * 开始生长果实的树龄
-     */
-    this.fruitGrowTreeAge = 20
+
     // this.fruitMaxAge = 100
     /**
      * @type {BlockPos[]} 芽的坐标
@@ -38,7 +36,7 @@ function GrowthTree(level, rootPos, treeType) {
     /**
      * 最大分支数
      */
-    this.maxBranch = 5
+    this.maxBranch = 7
     /**
      * 当前树龄
      */
@@ -46,11 +44,15 @@ function GrowthTree(level, rootPos, treeType) {
     /**
      * 最大树龄
      */
-    this.maxTreeAge = 25
+    this.maxTreeAge = 30
+    /**
+     * 开始生长果实的树龄
+     */
+    this.fruitGrowTreeAge = this.maxTreeAge / 2 + 5
     /**
      * 树的类型
      */
-    this.treeType = treeType ?? "kubejs:free_log"
+    this.treeType = treeType ?? "kubejs:common_tree"
 }
 GrowthTree.prototype = {
     /**
@@ -64,12 +66,13 @@ GrowthTree.prototype = {
         for(let i = 0; i < a; i++){
             if(!this.checkTree()){return}
             if(!this.checkRoot()){return}
-            this.growBud()
+            this.growNewBud()
             this.growLimb()
             this.growFruit()
             this.updataTreeAge()
             this.saveDataToRoot()
         }
+        // this.level.tell(this.treeAge)
         return
     },
     /**
@@ -79,6 +82,11 @@ GrowthTree.prototype = {
      */
     setMaxTreeAge(maxTreeAge){
         this.maxTreeAge = maxTreeAge
+        let rootBlock = this.level.getBlock(this.rootPos)
+        let entityData = rootBlock.entityData
+        let TreeData = entityData.getCompound('data').getCompound('TreeData')
+        TreeData.putInt('maxTreeAge', maxTreeAge)
+        rootBlock.mergeEntityData(entityData)
         return this
     },
     /**
@@ -88,7 +96,8 @@ GrowthTree.prototype = {
         let rootBlock = this.level.getBlock(this.rootPos)
         let vaildBlockList = this.findAroundVaildPos(this.rootPos, (aroundPos) => {
             let aroundBlock = this.level.getBlock(aroundPos)
-            if(PosEqual(aroundBlock.getDown().pos, rootBlock.pos)){
+            // 根旁边4个方块需要为泥土标签
+            if(PosEqual(aroundBlock.getDown().pos, rootBlock.pos) || PosEqual(aroundBlock.getUp().pos, rootBlock.pos)){
                 return true
             }
             let flag1 = aroundBlock.hasTag('minecraft:dirt')
@@ -100,60 +109,82 @@ GrowthTree.prototype = {
         return false
     },
     /**
-     * 
+     * 检查树能否生长
      * @returns {boolean}
      */
     checkTree() {
         // 检查年龄
         if(this.treeAge >= this.maxTreeAge){
-            this.level.getBlock(this.rootPos).set(this.limbBlock)
+            // this.level.getBlock(this.rootPos).set(this.limbBlock)
             return false
+        }
+        // 检查芽的数量
+        if(this.budPos.length == 0){
+            if(this.treeAge == 0){
+                return true
+            }
+            else{
+                return false
+            }
         }
         // 检查树的完整性
         this.limbPos.forEach(pos => {
             let block = this.level.getBlock(pos)
             if(block.id != this.limbBlock && block.id != this.fruitBlock){
-                this.level.tell(block.id)
-                this.level.getBlock(this.rootPos).set(this.limbBlock)
                 return false
             }
         })
         return true
     },
     /**
-     * 检查是否达到生长上限，达到后进行一次终局生长
+     * 果实生长
      */
     growFruit() {
-        let flag1 = this.treeAge == this.maxTreeAge - 1
-        if(flag1){
+        let ageFlag = this.treeAge == this.maxTreeAge - 1
+        let fruitFlag1 = Math.random() < 0.05 && this.fruitGrowTreeAge <= this.treeAge
+        let fruitFlag2 = this.budPos.length >= 3
+        // 树龄即将最大时强制结果
+        if(ageFlag){
             this.budPos.forEach(bud => {
                 this.level.getBlock(bud).set(this.fruitBlock)
-                this.growLeave(bud)
+                this.growLeave(bud, 3, 2, 3, 5)
+                this.fruitPos.push(bud)
             })
             this.budPos = []
         }
+        // 树有若干分叉时有概率提前结果
         for(let i = 0; i < this.budPos.length; i++){
             let bud = this.budPos[i]
-            let startGrowFruitAge = Math.random() * this.maxTreeAge
-            if(startGrowFruitAge < this.treeAge && this.fruitGrowTreeAge <= this.treeAge){
+            // this.level.tell("flag : " + fruitFlag1 + ";  " + fruitFlag2)
+            if(fruitFlag1 && fruitFlag2){
                 this.level.getBlock(bud).set(this.fruitBlock)
-                this.growLeave(bud)
+                this.growLeave(bud, 3, 2, 3, 5)
+                this.fruitPos.push(bud)
                 this.budPos.splice(i, 1)
             }
         }
+        // this.budPos.forEach(bud => {
+        //     if(fruitFlag1 && fruitFlag2){
+        //         this.level.getBlock(bud).set(this.fruitBlock)
+        //         this.growLeave(bud, 3, 2, 3, 5)
+        //         this.fruitPos.push(this.budPos.splice(i, 1))
+        //     }
+        // })
         return this
     },
     /**
      * 芽的分裂行为
      * @returns 
      */
-    growBud(){
+    growNewBud(){
         if(this.budPos.length < this.maxBranch){
-            // 树龄到某值才能分类
+            // 树龄到某值才能分裂
             let flag1 = this.treeAge > 5
             // 树龄到某值必定分裂一次
             let flag2 = this.treeAge == 5
-            if((Math.random() < 0.05 && flag1) || flag2){
+            // 随机分裂
+            let flag3 = Math.random() < 0.05
+            if((flag3 && flag1) || flag2){
                 this.budPos.push(randomInList(this.budPos))
             }
         }
@@ -165,10 +196,11 @@ GrowthTree.prototype = {
     growLimb() {
         if(this.treeAge == 0){
             this.budPos = [this.rootPos.offset(0, 1, 0)]
-            this.placeLimbBlock(this.budPos[0])
-            return this
+            this.placeLimbBlock(this.budPos[0], this.rootPos)
+            return true
         }
         let result = []
+        // 遍历当前生长的芽
         for(let i = 0; i < this.budPos.length; i++){
             let currentBudPos = this.budPos[i]
             let nextBudPos = randomInList(this.findAroundVaildPos(currentBudPos, (aroundPos) => {
@@ -176,7 +208,7 @@ GrowthTree.prototype = {
                 // 禁止向下生长
                 let flag1 = aroundBlock.y >= currentBudPos.y
                 // 只能往空气或自己的树叶里长
-                let flag2 = aroundBlock.getId() == "minecraft:air" || aroundBlock.getId() == this.leaveBlock
+                let flag2 = aroundBlock.getId() == "minecraft:air" || aroundBlock.getId() == this.leaveBlock || aroundBlock.getId() == this.budLeaveBlock
                 // 向水平四周生长时下方不能为limb
                 let flag3 = aroundBlock.offset(0, -1, 0).getId() != this.limbBlock || PosEqual(aroundBlock.pos.offset(0, -1, 0), currentBudPos)
                 // 树龄到达某值之前只能向上生长
@@ -185,9 +217,23 @@ GrowthTree.prototype = {
             }))
             if(nextBudPos){
                 result.push(nextBudPos)
-                this.placeLimbBlock(currentBudPos, nextBudPos).placeLimbBlock(nextBudPos)
-                if(Math.random() < 0.2 && this.treeAge > 5){
-                    this.growLeave(nextBudPos)
+                this.placeLimbBlock(nextBudPos, currentBudPos)
+                // 生长时的芽叶
+                this.findAroundVaildPos(currentBudPos, (aroundPos) => {
+                    let aroundBlock = this.level.getBlock(aroundPos)
+                    return aroundBlock.getId() == this.budLeaveBlock
+                }).forEach(pos => {
+                    this.level.getBlock(pos).set("minecraft:air")
+                })
+                this.findAroundVaildPos(nextBudPos, (aroundPos) => {
+                    let aroundBlock = this.level.getBlock(aroundPos)
+                    return aroundBlock.getId() == "minecraft:air"
+                }).forEach(pos => {
+                    this.level.getBlock(pos).set(this.budLeaveBlock)
+                })
+                // 较大的树叶团
+                if(Math.random() < 0.3 && this.treeAge > 5){
+                    this.growLeave(nextBudPos, 3, 2, 3, 5)
                 }
             }else{
                 result.push(currentBudPos)
@@ -205,21 +251,21 @@ GrowthTree.prototype = {
      * @param {BlockPos} pos 
      * @returns 
      */
-    growLeave(pos){
-        let xLength = 3
-        let yLength = 2
-        let zLength = 3
-        let rangSqr = 5 
+    growLeave(pos, xLength, yLength, zLength, maxRangSqr){
+        // this.level.tell("grow leave")
+        xLength = xLength ?? 3 
+        yLength = yLength ?? 2
+        zLength = zLength ?? 3
+        maxRangSqr = maxRangSqr ?? 5 
         for(let x = 0; x < xLength; x = x > 0 ? - x : 1 - x){
             for(let z = 0; z < zLength; z = z > 0 ? - z : 1 - z){
                 for(let y = 0; y < yLength; y = y > 0 ? - y : 1 - y){
-                    let block = this.level.getBlock(pos).offset(x, y, z)//
+                    let block = this.level.getBlock(pos.x + x, pos.y + y, pos.z + z)//.offset(x, y, z)//
                     let distSqr = block.pos.distSqr(pos)
-                    if(distSqr > rangSqr) {
-                        // this.level.tell(distSqr)
+                    if(distSqr > maxRangSqr) {
                         continue
                     }
-                    if(block.id == "minecraft:air"){
+                    if(block.id == "minecraft:air" || block.id == this.budLeaveBlock){
                         block.set(this.leaveBlock)
                     }
                 }
@@ -228,18 +274,18 @@ GrowthTree.prototype = {
         return this
     },
     /**
-     * 放置目标limb并记录目标limb的子节点坐标；如果sonLimbPos为空则默认为targetLimbPos
+     * 放置目标limb并记录目标limb的上个节点坐标；如果上个为空则默认为targetLimbPos
      * 
      * @param {BlockPos} targetLimbPos 
-     * @param {BlockPos?} sonLimbPos 
+     * @param {BlockPos?} parentLimbPos 
      * @returns 
      */
-    placeLimbBlock(targetLimbPos, sonLimbPos){
-        sonLimbPos = sonLimbPos ?? targetLimbPos
+    placeLimbBlock(targetLimbPos, parentLimbPos){
+        parentLimbPos = parentLimbPos ?? targetLimbPos
         this.level.getBlock(targetLimbPos).set(this.limbBlock)
         this.limbPos.push(targetLimbPos)
-        let leaveStatus = randomInList([0, 0, 0, 0, 1])
-        this.putDataToLimb(targetLimbPos, sonLimbPos, leaveStatus)
+        // let leaveStatus = randomInList([0, 0, 0, 0, 1])
+        this.putDataToLimb(targetLimbPos, parentLimbPos/**, leaveStatus*/)
         return this
     },
     /**
@@ -271,6 +317,7 @@ GrowthTree.prototype = {
         let treeData = entityData.getCompound("data").getCompound("TreeData")
         treeData.putString("treeType", this.treeType)
         treeData.putInt("treeAge", this.treeAge)
+        treeData.putInt("maxTreeAge", this.maxTreeAge)
         treeData.put("budPos", NBT.listTag())
         this.budPos.forEach(pos => {
             treeData.get("budPos").push(Pos2NBT(pos))
@@ -289,11 +336,14 @@ GrowthTree.prototype = {
     loadDataFromRoot(){
         let GTree = new GrowthTree(this.level, this.rootPos)
         let rootBlock = this.level.getBlock(this.rootPos)
+        // if(rootBlock.getId() == "minecraft:air"){return this}
+        // console.log(rootBlock.getId())
         let entityData = rootBlock.getEntityData()
         let treeData = entityData.getCompound("data").getCompound("TreeData")
         GTree.treeType = treeData.getString("treeType")
-        this.level.tell(treeData.getString("treeType"))
+        // this.level.tell(treeData.getString("treeType"))
         GTree.treeAge = treeData.getInt("treeAge")
+        GTree.maxTreeAge = treeData.getInt("maxTreeAge")
         /**
          * @type {Internal.CompoundTag[]}
          */
@@ -320,16 +370,15 @@ GrowthTree.prototype = {
     /**
      * 
      * @param {BlockPos} pos 目标limb坐标 
-     * @param {BlockPos} SonLimbPos 目标limb的下个节点的坐标
+     * @param {BlockPos} parentLimbPos 目标limb的上个节点的坐标
      * @returns 
      */
-    putDataToLimb(pos, SonLimbPos, leaveStatus){
-        leaveStatus = leaveStatus ?? 0
+    putDataToLimb(pos, parentLimbPos){
         let limbBlock = this.level.getBlock(pos)
         let entityData = limbBlock.getEntityData()
         entityData.getCompound("data").put("RootPos", Pos2NBT(this.rootPos))
         // TODO: 保存所在分枝信息
-        entityData.getCompound("data").put("SonLimbPos", Pos2NBT(SonLimbPos))
+        entityData.getCompound("data").put("ParentLimbPos", Pos2NBT(parentLimbPos))
         // entityData.getCompound("data").putByte("LeaveStatus", leaveStatus)
         limbBlock.mergeEntityData(entityData)
         return this
@@ -342,8 +391,11 @@ GrowthTree.prototype = {
         let limbBlock = this.level.getBlock(pos)
         let entityData = limbBlock.getEntityData()
         let rootPos = entityData.getCompound("data").getCompound("RootPos")
-        let sonLimbPos = entityData.getCompound("data").getCompound("SonLimbPos")
+        let parentLimbPos = entityData.getCompound("data").getCompound("ParentLimbPos")
         // let leaveStatus = entityData.getCompound("data").getByte("LeaveStatus")
-        return {"RootPos" : rootPos, "SonLimbPos" : sonLimbPos, /**"LeaveStatus" : leaveStatus*/}
+        return {"RootPos" : rootPos, "ParentLimbPos" : parentLimbPos, /**"LeaveStatus" : leaveStatus*/}
     },
+    getTreeData(){
+        return this.level.getBlock(this.rootPos).entityData.getCompound('data').getCompound('TreeData')
+    }
 }

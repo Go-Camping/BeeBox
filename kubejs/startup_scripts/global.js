@@ -37,3 +37,4 @@ global.StructuresTypesPools = {
     "natural" : {}, // 自然之巢
     "putrefy" : {}, // 腐化之巢
 }
+
