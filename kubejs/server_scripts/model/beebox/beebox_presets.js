@@ -70,7 +70,6 @@ const BeeBoxPresets = {
         let bbb = new BeeBoxBuilder(level, pos)
         .addDecorator("dress_top_by_blocks")
         .addStructure(structure_3, new BlockPos(-14, 2, -13))
-        // .addStructure("kubejs:natural/swamp_2", new BlockPos(-14, 2, -13))
         .setBiome("minecraft:swamp")
         .setAllWallBlock("minecraft:stripped_mangrove_wood")
         .setFloorBlock("kubejs:beehive")

@@ -10,47 +10,52 @@ function GrowthTree(level, rootPos, treeType) {
     this.level = level
     this.rootPos = rootPos
     this.nutrientBlock = "minecraft:honey_block"
-    this.nutrientAmount = 0
-    this.leaveBlock = 'minecraft:sculk'
+    /**
+     * 养分值 -
+     */
+    this.nutrientAmount = 0 
+    this.leaveBlock = "minecraft:mangrove_leaves"//minecraft:glass"//'minecraft:sculk'
     this.budLeaveBlock = 'minecraft:moss_block'
     /**
      * 树干方块
      */
     this.limbBlock = "kubejs:zenith_clouds_log"
     /**
-     * @type {BlockPos[]} 树干的坐标
+     * @type {BlockPos[]} 树干的坐标 -
      */
     this.limbPos = []
     /**
-     * @type {BlockPos[]} 果实的坐标
+     * @type {BlockPos[]} 果实的坐标 -
      */
     this.fruitPos = []
     this.fruitState = 0
     this.fruitBlock = "kubejs:zenith_clouds_fruit"
-
-    // this.fruitMaxAge = 100
     /**
-     * @type {BlockPos[]} 芽的坐标
+     * @type {BlockPos[]} 芽的坐标 -
      */
     this.budPos = []
     /**
-     * 最大分支数
+     * 最大分支数 -
      */
     this.maxBranch = 7
     /**
-     * 当前树龄
+     * 允许分支生长的树龄 -
+     */
+    this.branchGrowTreeAge = 5
+    /**
+     * 当前树龄 -
      */
     this.treeAge = 0
     /**
-     * 最大树龄
+     * 最大树龄 -
      */
     this.maxTreeAge = 30
     /**
-     * 开始生长果实的树龄
+     * 开始生长果实的树龄 - 
      */
-    this.fruitGrowTreeAge = this.maxTreeAge / 2 + 5
+    this.fruitGrowTreeAge = this.maxTreeAge / 2 + this.branchGrowTreeAge
     /**
-     * 树的类型
+     * 树的类型 -
      */
     this.treeType = treeType ?? "kubejs:common_tree"
 }
@@ -62,17 +67,17 @@ GrowthTree.prototype = {
      * @returns 
      */
     growUp(a) {
-        a = a ?? 1
+        a = a ?? this.maxTreeAge
+        this.budFindRootPath()
         for(let i = 0; i < a; i++){
-            if(!this.checkTree()){return}
-            if(!this.checkRoot()){return}
+            if(!this.checkTreeStopGrow()){return}
+            if(!this.checkRootRequire()){return}
             this.growNewBud()
             this.growLimb()
             this.growFruit()
             this.updataTreeAge()
             this.saveDataToRoot()
         }
-        // this.level.tell(this.treeAge)
         return
     },
     /**
@@ -83,16 +88,107 @@ GrowthTree.prototype = {
     setMaxTreeAge(maxTreeAge){
         this.maxTreeAge = maxTreeAge
         let rootBlock = this.level.getBlock(this.rootPos)
+        if(!rootBlock.hasTag('kubejs:growth_root')){return this}
         let entityData = rootBlock.entityData
         let TreeData = entityData.getCompound('data').getCompound('TreeData')
         TreeData.putInt('maxTreeAge', maxTreeAge)
         rootBlock.mergeEntityData(entityData)
         return this
     },
+    setBranchGrowTreeAge(branchGrowTreeAge){
+        this.branchGrowTreeAge = branchGrowTreeAge
+        let rootBlock = this.level.getBlock(this.rootPos)
+        if(!rootBlock.hasTag('kubejs:growth_root')){return this}
+        let entityData = rootBlock.entityData
+        let TreeData = entityData.getCompound('data').getCompound('TreeData')
+        TreeData.putInt('branchGrowTreeAge', branchGrowTreeAge)
+        rootBlock.mergeEntityData(entityData)
+        return this
+    },
+    setLeaveBlock(leaveBlock){
+        this.leaveBlock = leaveBlock
+        let rootBlock = this.level.getBlock(this.rootPos)
+        if(!rootBlock.hasTag('kubejs:growth_root')){return this}
+        let entityData = rootBlock.entityData
+        let TreeData = entityData.getCompound('data').getCompound('TreeData')
+        TreeData.putString('leaveBlock', leaveBlock)
+        rootBlock.mergeEntityData(entityData)
+        return this
+    },
+    setBudLeaveBlock(budLeaveBlock){
+        this.budLeaveBlock = budLeaveBlock
+        let rootBlock = this.level.getBlock(this.rootPos)
+        if(!rootBlock.hasTag('kubejs:growth_root')){return this}
+        let entityData = rootBlock.entityData
+        let TreeData = entityData.getCompound('data').getCompound('TreeData')
+        TreeData.putString('budLeaveBlock', budLeaveBlock)
+        rootBlock.mergeEntityData(entityData)
+        return this
+    },
+    setNutrientBlock(nutrientBlock){
+        this.nutrientBlock = nutrientBlock
+        let rootBlock = this.level.getBlock(this.rootPos)
+        if(!rootBlock.hasTag('kubejs:growth_root')){return this}
+        let entityData = rootBlock.entityData
+        let TreeData = entityData.getCompound('data').getCompound('TreeData')
+        TreeData.putString('nutrientBlock', nutrientBlock)
+        rootBlock.mergeEntityData(entityData)
+        return this
+    },
+    setLimbBlock(limbBlock){
+        this.limbBlock = limbBlock
+        let rootBlock = this.level.getBlock(this.rootPos)
+        if(!rootBlock.hasTag('kubejs:growth_root')){return this}
+        let entityData = rootBlock.entityData
+        let TreeData = entityData.getCompound('data').getCompound('TreeData')
+        TreeData.putString('limbBlock', limbBlock)
+        rootBlock.mergeEntityData(entityData)
+        return this
+    },
+    setFruitBlock(fruitBlock){
+        this.fruitBlock = fruitBlock
+        let rootBlock = this.level.getBlock(this.rootPos)
+        if(!rootBlock.hasTag('kubejs:growth_root')){return this}
+        let entityData = rootBlock.entityData
+        let TreeData = entityData.getCompound('data').getCompound('TreeData')
+        TreeData.putString('fruitBlock', fruitBlock)
+        rootBlock.mergeEntityData(entityData)
+        return this
+    },
+    setMaxBranch(maxBranch){
+        this.maxBranch = maxBranch
+        let rootBlock = this.level.getBlock(this.rootPos)
+        if(!rootBlock.hasTag('kubejs:growth_root')){return this}
+        let entityData = rootBlock.entityData
+        let TreeData = entityData.getCompound('data').getCompound('TreeData')
+        TreeData.putInt('maxBranch', maxBranch)
+        rootBlock.mergeEntityData(entityData)
+        return this
+    },
+    setFruitGrowTreeAge(fruitGrowTreeAge){
+        this.fruitGrowTreeAge = fruitGrowTreeAge
+        let rootBlock = this.level.getBlock(this.rootPos)
+        if(!rootBlock.hasTag('kubejs:growth_root')){return this}
+        let entityData = rootBlock.entityData
+        let TreeData = entityData.getCompound('data').getCompound('TreeData')
+        TreeData.putInt('fruitGrowTreeAge', fruitGrowTreeAge)
+        rootBlock.mergeEntityData(entityData)
+        return this
+    },
+    setTreeType(treeType){
+        this.treeType = treeType
+        let rootBlock = this.level.getBlock(this.rootPos)
+        if(!rootBlock.hasTag('kubejs:growth_root')){return this}
+        let entityData = rootBlock.entityData
+        let TreeData = entityData.getCompound('data').getCompound('TreeData')
+        TreeData.putString('treeType', treeType)
+        rootBlock.mergeEntityData(entityData)
+        return this
+    },
     /**
-     * 检查是否能够生长
+     * 检查根的生长需求
      */
-    checkRoot(){
+    checkRootRequire(){
         let rootBlock = this.level.getBlock(this.rootPos)
         let vaildBlockList = this.findAroundVaildPos(this.rootPos, (aroundPos) => {
             let aroundBlock = this.level.getBlock(aroundPos)
@@ -112,29 +208,25 @@ GrowthTree.prototype = {
      * 检查树能否生长
      * @returns {boolean}
      */
-    checkTree() {
+    checkTreeStopGrow() {
+        let isPass = true
         // 检查年龄
         if(this.treeAge >= this.maxTreeAge){
-            // this.level.getBlock(this.rootPos).set(this.limbBlock)
-            return false
+            this.level.getBlock(this.rootPos).set(this.limbBlock)
+            isPass = false
+            return isPass
         }
         // 检查芽的数量
         if(this.budPos.length == 0){
             if(this.treeAge == 0){
-                return true
             }
             else{
-                return false
+                this.level.getBlock(this.rootPos).set(this.limbBlock)
+                isPass = false
+                return isPass
             }
         }
-        // 检查树的完整性
-        this.limbPos.forEach(pos => {
-            let block = this.level.getBlock(pos)
-            if(block.id != this.limbBlock && block.id != this.fruitBlock){
-                return false
-            }
-        })
-        return true
+        return isPass
     },
     /**
      * 果实生长
@@ -153,23 +245,14 @@ GrowthTree.prototype = {
             this.budPos = []
         }
         // 树有若干分叉时有概率提前结果
-        for(let i = 0; i < this.budPos.length; i++){
-            let bud = this.budPos[i]
-            // this.level.tell("flag : " + fruitFlag1 + ";  " + fruitFlag2)
+        this.budPos.forEach((bud, index) => {
             if(fruitFlag1 && fruitFlag2){
                 this.level.getBlock(bud).set(this.fruitBlock)
                 this.growLeave(bud, 3, 2, 3, 5)
                 this.fruitPos.push(bud)
-                this.budPos.splice(i, 1)
+                this.budPos.splice(index, 1)
             }
-        }
-        // this.budPos.forEach(bud => {
-        //     if(fruitFlag1 && fruitFlag2){
-        //         this.level.getBlock(bud).set(this.fruitBlock)
-        //         this.growLeave(bud, 3, 2, 3, 5)
-        //         this.fruitPos.push(this.budPos.splice(i, 1))
-        //     }
-        // })
+        })
         return this
     },
     /**
@@ -197,7 +280,7 @@ GrowthTree.prototype = {
         if(this.treeAge == 0){
             this.budPos = [this.rootPos.offset(0, 1, 0)]
             this.placeLimbBlock(this.budPos[0], this.rootPos)
-            return true
+            return this
         }
         let result = []
         // 遍历当前生长的芽
@@ -212,7 +295,7 @@ GrowthTree.prototype = {
                 // 向水平四周生长时下方不能为limb
                 let flag3 = aroundBlock.offset(0, -1, 0).getId() != this.limbBlock || PosEqual(aroundBlock.pos.offset(0, -1, 0), currentBudPos)
                 // 树龄到达某值之前只能向上生长
-                let flag4 = this.treeAge >= 5 || PosEqual(aroundBlock.pos.offset(0, -1, 0), currentBudPos)
+                let flag4 = this.treeAge >= this.branchGrowTreeAge || PosEqual(aroundBlock.pos.offset(0, -1, 0), currentBudPos)
                 return flag1 && flag2 && flag3 && flag4
             }))
             if(nextBudPos){
@@ -244,6 +327,44 @@ GrowthTree.prototype = {
     },
     updataTreeAge(){
         this.treeAge = this.treeAge >= this.maxTreeAge ? this.maxTreeAge : this.treeAge + 1
+        return this
+    },
+    /**
+     * 遍历所有的芽，寻找其生长路径，如果某芽无法按生长路径寻找到根，则移除根方块实体数据中 该芽到破损位置路径 所对应的数据
+     * @returns 
+     */
+    budFindRootPath(){
+        this.budPos.forEach((budP, budIndex) => {
+            // this.level.tell("check bud" + this.budPos[budIndex])
+            let rootBlock = this.level.getBlock(this.rootPos)
+            let branchPathPosList = []
+            let limb = budP
+            for(let i = 0; i < this.maxTreeAge; i++){
+                let currentlimbBlock = this.level.getBlock(limb)
+                branchPathPosList.push(limb)
+                if(currentlimbBlock.id == this.limbBlock || currentlimbBlock.id == this.fruitBlock){
+                    limb = this.getDataFromLimb(limb).ParentLimbPos
+                    continue
+                }else if(currentlimbBlock.id != rootBlock.id){
+                    branchPathPosList.forEach((pos) => {
+                        let index = this.limbPos.findIndex((blockPos) => {
+                            return PosEqual(blockPos, pos)
+                        })
+                        if(index >= 0){
+                            this.level.getBlock(this.limbPos[index]).set("minecraft:magma_block")
+                            this.limbPos.splice(index,1)
+                        }
+                    })
+                    this.level.getBlock(this.budPos[budIndex]).set("minecraft:magma_block")
+                    this.budPos.splice(budIndex,1)
+                    break
+                }else{
+                    break
+                }
+            }
+        })
+        // this.level.tell("tree age: " + this.treeAge)
+        this.saveDataToRoot()
         return this
     },
     /**
@@ -312,12 +433,24 @@ GrowthTree.prototype = {
     },
     saveDataToRoot(){
         let rootBlock = this.level.getBlock(this.rootPos)
+        if(!rootBlock.hasTag("kubejs:growth_root")){
+            return this
+        }
         let entityData = rootBlock.getEntityData()
         entityData.getCompound("data").put("TreeData", NBT.compoundTag())
         let treeData = entityData.getCompound("data").getCompound("TreeData")
         treeData.putString("treeType", this.treeType)
         treeData.putInt("treeAge", this.treeAge)
         treeData.putInt("maxTreeAge", this.maxTreeAge)
+        treeData.putInt("branchGrowTreeAge", this.branchGrowTreeAge)
+        treeData.putInt("fruitGrowTreeAge", this.fruitGrowTreeAge)
+        treeData.putInt("maxBranch", this.maxBranch)
+        treeData.putInt("nutrientAmount", this.nutrientAmount)
+        treeData.putString("nutrientBlock", this.nutrientBlock)
+        treeData.putString("leaveBlock", this.leaveBlock)
+        treeData.putString("budLeaveBlock", this.budLeaveBlock)
+        treeData.putString("limbBlock", this.limbBlock)
+        treeData.putString("fruitBlock", this.fruitBlock)
         treeData.put("budPos", NBT.listTag())
         this.budPos.forEach(pos => {
             treeData.get("budPos").push(Pos2NBT(pos))
@@ -336,14 +469,23 @@ GrowthTree.prototype = {
     loadDataFromRoot(){
         let GTree = new GrowthTree(this.level, this.rootPos)
         let rootBlock = this.level.getBlock(this.rootPos)
-        // if(rootBlock.getId() == "minecraft:air"){return this}
-        // console.log(rootBlock.getId())
+        if(!rootBlock.hasTag("kubejs:growth_root")){
+            return this
+        }
         let entityData = rootBlock.getEntityData()
         let treeData = entityData.getCompound("data").getCompound("TreeData")
         GTree.treeType = treeData.getString("treeType")
-        // this.level.tell(treeData.getString("treeType"))
         GTree.treeAge = treeData.getInt("treeAge")
         GTree.maxTreeAge = treeData.getInt("maxTreeAge")
+        GTree.branchGrowTreeAge = treeData.getInt("branchGrowTreeAge")
+        GTree.fruitGrowTreeAge = treeData.getInt("fruitGrowTreeAge")
+        GTree.maxBranch = treeData.getInt("maxBranch")
+        GTree.nutrientAmount = treeData.getInt("nutrientAmount")
+        GTree.nutrientBlock = treeData.getString("nutrientBlock")
+        GTree.leaveBlock = treeData.getString("leaveBlock")
+        GTree.budLeaveBlock = treeData.getString("budLeaveBlock")
+        GTree.limbBlock = treeData.getString("limbBlock")
+        GTree.fruitBlock = treeData.getString("fruitBlock")
         /**
          * @type {Internal.CompoundTag[]}
          */
@@ -393,7 +535,7 @@ GrowthTree.prototype = {
         let rootPos = entityData.getCompound("data").getCompound("RootPos")
         let parentLimbPos = entityData.getCompound("data").getCompound("ParentLimbPos")
         // let leaveStatus = entityData.getCompound("data").getByte("LeaveStatus")
-        return {"RootPos" : rootPos, "ParentLimbPos" : parentLimbPos, /**"LeaveStatus" : leaveStatus*/}
+        return {"RootPos" : NBT2Pos(rootPos), "ParentLimbPos" : NBT2Pos(parentLimbPos), /**"LeaveStatus" : leaveStatus*/}
     },
     getTreeData(){
         return this.level.getBlock(this.rootPos).entityData.getCompound('data').getCompound('TreeData')

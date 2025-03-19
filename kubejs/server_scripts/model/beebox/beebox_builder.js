@@ -440,8 +440,6 @@ BeeBoxBuilder.prototype = {
         if(centerBlockContainerJS.getId() != "kubejs:beebox_center") {return this}
         // 处理蜂巢信息
         let BlockEntityData = centerBlockContainerJS.getEntityData()
-        // BlockEntityData.getCompound("componentManager").getCompound("data_component").put("BeeBoxData", NBT.compoundTag())
-        // let boxData = BlockEntityData.getCompound("componentManager").getCompound("data_component").getCompound("BeeboxData")
         let boxData = BlockEntityData.getCompound("data").getCompound("BeeBoxData")
         boxData.putInt("boxLength", this.halfSideLength * 2)
         boxData.putInt("boxHigh", this.wallHeight + 1)

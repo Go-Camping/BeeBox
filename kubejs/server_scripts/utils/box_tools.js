@@ -73,10 +73,6 @@ function BeeBoxLevelStartUpInit(level){
     if(level.getBlock(startPos).id != "minecraft:air"){return}
     level.setBlockAndUpdate(startPos, Block.getBlock("kubejs:magic_bee_candy_block").defaultBlockState())
     level.server.runCommandSilent(`/setworldspawn 0 64 0`)
-    // global.ZenithCloudsTree = (level, rootPos) => {
-    //     console.log("global")
-    //     return new GrowthTree(level, rootPos, "kubejs:zenith_clouds_log") 
-    // }
 }
 
 /**
