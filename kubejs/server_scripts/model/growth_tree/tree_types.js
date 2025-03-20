@@ -1,5 +1,7 @@
-global.ZenithCloudsTree = (level, rootPos) => {
-    return new GrowthTree(level, rootPos, "kubejs:zenith_clouds_log")
-    .setMaxTreeAge(50)
-    .setLeaveBlock('minecraft:sculk')
+global.GrowthTree = (level, rootPos) => {
+    return new GrowthTree(level, rootPos)
+    // .setMaxTreeAge(50)
+    // .setLeaveBlock("minecraft:glass")
+    // .setBudLeaveBlock("kubejs:zenith_clouds_bud_leave")
+    // .setLeaveBlock('minecraft:sculk')
 }

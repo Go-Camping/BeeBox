@@ -3,12 +3,13 @@ StartupEvents.registry('block', event => {
     event.create('kubejs:zenith_clouds_log_root', 'basic')
     .hardness(10)
     .noDrops()
-    .tag('minecraft:mineable/axe')
-    .tag('minecraft:logs')
-    .tag('kubejs:growth_logs')
-    .tag('kubejs:growth_root')
-    .tag('minecraft:lava_pool_stone_cannot_replace')
-    .textureAll("minecraft:block/light_gray_terracotta")
+    // .noItem()
+    .woodSoundType()
+    .model("minecraft:block/cherry_log")
+    .property(BlockProperties.AXIS)
+    .defaultState(stateCallBack => {
+        stateCallBack.set(BlockProperties.AXIS, "y")
+    })
     .blockEntity(entity => {
         entity.initialData({
             TreeData:{
@@ -37,17 +38,23 @@ StartupEvents.registry('block', event => {
         /**
          * @type {GrowthTree}
          */
-        let Gtree = global.ZenithCloudsTree(level, block.pos)
+        let Gtree = global.GrowthTree(level, block.pos)
         Gtree.loadDataFromRoot().growUp(Math.floor(Math.random() * 10) + 1)
     })
-
-    event.create('kubejs:zenith_clouds_log', 'basic')
-    .hardness(10)
     .tag('minecraft:mineable/axe')
     .tag('minecraft:logs')
     .tag('kubejs:growth_logs')
+    .tag('kubejs:growth_root')
     .tag('minecraft:lava_pool_stone_cannot_replace')
-    .textureAll("minecraft:block/light_gray_terracotta")
+
+    event.create('kubejs:zenith_clouds_log', 'basic')
+    .hardness(10)
+    .woodSoundType()
+    .model("minecraft:block/cherry_log")
+    .property(BlockProperties.AXIS)
+    .defaultState(stateCallBack => {
+        stateCallBack.set(BlockProperties.AXIS, "y")
+    })
     .blockEntity(entity => {
         entity.initialData({
             RootPos:{
@@ -62,13 +69,15 @@ StartupEvents.registry('block', event => {
             },
         })
     })
+    .tag('minecraft:mineable/axe')
+    .tag('minecraft:logs')
+    .tag('kubejs:growth_logs')
+    .tag('minecraft:lava_pool_stone_cannot_replace')
 
     event.create('kubejs:zenith_clouds_fruit', 'basic')
     .hardness(10)
-    .tag('minecraft:mineable/axe')
-    .tag('kubejs:growth_fruit')
-    .tag('minecraft:lava_pool_stone_cannot_replace')
-    .textureAll("minecraft:block/minecraft:redstone_block")
+    .woodSoundType()
+    .model("minecraft:block/red_mushroom_block_inventory")
     .blockEntity(entity => {
         entity.initialData({
             RootPos:{
@@ -84,9 +93,15 @@ StartupEvents.registry('block', event => {
             fruitAge : 0
         })
     })
+    .tag('minecraft:mineable/axe')
+    .tag('kubejs:growth_fruit')
+    .tag('minecraft:lava_pool_stone_cannot_replace')
 
     event.create("kubejs:zenith_clouds_leave", 'basic') 
     .hardness(1)
+    .cropSoundType()
+    // .renderType("cutout")
+    .model("minecraft:block/cherry_leaves")
     .tag('minecraft:leaves')
     .tag('kubejs:growth_leaves')
     .tag('minecraft:mineable/hoe')
@@ -94,24 +109,25 @@ StartupEvents.registry('block', event => {
     .tag('forestry:grafter')
     .tag('minecraft:replaceable_by_trees')
     .tag('minecraft:lava_pool_stone_cannot_replace')
-    .textureAll("minecraft:block/weathered_copper")
 
     event.create('kubejs:zenith_clouds_bud_leave', 'basic')
     .hardness(1)
+    .noDrops()
+    .cropSoundType()
+    .renderType("cutout")
+    .model("minecraft:block/cherry_leaves")
     .tag('minecraft:leaves')
+    .tag('kubejs:growth_leaves')
     .tag('minecraft:mineable/hoe')
     .tag('minecraft:sword_efficient')
     .tag('forestry:grafter')
-    .tag('kubejs:growth_leaves')
     .tag('minecraft:replaceable_by_trees')
     .tag('minecraft:lava_pool_stone_cannot_replace')
-    .noDrops()
-    .textureAll("minecraft:block/weathered_copper")
 
     event.create('kubejs:zenith_clouds_sapling')
-    .tag('minecraft:saplings')
     .model("minecraft:block/cherry_sapling")
     .renderType("translucent")
+    .cropSoundType()
     .box(2, 0, 2, 14, 12, 14, true)
     .hardness(0)
     .noCollision()
@@ -124,9 +140,12 @@ StartupEvents.registry('block', event => {
             rootBlock.offset(0, 0, -1).hasTag('minecraft:dirt')
         if(flag && rootBlock.hasTag('minecraft:dirt')){
             rootBlock.set("kubejs:zenith_clouds_log_root")
-            let Gtree = global.ZenithCloudsTree(block.level, rootBlock.pos)
+            let Gtree = global.GrowthTree(block.level, rootBlock.pos)
             block.set("minecraft:air")
-            Gtree.growUp(2)
+            Gtree.loadDataFromRoot().growUp(2)
+        }else{
+            block.level.destroyBlock(block.pos, true)
         }
     })
+    .tag('minecraft:saplings')
 })

@@ -8,7 +8,13 @@ ItemEvents.rightClicked("kubejs:debugger", event=>{
     // let T = new GrowthTree(level, playerPos.offset(0, -1, 0)).loadDataFromRoot()
 
     if(player.isShiftKeyDown()){
-
+        // $HexChunkGenerator.placedHex($Hex.blockToHex(buildPos.x, buildPos.z, BeeBoxDefaultSize.boxLength),state, 0)
+        // level.tell(level.getBlock(playerPos.offset(0, -1, 0)).blockState.getValues())
+        level.tell(level.getBlock(playerPos.offset(0, -1, 0)))
+        level.getBlock(playerPos.offset(0, -1, 0)).set("minecraft:spruce_log",{"axis": "z"})//.blockState.setValue(BlockProperties.AXIS, "y")
+        
+        // level.tell('§2' + $Hex.blockToHex(buildPos.x, buildPos.z, BeeBoxDefaultSize.boxLength).toString())
+        // new $PlacedHex()
     }
     else{
         // let order = getNestingOrderItem("preset", "natural_box_2")
@@ -20,13 +26,12 @@ ItemEvents.rightClicked("kubejs:debugger", event=>{
         let block = player.rayTrace(20).block
         if(block && block.id == "kubejs:zenith_clouds_log_root"){
             let T = new GrowthTree(level, block.pos).loadDataFromRoot()
-            // 需要根周围除上方的5个面有泥土才能生长
+            // 需要根周围除上下方的4个面有泥土才能生长
             T.setMaxTreeAge(225)
             T.growUp(222)
         }
         // player.tell(block.tags.toString())
     }
-
     /*let b = 16
     let r = Math.round((b - 2) * Math.sqrt(3) / 2)
     r = r%2 == 0 ? r : r + 1

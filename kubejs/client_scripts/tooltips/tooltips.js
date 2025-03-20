@@ -54,4 +54,8 @@ ItemEvents.tooltip(event => {
         text.add("§3在框选结构范围的两个对角各生成一个方块")
         text.add("§3范围内有大量水的话需要将gamerule waterSourceConversion设为false")
     })
+
+    event.addAdvanced("kubejs:zenith_clouds_sapling", (item, advanced, text) => {
+        text.add("§3需要正下方及其相邻方块都为泥土类方块才能开始生长")
+    })
 })

@@ -4,3 +4,5 @@ const $MutableInt = Java.loadClass("org.apache.commons.lang3.mutable.MutableInt"
 const $ResourceArgument = Java.loadClass("net.minecraft.commands.arguments.ResourceArgument")
 const $Registries = Java.loadClass("net.minecraft.core.registries.Registries")
 const $CompoundTag = Java.loadClass('net.minecraft.nbt.CompoundTag')
+// const $PlacedHex = Java.loadClass("com.alcatrazescapee.hexlands.world.HexChunkGenerator$PlacedHex")
+// const $Hex = Java.loadClass('com.alcatrazescapee.hexlands.util.Hex')

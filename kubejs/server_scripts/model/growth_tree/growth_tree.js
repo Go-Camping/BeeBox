@@ -212,7 +212,8 @@ GrowthTree.prototype = {
         let isPass = true
         // 检查年龄
         if(this.treeAge >= this.maxTreeAge){
-            this.level.getBlock(this.rootPos).set(this.limbBlock)
+            // this.level.getBlock(this.rootPos).set(this.limbBlock)
+            this.placeLimbBlock(this.rootPos, this.rootPos)
             isPass = false
             return isPass
         }
@@ -221,7 +222,8 @@ GrowthTree.prototype = {
             if(this.treeAge == 0){
             }
             else{
-                this.level.getBlock(this.rootPos).set(this.limbBlock)
+                // this.level.getBlock(this.rootPos).set(this.limbBlock)
+                this.placeLimbBlock(this.rootPos, this.rootPos)
                 isPass = false
                 return isPass
             }
@@ -351,11 +353,15 @@ GrowthTree.prototype = {
                             return PosEqual(blockPos, pos)
                         })
                         if(index >= 0){
-                            this.level.getBlock(this.limbPos[index]).set("minecraft:magma_block")
+                            // this.level.getBlock(this.limbPos[index]).set("minecraft:magma_block")
+                            if(!PosEqual(this.limbPos[index], limb)){
+                                this.level.destroyBlock(this.limbPos[index],true)
+                            }
                             this.limbPos.splice(index,1)
                         }
                     })
-                    this.level.getBlock(this.budPos[budIndex]).set("minecraft:magma_block")
+                    // this.level.getBlock(this.budPos[budIndex]).set("minecraft:magma_block")
+                    // this.level.destroyBlock(this.budPos[budIndex],true)
                     this.budPos.splice(budIndex,1)
                     break
                 }else{
@@ -403,10 +409,15 @@ GrowthTree.prototype = {
      */
     placeLimbBlock(targetLimbPos, parentLimbPos){
         parentLimbPos = parentLimbPos ?? targetLimbPos
-        this.level.getBlock(targetLimbPos).set(this.limbBlock)
+        let axis = "y"
+        if(parentLimbPos.x != targetLimbPos.x){
+            axis = "z"
+        }else if(parentLimbPos.z != targetLimbPos.z){
+            axis = "x"
+        }
+        this.level.getBlock(targetLimbPos).set(this.limbBlock, {"axis": axis})
         this.limbPos.push(targetLimbPos)
-        // let leaveStatus = randomInList([0, 0, 0, 0, 1])
-        this.putDataToLimb(targetLimbPos, parentLimbPos/**, leaveStatus*/)
+        this.putDataToLimb(targetLimbPos, parentLimbPos)
         return this
     },
     /**
@@ -467,47 +478,48 @@ GrowthTree.prototype = {
         return this
     },
     loadDataFromRoot(){
-        let GTree = new GrowthTree(this.level, this.rootPos)
         let rootBlock = this.level.getBlock(this.rootPos)
         if(!rootBlock.hasTag("kubejs:growth_root")){
+            // this.level.tell("not a growth root")
             return this
         }
+        // this.level.tell("load :" + rootBlock.pos)
         let entityData = rootBlock.getEntityData()
         let treeData = entityData.getCompound("data").getCompound("TreeData")
-        GTree.treeType = treeData.getString("treeType")
-        GTree.treeAge = treeData.getInt("treeAge")
-        GTree.maxTreeAge = treeData.getInt("maxTreeAge")
-        GTree.branchGrowTreeAge = treeData.getInt("branchGrowTreeAge")
-        GTree.fruitGrowTreeAge = treeData.getInt("fruitGrowTreeAge")
-        GTree.maxBranch = treeData.getInt("maxBranch")
-        GTree.nutrientAmount = treeData.getInt("nutrientAmount")
-        GTree.nutrientBlock = treeData.getString("nutrientBlock")
-        GTree.leaveBlock = treeData.getString("leaveBlock")
-        GTree.budLeaveBlock = treeData.getString("budLeaveBlock")
-        GTree.limbBlock = treeData.getString("limbBlock")
-        GTree.fruitBlock = treeData.getString("fruitBlock")
+        this.treeType = treeData.getString("treeType")
+        this.treeAge = treeData.getInt("treeAge")
+        this.maxTreeAge = treeData.getInt("maxTreeAge")
+        this.branchGrowTreeAge = treeData.getInt("branchGrowTreeAge")
+        this.fruitGrowTreeAge = treeData.getInt("fruitGrowTreeAge")
+        this.maxBranch = treeData.getInt("maxBranch")
+        this.nutrientAmount = treeData.getInt("nutrientAmount")
+        this.nutrientBlock = treeData.getString("nutrientBlock")
+        this.leaveBlock = treeData.getString("leaveBlock")
+        this.budLeaveBlock = treeData.getString("budLeaveBlock")
+        this.limbBlock = treeData.getString("limbBlock")
+        this.fruitBlock = treeData.getString("fruitBlock")
         /**
          * @type {Internal.CompoundTag[]}
          */
         let budPosList = treeData.get("budPos") ?? []
         budPosList.forEach(tag => {
-            GTree.budPos.push(NBT2Pos(tag))
+            this.budPos.push(NBT2Pos(tag))
         })
         /**
          * @type {Internal.CompoundTag[]}
          */
         let fruitPosList = treeData.get("fruitPos") ?? []
         fruitPosList.forEach(tag => {
-            GTree.fruitPos.push(NBT2Pos(tag))
+            this.fruitPos.push(NBT2Pos(tag))
         })
         /**
          * @type {Internal.CompoundTag[]}
          */
         let limbPosList = treeData.get("limbPos") ?? []
         limbPosList.forEach(tag => {
-            GTree.limbPos.push(NBT2Pos(tag))
+            this.limbPos.push(NBT2Pos(tag))
         })
-        return GTree
+        return this
     },
     /**
      * 
