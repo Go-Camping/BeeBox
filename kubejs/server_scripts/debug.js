@@ -17,19 +17,19 @@ ItemEvents.rightClicked("kubejs:debugger", event=>{
         // new $PlacedHex()
     }
     else{
-        // let order = getNestingOrderItem("preset", "natural_box_2")
-        // let order2 = getNestingOrderItem("type_pool", "natural")
-        // let order3 = getNestingOrderItem("tier_pool", "T0")
-        // player.give(order.withName("1"))
-        // player.give(order2.withName("2"))
-        // player.give(order3.withName("3"))
-        let block = player.rayTrace(20).block
-        if(block && block.id == "kubejs:zenith_clouds_log_root"){
-            let T = new GrowthTree(level, block.pos).loadDataFromRoot()
-            // 需要根周围除上下方的4个面有泥土才能生长
-            T.setMaxTreeAge(225)
-            T.growUp(222)
-        }
+        let order = getNestingOrderItem("preset", "natural_box_2")
+        let order2 = getNestingOrderItem("type_pool", "natural")
+        let order3 = getNestingOrderItem("tier_pool", "T0")
+        player.give(order.withName("1"))
+        player.give(order2.withName("2"))
+        player.give(order3.withName("3"))
+        // let block = player.rayTrace(20).block
+        // if(block && block.id == "kubejs:zenith_clouds_log_root"){
+        //     let T = new GrowthTree(level, block.pos).loadDataFromRoot()
+        //     // 需要根周围除上下方的4个面有泥土才能生长
+        //     T.setMaxTreeAge(225)
+        //     T.growUp(222)
+        // }
         // player.tell(block.tags.toString())
     }
     /*let b = 16

@@ -1,3 +1,9 @@
+ars_nouveau:guardian_wilden_den
+ars_nouveau:hunter_wilden_den
+ars_nouveau:stalker_wilden_den
+eidolon:catacomb
+eidolon:lab
+eidolon:stray_tower
 minecraft:ancient_city
 minecraft:bastion_remnant
 minecraft:buried_treasure
@@ -31,3 +37,8 @@ minecraft:village_plains
 minecraft:village_savanna
 minecraft:village_snowy
 minecraft:village_taiga
+tconstruct:blood_island
+tconstruct:clay_island
+tconstruct:earth_slime_island
+tconstruct:end_slime_island
+tconstruct:sky_slime_island

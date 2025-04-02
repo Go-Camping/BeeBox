@@ -55,6 +55,9 @@
     "soil": true,
     "crop_block": true
   },
+  "ars_nouveau": {
+    "mob_jar": true
+  },
   "jade": {
     "coordinates.rel": false,
     "distance": false,

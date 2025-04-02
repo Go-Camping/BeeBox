@@ -14,18 +14,21 @@ function BeeBoxBuilder (level, centerPos){
     this.wallHeight = BeeBoxDefaultSize.boxHigh - 1
     this.tier = "T0"
     this.type = "default"
-    this.topBlock = 'kubejs:beebox_honeycomb_block'
+    this.topBlock = 'kubejs:beebox_phantasm_block_7'
     this.wallBlock = [
-        "kubejs:beebox_honeycomb_block",
-        "kubejs:beebox_honeycomb_block",
-        "kubejs:beebox_honeycomb_block",
-        "kubejs:beebox_honeycomb_block",
-        "kubejs:beebox_honeycomb_block",
-        "kubejs:beebox_honeycomb_block"
+        "kubejs:beebox_phantasm_block_7",
+        "kubejs:beebox_phantasm_block_7",
+        "kubejs:beebox_phantasm_block_7",
+        "kubejs:beebox_phantasm_block_7",
+        "kubejs:beebox_phantasm_block_7",
+        "kubejs:beebox_phantasm_block_7"
     ]
-    this.floorBlock = "kubejs:beebox_honeycomb_block"
+    this.floorBlock = "kubejs:beebox_phantasm_block_7"
     this.biome = "minecraft:the_void"
-    this.doors = [0, 0, 0, 0, 0, 0]
+    /**
+     * @type {number[]}  门的状态，0为关闭，1为打开; 依次为[正北、东北、东南、正南、西南、西北、上、下]
+     */
+    this.doors = [0, 0, 0, 0, 0, 0, 0, 0]
     this.decorators = []
     this.structures = []
     /**
@@ -45,11 +48,11 @@ BeeBoxBuilder.prototype = {
         // this.level.tell("biome done")
         this.buildStructure()
         // this.level.tell("structure done")
-        this.buildFlat(this.wallHeight, this.topBlock, "replace")
-        this.buildFlat(this.wallHeight - 1, this.topBlock, "replace")
+        this.buildFlat(this.wallHeight, this.topBlock, "dooreye")
+        this.buildFlat(this.wallHeight - 1, this.topBlock, "dooreye")
         // this.level.tell("top done")
-        this.buildFlat(0, this.floorBlock, "replace")
-        this.buildFlat(1, this.floorBlock, "replace")
+        this.buildFlat(0, this.floorBlock, "dooreye")
+        this.buildFlat(1, this.floorBlock, "dooreye")
         // this.level.tell("floor done")
         this.buildAllWalls()
         // this.level.tell("walls done")
@@ -152,14 +155,17 @@ BeeBoxBuilder.prototype = {
         return this
     },
     /**
-     * 设置门
+     * 设置对应墙或平面上的门
      * @param {number} wall_number 
-     * @param {boolean} open 
+     * @param {boolean} isOpen false为关；true为开
      * @returns 
      */
-    setDoor : function(wall_number, open){
-        if(wall_number < 0) return this
-        this.doors[wall_number % 6] = open ? 1 : 0
+    setDoor : function(wall_number, isOpen){
+        if(wall_number >= 0){
+            this.doors[wall_number % 6] = isOpen ? 1 : 0
+        }else{
+            this.doors[5 - wall_number] = isOpen ? 1 : 0
+        }
         return this
     },
     /**
@@ -252,7 +258,7 @@ BeeBoxBuilder.prototype = {
     },
     /**
      * 在box范围内放置某方块
-     * @param {BlockPos} pos 
+     * @param {BlockPos | BlockPos[]} pos 目标坐标，可以用数组表示多个坐标
      * @param {string} block 
      * @param {boolean?} includeShell 该范围是否包含外壳，默认true
      * @returns 
@@ -265,24 +271,39 @@ BeeBoxBuilder.prototype = {
         return this
     },
     /**
-     * 在对应的墙上开个门
-     * @param {number} wall_number 从正北（Z轴负方向）开始，顺时针计算，每个边代表一个方向，依次为从0至5
+     * 在对应的墙或平面上开个门
+     * @param {number} wall_number 从正北（Z轴负方向）开始，顺时针计算，每个边代表一个方向，依次为从0至5; -1为上，-2为下
      * @returns 
      */
     buildDoor : function(wall_number){
-        if(wall_number < 0) return this
-        let blockColumn = this.sideUnits[wall_number % 6]
-        for(let i = 1; i < this.halfSideLength - 1; i++){
-            let unit = blockColumn[i]
-            blockColumnUnit(this.level, "minecraft:yellow_stained_glass", unit.x, unit.y + 2, unit.z, this.wallHeight - 4)
-        }
+        let doorBlock = "minecraft:yellow_stained_glass"
         this.setDoor(wall_number, true)
+        if(wall_number >= 0) {
+            let blockColumn = this.sideUnits[wall_number % 6]
+            for(let i = 1; i < this.halfSideLength - 1; i++){
+                let unit = blockColumn[i]
+                blockColumnUnit(this.level, doorBlock, unit.x, unit.y + 2, unit.z, this.wallHeight - 4)
+            }
+        }else{
+            if(wall_number == -1){
+                this.buildFlat(this.wallHeight - 1, doorBlock)
+                this.buildFlat(this.wallHeight, doorBlock)
+            }
+            if(wall_number == -2){
+                this.buildFlat(0, doorBlock)
+                this.buildFlat(1, doorBlock)
+            }
+        }
         return this
     },
     buildAllDoors : function(){
-        for(let i = 0; i < 6; i++){
-            if(this.doors[i]){
-                this.buildDoor(i)
+        for(let i = 0; i < this.doors.length; i++){
+            if(this.doors[i] == 1){
+                if(i < 6){
+                    this.buildDoor(i % 6)
+                }else{
+                    this.buildDoor(- (i - 5))
+                }
             }
         }
         return this
@@ -307,22 +328,24 @@ BeeBoxBuilder.prototype = {
         let eyes_1 = blockColumnUnit(this.level, "kubejs:beebox_dooreye", dooreye_1.x, dooreye_1.y, dooreye_1.z, 3)
         let eyes_2 = blockColumnUnit(this.level, "kubejs:beebox_dooreye", dooreye_2.x, dooreye_2.y, dooreye_2.z, 3)
         eyes_1.forEach(block => {
-            let blockEntityData = block.getEntityData()
-            let wallData = blockEntityData.getCompound("data").getCompound("WallData")
-            wallData.putInt("wall_number", wall_number % 6)
-            wallData.putInt("box_center_x", this.centerX)
-            wallData.putInt("box_center_y", this.centerY)
-            wallData.putInt("box_center_z", this.centerZ)
-            block.mergeEntityData(blockEntityData)
+            // let blockEntityData = block.getEntityData()
+            // let wallData = blockEntityData.getCompound("data").getCompound("WallData")
+            // wallData.putInt("wall_number", wall_number % 6)
+            // wallData.putInt("box_center_x", this.centerX)
+            // wallData.putInt("box_center_y", this.centerY)
+            // wallData.putInt("box_center_z", this.centerZ)
+            // block.mergeEntityData(blockEntityData)
+            this.saveDooreyeData(block, wall_number % 6)
         })
         eyes_2.forEach(block => {
-            let blockEntityData = block.getEntityData()
-            let wallData = blockEntityData.getCompound("data").getCompound("WallData")
-            wallData.putInt("wall_number", wall_number % 6)
-            wallData.putInt("box_center_x", this.centerX)
-            wallData.putInt("box_center_y", this.centerY)
-            wallData.putInt("box_center_z", this.centerZ)
-            block.mergeEntityData(blockEntityData)
+            // let blockEntityData = block.getEntityData()
+            // let wallData = blockEntityData.getCompound("data").getCompound("WallData")
+            // wallData.putInt("wall_number", wall_number % 6)
+            // wallData.putInt("box_center_x", this.centerX)
+            // wallData.putInt("box_center_y", this.centerY)
+            // wallData.putInt("box_center_z", this.centerZ)
+            // block.mergeEntityData(blockEntityData)
+            this.saveDooreyeData(block, wall_number % 6)
         })
         return this
     },
@@ -341,26 +364,48 @@ BeeBoxBuilder.prototype = {
     /**
      * 建造一层六边形平面
      * @param {number} offsetY 距离BOX底部的Y偏移量
-     * @param {*} block 
-     * @param {String?} type "keep" | "replace", 可选
+     * @param {String} blockId 
+     * @param {String?} type "keep" | "replace" | "dooreye", 可选
      */
-    buildFlat : function(offsetY, block, type){
+    buildFlat : function(offsetY, blockId, type){
         type = type ?? "replace"
-        let currentStartPos
-        let currentEndPos
-        let flatY = this.centerY + Math.min(offsetY, this.wallHeight)
-        for(let i = 0; i < this.halfSideLength; i++){
-            if(i > 0){
-                currentStartPos = this.sideUnits[1][i]  
-                currentEndPos = this.sideUnits[4][i]
-                this.level.server.runCommandSilent(`fill ${currentStartPos.x - 1} ${flatY} ${currentStartPos.z} ${currentEndPos.x + 2} ${flatY} ${currentStartPos.z + 1} ${block} ${type}`)
-            } 
-            if(i < this.halfSideLength - 1){
-                currentStartPos = this.sideUnits[2][i]
-                currentEndPos = this.sideUnits[5][i]
-                this.level.server.runCommandSilent(`fill ${currentStartPos.x - 1} ${flatY} ${currentStartPos.z} ${currentEndPos.x + 2} ${flatY} ${currentStartPos.z + 1} ${block} ${type}`)
+    //     let currentStartPos
+    //     let currentEndPos
+    //     let flatY = this.centerY + Math.min(offsetY, this.wallHeight)
+    //     for(let i = 0; i < this.halfSideLength; i++){
+    //         if(i > 0){
+    //             currentStartPos = this.sideUnits[1][i]  
+    //             currentEndPos = this.sideUnits[4][i]
+    //             this.level.server.runCommandSilent(`fill ${currentStartPos.x - 1} ${flatY} ${currentStartPos.z} ${currentEndPos.x + 2} ${flatY} ${currentStartPos.z + 1} ${block} ${type}`)
+    //         } 
+    //         if(i < this.halfSideLength - 1){
+    //             currentStartPos = this.sideUnits[2][i]
+    //             currentEndPos = this.sideUnits[5][i]
+    //             this.level.server.runCommandSilent(`fill ${currentStartPos.x - 1} ${flatY} ${currentStartPos.z} ${currentEndPos.x + 2} ${flatY} ${currentStartPos.z + 1} ${block} ${type}`)
+    //         }
+    //    }
+       this.getFlatBlocks(offsetY, false).forEach(blockJS => {
+            if(type == "replace"){
+                blockJS.set(blockId)
+            }else if(type == "keep" && blockJS.getId() == "minecraft:air"){
+                blockJS.set(blockId)
+            }else if(type == "dooreye"){
+                blockJS.set(blockId)
+                let wall_number = -3
+                if(offsetY <= 1){
+                    wall_number = -2
+                }else if(offsetY >= this.wallHeight - 1){
+                    wall_number = -1
+                }
+                for(let dx = -1; dx <= 2; dx++){
+                    for(let dz = -1; dz <= 2; dz++){
+                        let currrentBlock = this.getCenterBlock().offset(dx, offsetY, dz)
+                        currrentBlock.set("kubejs:beebox_dooreye")
+                        this.saveDooreyeData(currrentBlock, wall_number)
+                    }
+                }
             }
-       }
+       })
        return this
     },
     /**
@@ -433,6 +478,21 @@ BeeBoxBuilder.prototype = {
         return this
     },
     /**
+     * 
+     * @param {Internal.BlockContainerJS} block 
+     * @param {number} wall_number 
+     */
+    saveDooreyeData : function(block, wall_number){
+        let blockEntityData = block.getEntityData()
+        let wallData = blockEntityData.getCompound("data").getCompound("WallData")
+        wallData.putInt("wall_number", wall_number % 6)
+        wallData.putInt("box_center_x", this.centerX)
+        wallData.putInt("box_center_y", this.centerY)
+        wallData.putInt("box_center_z", this.centerZ)
+        block.mergeEntityData(blockEntityData)
+        return this
+    },
+    /**
      * 保存蜂箱信息到自身蜂箱中心
      */
     saveDataToCenter : function(){
@@ -466,7 +526,7 @@ BeeBoxBuilder.prototype = {
             boxData.get("walls").push(NBT.stringTag(this.wallBlock[i]))
         }
         boxData.put("doors", NBT.listTag())
-        for(let i = 0; i < 6; i++){
+        for(let i = 0; i < this.doors.length; i++){
             boxData.get("doors").push(NBT.byteTag(this.doors[i]))
         }
         boxData.putString("floor", this.floorBlock)
@@ -544,7 +604,7 @@ BeeBoxBuilder.prototype = {
     /**
      * 获取一个蜂箱中心Y轴偏移平面内的方块
      * @param {number} offsetY 
-     * @param {boolean} includeWall 是否包含墙壁，默认为false
+     * @param {boolean?} includeWall 是否包含墙壁，默认为false
      * @returns {Internal.BlockContainerJS[]}
      */
     getFlatBlocks : function(offsetY, includeWall){

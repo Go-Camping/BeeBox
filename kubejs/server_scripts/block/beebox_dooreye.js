@@ -16,6 +16,7 @@ BlockEvents.rightClicked("kubejs:beebox_dooreye", event => {
     }
     let centerPos = new BlockPos(wallData.getInt("box_center_x"), wallData.getInt("box_center_y"), wallData.getInt("box_center_z"))
     let wallNum = wallData.getInt("wall_number")
+
     let presetId = itemNbt.getString("box_preset")
     let thisBox = new BeeBoxBuilder(event.level, centerPos).loadDataFromCenter()
     let newBox = thisBox.extend(wallNum).preset("default")
@@ -23,13 +24,16 @@ BlockEvents.rightClicked("kubejs:beebox_dooreye", event => {
         newBox = thisBox.extend(wallNum).preset(presetId)
     }
     if(newBox.getCenterBlock().id != "kubejs:beebox_center"){
-        thisBox.buildDoor(wallNum).saveDataToCenter()
-        newBox.setDoor(wallNum + 3, true).buildBox()
+        // console.log("wall:" + wallNum)
+        let newWallNum = wallNum < 0 ? (wallNum == -1 ? -2 : -1) : wallNum + 3
+        thisBox.buildDoor(wallNum).buildCenter()
+        newBox.setDoor(newWallNum, true).buildBox()
         item.setDamageValue(item.getDamageValue() + 2)
     }
     else{
+        let newWallNum = wallNum < 0 ? (wallNum == -1 ? wallNum : -2) : wallNum + 3
         thisBox.buildDoor(wallNum).saveDataToCenter()
-        newBox.buildDoor(wallNum + 3).saveDataToCenter()
+        newBox.buildDoor(newWallNum).saveDataToCenter()
         item.setDamageValue(item.getDamageValue() + 1)
     }
     if(item.getDamageValue() >= item.getMaxDamage()){

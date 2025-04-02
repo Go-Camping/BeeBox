@@ -353,15 +353,12 @@ GrowthTree.prototype = {
                             return PosEqual(blockPos, pos)
                         })
                         if(index >= 0){
-                            // this.level.getBlock(this.limbPos[index]).set("minecraft:magma_block")
                             if(!PosEqual(this.limbPos[index], limb)){
                                 this.level.destroyBlock(this.limbPos[index],true)
                             }
                             this.limbPos.splice(index,1)
                         }
                     })
-                    // this.level.getBlock(this.budPos[budIndex]).set("minecraft:magma_block")
-                    // this.level.destroyBlock(this.budPos[budIndex],true)
                     this.budPos.splice(budIndex,1)
                     break
                 }else{
@@ -369,7 +366,6 @@ GrowthTree.prototype = {
                 }
             }
         })
-        // this.level.tell("tree age: " + this.treeAge)
         this.saveDataToRoot()
         return this
     },

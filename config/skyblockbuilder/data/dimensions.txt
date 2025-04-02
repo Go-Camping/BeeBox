@@ -1,3 +1,5 @@
 minecraft:overworld
-minecraft:the_nether
 minecraft:the_end
+short_circuit:runtime
+short_circuit:circuit_board
+minecraft:the_nether

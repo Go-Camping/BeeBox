@@ -2,6 +2,7 @@
   "agricraft:crop_block": null,
   "agricraft:soil": null,
   "anvilcraft:power_provider": null,
+  "ars_nouveau:mob_jar": null,
   "custommachinery:machine_component_provider": null,
   "custommachinery:machine_server_data_provider": null,
   "jade:block_face": null,
@@ -49,5 +50,6 @@
   "minecraft:total_enchantment_power": null,
   "minecraft:villager_profession": null,
   "minecraft:waxed": null,
-  "minecraft:zombie_villager": null
+  "minecraft:zombie_villager": null,
+  "theurgy:mercury_flux": null
 }
